@@ -13,11 +13,14 @@ import crashImg from "../assets/simulation/stage1/level1/crash.png";
 import policeGood from "../assets/simulation/stage1/level1/police-good.png";
 import policeStop from "../assets/simulation/stage1/level1/police-stop.png";
 
+import bubbleQuestionRight from "../assets/simulation/stage1/level1/bubble-question-right.png";
+import bubbleGoodLeft from "../assets/simulation/stage1/level1/bubble-good-left.png";
+import bubbleWarningRight from "../assets/simulation/stage1/level1/bubble-warning-right.png";
+
 const STAGE1_PROGRESS_KEY = "stage1-progress";
 
 const PHASE = {
-  CAMERA_SHOOT: "camera-shoot",
-  GIRL_ENTER: "girl-enter",
+  INTRO: "intro",
   GIRL_STOP: "girl-stop",
   TRAFFIC_ENTER: "traffic-enter",
   QUESTION: "question",
@@ -34,11 +37,17 @@ export default function SimulationPage() {
 
   const timersRef = useRef([]);
 
-  const [phase, setPhase] = useState(PHASE.CAMERA_SHOOT);
-  const [cameraAtTop, setCameraAtTop] = useState(false);
+  const [phase, setPhase] = useState(PHASE.INTRO);
+  const [startCamera, setStartCamera] = useState(false);
   const [showGirl, setShowGirl] = useState(false);
   const [showTraffic, setShowTraffic] = useState(false);
   const [answerLocked, setAnswerLocked] = useState(false);
+
+  /*
+    Dipakai untuk memaksa scene render ulang saat klik Ulangi Level.
+    Jadi kamera benar-benar balik ngeshot dari bawah seperti awal play.
+  */
+  const [restartKey, setRestartKey] = useState(0);
 
   const clearTimers = () => {
     timersRef.current.forEach((timer) => clearTimeout(timer));
@@ -74,57 +83,53 @@ export default function SimulationPage() {
   const startLevel = () => {
     clearTimers();
 
-    setPhase(PHASE.CAMERA_SHOOT);
-    setCameraAtTop(false);
+    setRestartKey((prevKey) => prevKey + 1);
+
+    setPhase(PHASE.INTRO);
+    setStartCamera(false);
     setShowGirl(false);
     setShowTraffic(false);
     setAnswerLocked(false);
 
     /*
-      1. Kamera shoot pelan dari bawah sampai atas/persimpangan.
-    */
-    timersRef.current.push(
-      setTimeout(() => {
-        setCameraAtTop(true);
-      }, 250)
-    );
-
-    /*
-      2. Setelah kamera hampir sampai atas, motor cewek masuk dari bawah.
+      Kamera dan motor cewek mulai barengan.
+      Background naik pelan, motor cewek juga naik pelan.
     */
     timersRef.current.push(
       setTimeout(() => {
         setShowGirl(true);
-        setPhase(PHASE.GIRL_ENTER);
-      }, 3600)
+        setStartCamera(true);
+      }, 120)
     );
 
     /*
-      3. Cewek stop dulu di bawah persimpangan.
+      Kamera sudah sampai area persimpangan,
+      cewek berhenti di bawah persimpangan.
     */
     timersRef.current.push(
       setTimeout(() => {
         setPhase(PHASE.GIRL_STOP);
-      }, 5200)
+      }, 3900)
     );
 
     /*
-      4. Baru mobil dan motor cowok biru masuk dari kanan setengah.
+      Setelah cewek berhenti, mobil dan cowok masuk dari kanan.
     */
     timersRef.current.push(
       setTimeout(() => {
         setShowTraffic(true);
         setPhase(PHASE.TRAFFIC_ENTER);
-      }, 5700)
+      }, 4300)
     );
 
     /*
-      5. Semua freeze, lalu pertanyaan muncul.
+      Mobil dan cowok berhenti setengah masuk,
+      lalu pertanyaan muncul.
     */
     timersRef.current.push(
       setTimeout(() => {
         setPhase(PHASE.QUESTION);
-      }, 7100)
+      }, 5500)
     );
   };
 
@@ -145,7 +150,7 @@ export default function SimulationPage() {
     timersRef.current.push(
       setTimeout(() => {
         setPhase(PHASE.WRONG_RESULT);
-      }, 950)
+      }, 900)
     );
   };
 
@@ -159,7 +164,7 @@ export default function SimulationPage() {
     timersRef.current.push(
       setTimeout(() => {
         setPhase(PHASE.CORRECT_RESULT);
-      }, 1200)
+      }, 1100)
     );
   };
 
@@ -175,10 +180,10 @@ export default function SimulationPage() {
     navigate("/simulation/2");
   };
 
-  const isQuestion = phase === PHASE.QUESTION;
-  const isGirlEnter = phase === PHASE.GIRL_ENTER;
+  const isIntro = phase === PHASE.INTRO;
   const isGirlStop = phase === PHASE.GIRL_STOP;
   const isTrafficEnter = phase === PHASE.TRAFFIC_ENTER;
+  const isQuestion = phase === PHASE.QUESTION;
   const isWrongMove = phase === PHASE.WRONG_MOVE;
   const isWrongResult = phase === PHASE.WRONG_RESULT;
   const isCorrectMove = phase === PHASE.CORRECT_MOVE;
@@ -191,10 +196,7 @@ export default function SimulationPage() {
     !isCorrectMove &&
     !isCorrectResult;
 
-  const showBoyAndCar =
-    showTraffic &&
-    !isWrongResult &&
-    !isCorrectResult;
+  const showBoyAndCar = showTraffic;
 
   return (
     <main className="simulation-page">
@@ -207,21 +209,23 @@ export default function SimulationPage() {
         <strong>Dilarang Belok Kanan</strong>
       </div>
 
-      <section className="sim-viewport">
-        <div className={`sim-world ${cameraAtTop ? "sim-world--top" : ""}`}>
+      <section key={restartKey} className="sim-viewport">
+        <div className={`sim-bg-world ${startCamera ? "sim-bg-world--top" : ""}`}>
           <img
             src={level1Bg}
             alt="Background Level 1"
             className="sim-bg"
             draggable="false"
           />
+        </div>
 
+        <div className="sim-actors-layer">
           {showNormalGirl && (
             <img
               src={girlPinkBack}
-              alt="Cewek pink dari bawah"
+              alt="Cewek pink dari bawah ke atas"
               className={`sim-actor sim-girl-back ${
-                isGirlEnter ? "sim-girl-back--enter" : ""
+                isIntro ? "sim-girl-back--walk" : ""
               } ${
                 isGirlStop || isTrafficEnter || isQuestion
                   ? "sim-girl-back--stop"
@@ -238,9 +242,11 @@ export default function SimulationPage() {
                 alt="Mobil hitam"
                 className={`sim-actor sim-car ${
                   isTrafficEnter ? "sim-car--enter" : ""
+                } ${isQuestion ? "sim-car--stop" : ""} ${
+                  isWrongMove || isWrongResult ? "sim-car--wrong-drive" : ""
                 } ${
-                  isQuestion || isWrongMove || isCorrectMove
-                    ? "sim-car--stop"
+                  isCorrectMove || isCorrectResult
+                    ? "sim-car--correct-drive"
                     : ""
                 }`}
                 draggable="false"
@@ -251,9 +257,11 @@ export default function SimulationPage() {
                 alt="Cowok biru"
                 className={`sim-actor sim-boy ${
                   isTrafficEnter ? "sim-boy--enter" : ""
+                } ${isQuestion ? "sim-boy--stop" : ""} ${
+                  isWrongMove || isWrongResult ? "sim-boy--wrong-move" : ""
                 } ${
-                  isQuestion || isWrongMove || isCorrectMove
-                    ? "sim-boy--stop"
+                  isCorrectMove || isCorrectResult
+                    ? "sim-boy--correct-drive"
                     : ""
                 }`}
                 draggable="false"
@@ -264,7 +272,13 @@ export default function SimulationPage() {
           {isQuestion && (
             <>
               <div className="sim-question-bubble">
-                <div className="sim-question-icon">?</div>
+                <img
+                  src={bubbleQuestionRight}
+                  alt=""
+                  className="sim-bubble-img"
+                  draggable="false"
+                />
+
                 <p>
                   Wah, jalan satu arah,
                   <br />
@@ -331,15 +345,21 @@ export default function SimulationPage() {
               />
 
               <div className="sim-result-bubble sim-result-bubble--warning">
-                <div className="sim-warning-icon">!!!</div>
+                <img
+                  src={bubbleWarningRight}
+                  alt=""
+                  className="sim-result-bubble-img"
+                  draggable="false"
+                />
 
-                <h2>Berhenti!</h2>
-                <p>
-                  Kamu melanggar peraturan.
-                  <br />
-                  Rambu dilarang belok kanan berarti kamu tidak boleh belok ke
-                  kanan karena bisa bertabrakan.
-                </p>
+                <div className="sim-result-text sim-result-text--warning">
+                  <h2>Berhenti!</h2>
+                  <p>
+                    Kamu melanggar peraturan. Rambu dilarang belok kanan
+                    berarti kamu tidak boleh belok ke kanan karena bisa
+                    bertabrakan.
+                  </p>
+                </div>
               </div>
 
               <div className="sim-result-buttons">
@@ -375,21 +395,26 @@ export default function SimulationPage() {
 
               <img
                 src={girlPinkLeft}
-                alt="Cewek aman"
+                alt="Cewek pink aman"
                 className="sim-actor sim-girl-safe-final"
                 draggable="false"
               />
 
               <div className="sim-result-bubble sim-result-bubble--good">
-                <div className="sim-good-icon">★</div>
+                <img
+                  src={bubbleGoodLeft}
+                  alt=""
+                  className="sim-result-bubble-img"
+                  draggable="false"
+                />
 
-                <h2>Kerja Bagus!</h2>
-                <p>
-                  Kamu memilih belok kiri.
-                  <br />
-                  Itu sesuai arah jalan satu arah dan membuat perjalanan tetap
-                  aman.
-                </p>
+                <div className="sim-result-text sim-result-text--good">
+                  <h2>Kerja Bagus!</h2>
+                  <p>
+                    Kamu memilih belok kiri. Itu sesuai arah jalan satu arah dan
+                    membuat perjalanan tetap aman.
+                  </p>
+                </div>
               </div>
 
               <div className="sim-result-buttons">
@@ -403,8 +428,7 @@ export default function SimulationPage() {
 
                 <button
                   type="button"
-                  className="sim-secondary-button"
-                  onClick={handleNext}
+                  className="sim-secondary-button" onClick={handleNext}
                 >
                   Lanjut Level 2
                 </button>
