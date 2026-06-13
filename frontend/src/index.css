@@ -1,0 +1,192 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap');
+
+@import "tailwindcss";
+@config "../tailwind.config.js";
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body, html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  font-family: 'Nunito', sans-serif;
+  scroll-behavior: smooth;
+  background-color: #0b0f19;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #0f172a;
+}
+::-webkit-scrollbar-thumb {
+  background: #f59e0b;
+  border: 2px solid #0f172a;
+  border-radius: 8px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #fbbf24;
+}
+
+@layer components {
+/* Arcade Pegas Buttons - 3D Click Effect */
+.btn-arcade {
+  font-family: 'Nunito', 'Fredoka One', "Comic Sans MS", sans-serif;
+  font-weight: 900;
+  user-select: none;
+  transition: all 0.15s ease-out;
+  border-radius: 1rem;
+  text-align: center;
+  border-width: 4px;
+  letter-spacing: 0.05em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+.btn-arcade:active {
+  transform: translateY(6px);
+}
+
+.btn-arcade-yellow {
+  background-color: #fbbf24;
+  color: #0f172a;
+  border-color: #0f172a;
+  box-shadow: 0 8px 0 #ca8a04, 0 15px 20px rgba(0,0,0,0.3);
+}
+.btn-arcade-yellow:hover {
+  background-color: #fde047;
+  box-shadow: 0 10px 0 #ca8a04, 0 18px 25px rgba(0,0,0,0.35);
+}
+.btn-arcade-yellow:active {
+  box-shadow: 0 2px 0 #ca8a04, 0 5px 10px rgba(0,0,0,0.3);
+}
+
+.btn-arcade-purple {
+  background-color: #a855f7;
+  color: #ffffff;
+  border-color: #3b0764;
+  box-shadow: 0 8px 0 #7e22ce, 0 15px 20px rgba(0,0,0,0.3);
+}
+.btn-arcade-purple:hover {
+  background-color: #c084fc;
+  box-shadow: 0 10px 0 #7e22ce, 0 18px 25px rgba(0,0,0,0.35);
+}
+.btn-arcade-purple:active {
+  box-shadow: 0 2px 0 #7e22ce, 0 5px 10px rgba(0,0,0,0.3);
+}
+
+.btn-arcade-green {
+  background-color: #10b981;
+  color: #ffffff;
+  border-color: #064e3b;
+  box-shadow: 0 8px 0 #047857, 0 15px 20px rgba(0,0,0,0.3);
+}
+.btn-arcade-green:hover {
+  background-color: #34d399;
+  box-shadow: 0 10px 0 #047857, 0 18px 25px rgba(0,0,0,0.35);
+}
+.btn-arcade-green:active {
+  box-shadow: 0 2px 0 #047857, 0 5px 10px rgba(0,0,0,0.3);
+}
+
+.btn-arcade-red {
+  background-color: #f43f5e;
+  color: #ffffff;
+  border-color: #4c0519;
+  box-shadow: 0 8px 0 #be123c, 0 15px 20px rgba(0,0,0,0.3);
+}
+.btn-arcade-red:hover {
+  background-color: #fb7185;
+  box-shadow: 0 10px 0 #be123c, 0 18px 25px rgba(0,0,0,0.35);
+}
+.btn-arcade-red:active {
+  box-shadow: 0 2px 0 #be123c, 0 5px 10px rgba(0,0,0,0.3);
+}
+
+.btn-arcade-blue {
+  background-color: #0ea5e9;
+  color: #ffffff;
+  border-color: #0c4a6e;
+  box-shadow: 0 8px 0 #0369a1, 0 15px 20px rgba(0,0,0,0.3);
+}
+.btn-arcade-blue:hover {
+  background-color: #38bdf8;
+  box-shadow: 0 10px 0 #0369a1, 0 18px 25px rgba(0,0,0,0.35);
+}
+.btn-arcade-blue:active {
+  box-shadow: 0 2px 0 #0369a1, 0 5px 10px rgba(0,0,0,0.3);
+}
+
+  /* Arcade Glass Card */
+  .card-arcade {
+    @apply bg-slate-900/60 backdrop-blur-xl border-2 border-white/10 rounded-[32px] shadow-[0_20px_50px_rgba(0,0,0,0.5),inset_0_0_30px_rgba(255,255,255,0.05)];
+  }
+
+  .glass-card {
+    @apply bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 shadow-xl;
+  }
+}
+
+/* Neon Glows */
+.neon-glow-yellow {
+  box-shadow: 0 0 20px rgba(250, 204, 21, 0.4), inset 0 0 20px rgba(250, 204, 21, 0.2);
+}
+.neon-glow-purple {
+  box-shadow: 0 0 25px rgba(168, 85, 247, 0.5), inset 0 0 20px rgba(168, 85, 247, 0.2);
+}
+.neon-glow-red {
+  box-shadow: 0 0 20px rgba(244, 63, 94, 0.4), inset 0 0 20px rgba(244, 63, 94, 0.2);
+}
+.neon-glow-green {
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.4), inset 0 0 20px rgba(16, 185, 129, 0.2);
+}
+
+/* Laser Grid for Synthwave Theme */
+.laser-grid-container {
+  perspective: 450px;
+  overflow: hidden;
+}
+.laser-grid {
+  background-image: 
+    linear-gradient(rgba(168, 85, 247, 0.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(168, 85, 247, 0.12) 1px, transparent 1px);
+  background-size: 50px 50px;
+  background-position: center top;
+  transform: rotateX(65deg);
+  transform-origin: top center;
+  animation: grid-scroll 20s linear infinite;
+}
+
+@keyframes grid-scroll {
+  0% { background-position-y: 0px; }
+  100% { background-position-y: 1000px; }
+}
+
+/* Winding road helper style */
+.road-border-dashed {
+  background-image: linear-gradient(90deg, #facc15 50%, transparent 50%);
+  background-size: 30px 6px;
+  background-repeat: repeat-x;
+}
+
+/* Confetti animations */
+@keyframes confetti-1 {
+  0% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
+  100% { transform: translate(-40px, 150px) rotate(360deg); opacity: 0; }
+}
+@keyframes confetti-2 {
+  0% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
+  100% { transform: translate(40px, 130px) rotate(-360deg); opacity: 0; }
+}
+@keyframes confetti-3 {
+  0% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
+  100% { transform: translate(-60px, 100px) rotate(180deg); opacity: 0; }
+}
