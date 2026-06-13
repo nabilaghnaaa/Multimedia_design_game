@@ -1,0 +1,637 @@
+.simulation-level2-page {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: #10202a;
+  font-family: "Nunito", Arial, sans-serif;
+}
+
+.simulation-level2-page,
+.simulation-level2-page * {
+  box-sizing: border-box;
+}
+
+.level2-viewport {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* =========================
+   BACKGROUND LEVEL 2
+   SHOOT DARI KANAN KE KIRI
+========================= */
+.level2-bg-world {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 180vw;
+  height: 100vh;
+  z-index: 1;
+  transform: translate3d(calc(100vw - 180vw), 0, 0);
+  transition: transform 3.45s cubic-bezier(0.42, 0, 0.18, 1);
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+.level2-bg-world--move {
+  transform: translate3d(0vw, 0, 0);
+}
+
+.level2-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  user-select: none;
+  pointer-events: none;
+}
+
+/* =========================
+   LAYER AKTOR
+========================= */
+.level2-actors-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.level2-actor {
+  position: absolute;
+  z-index: 10;
+  user-select: none;
+  pointer-events: none;
+  height: auto;
+  filter: drop-shadow(0 10px 10px rgba(0, 0, 0, 0.25));
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+}
+
+/* =========================
+   BACK BUTTON
+========================= */
+.level2-back-button {
+  position: absolute;
+  z-index: 100;
+  top: 18px;
+  left: 18px;
+  border: none;
+  border-radius: 18px;
+  padding: 11px 20px;
+  background: linear-gradient(180deg, #ffd866, #efa126);
+  color: #3b2208;
+  font-size: 15px;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 5px 0 #8c5200;
+  pointer-events: auto;
+}
+
+.level2-back-button:active {
+  transform: translateY(3px);
+  box-shadow: 0 2px 0 #8c5200;
+}
+
+/* =========================
+   BADGE
+========================= */
+.level2-badge {
+  position: absolute;
+  z-index: 100;
+  top: 18px;
+  right: 18px;
+  min-width: 245px;
+  padding: 10px 16px;
+  border-radius: 18px;
+  background: rgba(71, 39, 10, 0.86);
+  border: 2px solid rgba(255, 222, 134, 0.9);
+  color: #fff1c9;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.28);
+}
+
+.level2-badge span {
+  display: block;
+  font-size: 13px;
+  font-weight: 1000;
+  color: #ffd45a;
+}
+
+.level2-badge strong {
+  display: block;
+  margin-top: 3px;
+  font-size: 16px;
+  font-weight: 1000;
+}
+
+/* =========================
+   BOY LEVEL 2
+   SMOOTH VERSION
+========================= */
+.level2-boy {
+  width: 35vw;
+  left: 0;
+  top: 0;
+  z-index: 18;
+  transform-origin: center center;
+  transform: translate3d(112vw, 10vh, 0);
+}
+
+.level2-boy--ride {
+  animation: level2BoyRideFromRight 3.4s cubic-bezier(0.42, 0, 0.18, 1) forwards;
+}
+
+/* stop sebelum lubang */
+.level2-boy--stop {
+  transform: translate3d(62vw, 10vh, 0);
+}
+
+/* salah: lurus aja, tanpa turun */
+.level2-boy--wrong {
+  animation: level2BoyWrongToHole 1.35s linear forwards;
+}
+
+/* benar: turun dikit lalu lurus menghindari lubang */
+.level2-boy--correct {
+  animation: level2BoyCorrectAvoidHole 2.25s linear forwards;
+}
+
+@keyframes level2BoyRideFromRight {
+  0% {
+    transform: translate3d(112vw, 10vh, 0);
+  }
+
+  100% {
+    transform: translate3d(62vw, 10vh, 0);
+  }
+}
+
+@keyframes level2BoyWrongToHole {
+  0% {
+    transform: translate3d(62vw, 10vh, 0);
+  }
+
+  20% {
+    transform: translate3d(58vw, 10vh, 0);
+  }
+
+  40% {
+    transform: translate3d(54vw, 10vh, 0);
+  }
+
+  60% {
+    transform: translate3d(50vw, 10vh, 0);
+  }
+
+  80% {
+    transform: translate3d(46vw, 10vh, 0);
+  }
+
+  100% {
+    transform: translate3d(43vw, 10vh, 0);
+  }
+}
+
+@keyframes level2BoyCorrectAvoidHole {
+  0% {
+    transform: translate3d(62vw, 10vh, 0);
+  }
+
+  18% {
+    transform: translate3d(58vw, 13vh, 0);
+  }
+
+  35% {
+    transform: translate3d(54vw, 17vh, 0);
+  }
+
+  52% {
+    transform: translate3d(49vw, 21vh, 0);
+  }
+
+  70% {
+    transform: translate3d(43vw, 22vh, 0);
+  }
+
+  85% {
+    transform: translate3d(38vw, 22vh, 0);
+  }
+
+  100% {
+    transform: translate3d(34vw, 22vh, 0);
+  }
+}
+
+/* =========================
+   QUESTION BUBBLE
+========================= */
+.level2-question-bubble {
+  position: absolute;
+  z-index: 50;
+  left: 45%;
+  top: 8%;
+  width: 25vw;
+  min-height: 0;
+  animation: level2BubblePop 0.28s ease-out forwards;
+}
+
+.level2-bubble-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  user-select: none;
+  pointer-events: none;
+  filter: drop-shadow(0 10px 0 rgba(0, 0, 0, 0.18));
+}
+
+.level2-question-bubble p {
+  position: absolute;
+  right: 16%;
+  top: 40%;
+  width: 64%;
+  margin: 0;
+  padding: 0;
+  color: #111;
+  font-size: 1.1vw;
+  font-weight: 1000;
+  line-height: 1.18;
+  text-align: center;
+  z-index: 5;
+  white-space: normal;
+}
+
+@keyframes level2BubblePop {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 18px, 0) scale(0.92);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+/* =========================
+   ANSWER BUTTON
+========================= */
+.level2-answer-wrapper {
+  position: fixed;
+  z-index: 70;
+  left: 50%;
+  bottom: 5.5%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 52px;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+}
+
+.level2-answer-button {
+  min-width: 300px;
+  min-height: 62px;
+  border: 4px solid rgba(255, 255, 255, 0.95);
+  border-radius: 22px;
+  outline: none;
+  background: rgba(255, 255, 255, 0.94);
+  color: #111;
+  font-size: 21px;
+  font-weight: 1000;
+  cursor: pointer;
+  box-shadow: 0 8px 0 rgba(0, 0, 0, 0.18);
+  transition: transform 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+}
+
+.level2-answer-button:hover {
+  transform: translateY(-4px);
+  background: #fff;
+}
+
+.level2-answer-button:active {
+  transform: translateY(3px);
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.18);
+}
+
+/* =========================
+   RESULT DIM
+========================= */
+.level2-result-dim {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  pointer-events: none;
+}
+
+.level2-result-dim--wrong {
+  background: rgba(104, 28, 18, 0.34);
+}
+
+.level2-result-dim--correct {
+  background: rgba(27, 93, 49, 0.22);
+}
+
+/* =========================
+   POLISI
+========================= */
+.level2-police {
+  position: fixed;
+  z-index: 55;
+  left: 40%;
+  top: 500px;
+  bottom: auto;
+  width: 40vw;
+  max-width: 600px;
+  height: auto;
+}
+
+.level2-police--good {
+  left: 40%;
+  top: 500px;
+}
+
+.level2-police--stop {
+  left: 40%;
+  top: 500px;
+}
+
+/* =========================
+   CRASH / EFEK SALAH
+   dibikin di belakang overlay merah
+========================= */
+.level2-crash {
+  z-index: 39;
+  left: 0;
+  top: 0;
+  width: 30vw;
+  transform: translate3d(30vw, 20vh, 0);
+  animation: level2CrashPop 0.18s ease-out forwards;
+}
+
+@keyframes level2CrashPop {
+  from {
+    opacity: 0;
+    transform: translate3d(30vw, 20vh, 0) scale(0.92);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(35vw, 24.5vh, 0) scale(1);
+  }
+}
+
+/* =========================
+   RESULT BUBBLE
+========================= */
+.level2-result-bubble {
+  position: fixed;
+  z-index: 58;
+  width: 44vw;
+  min-height: 18vw;
+  animation: level2BubblePop 0.28s ease-out forwards;
+}
+
+.level2-result-bubble--warning {
+  left: 5%;
+  top: 0%;
+}
+
+.level2-result-bubble--good {
+  left: 52%;
+  top: 1%;
+}
+
+.level2-result-bubble-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  user-select: none;
+  pointer-events: none;
+  filter: drop-shadow(0 10px 0 rgba(0, 0, 0, 0.18));
+}
+
+.level2-result-text {
+  position: absolute;
+  z-index: 3;
+  left: 14%;
+  top: 35%;
+  width: 70%;
+  color: #111;
+  text-align: center;
+}
+
+.level2-result-text--warning {
+  left: 16%;
+  top: 35%;
+  width: 68%;
+}
+
+.level2-result-text h2 {
+  margin: 0 0 10px;
+  font-size: 2vw;
+  font-weight: 1000;
+  text-align: center;
+}
+
+.level2-result-text p {
+  margin: 0;
+  font-size: 1.25vw;
+  font-weight: 900;
+  line-height: 1.3;
+  text-align: center;
+}
+
+/* =========================
+   RESULT BUTTON
+========================= */
+.level2-result-buttons {
+  position: fixed;
+  z-index: 75;
+  left: 50%;
+  bottom: 5%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+}
+
+.level2-main-button,
+.level2-secondary-button {
+  border: none;
+  border-radius: 18px;
+  padding: 15px 27px;
+  font-size: 22px;
+  font-weight: 1000;
+  cursor: pointer;
+}
+
+.level2-main-button {
+  color: #3b2208;
+  background: linear-gradient(180deg, #ffd866, #efa126);
+  box-shadow: 0 5px 0 #8c5200;
+}
+
+.level2-secondary-button {
+  color: #fff4d8;
+  background: linear-gradient(180deg, #7a4b22, #44250c);
+  box-shadow: 0 5px 0 #231204;
+}
+
+.level2-main-button:active,
+.level2-secondary-button:active {
+  transform: translateY(3px);
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 1200px) {
+  .level2-question-bubble {
+    width: 36vw;
+    left: 52%;
+  }
+
+  .level2-question-bubble p {
+    font-size: 1.35vw;
+  }
+
+  .level2-answer-wrapper {
+    gap: 30px;
+  }
+
+  .level2-answer-button {
+    min-width: 260px;
+    font-size: 18px;
+  }
+
+  .level2-result-text h2 {
+    font-size: 2.4vw;
+  }
+
+  .level2-result-text p {
+    font-size: 1.45vw;
+  }
+}
+
+@media (max-width: 760px) {
+  .level2-bg-world {
+    width: 220vw;
+    transform: translate3d(calc(100vw - 220vw), 0, 0);
+  }
+
+  .level2-bg-world--move {
+    transform: translate3d(0vw, 0, 0);
+  }
+
+  .level2-back-button {
+    padding: 9px 14px;
+    font-size: 12px;
+  }
+
+  .level2-badge {
+    min-width: 165px;
+    padding: 8px 11px;
+  }
+
+  .level2-badge span {
+    font-size: 11px;
+  }
+
+  .level2-badge strong {
+    font-size: 12px;
+  }
+
+  .level2-boy {
+    width: 27vw;
+  }
+
+  .level2-question-bubble {
+    left: 50%;
+    top: 10%;
+    width: 82vw;
+    transform: translateX(-50%);
+  }
+
+  .level2-question-bubble p {
+    left: 18%;
+    right: auto;
+    top: 22%;
+    width: 62%;
+    font-size: 17px;
+    line-height: 1.18;
+  }
+
+  .level2-answer-wrapper {
+    width: 90vw;
+    flex-direction: column;
+    gap: 14px;
+    bottom: 5%;
+  }
+
+  .level2-answer-button {
+    width: 100%;
+    min-width: unset;
+    min-height: 58px;
+    font-size: 17px;
+  }
+
+  .level2-result-bubble {
+    left: 50%;
+    top: 13%;
+    width: 82vw;
+    transform: translateX(-50%);
+  }
+
+  .level2-result-text h2 {
+    font-size: 24px;
+  }
+
+  .level2-result-text p {
+    font-size: 14px;
+  }
+
+  .level2-police {
+    left: 2%;
+    top: auto;
+    bottom: 9%;
+    width: 38vw;
+  }
+
+  .level2-crash {
+    width: 42vw;
+    transform: translate3d(25vw, 20vh, 0);
+  }
+
+  @keyframes level2CrashPop {
+    from {
+      opacity: 0;
+      transform: translate3d(25vw, 20vh, 0) scale(0.92);
+    }
+
+    to {
+      opacity: 1;
+      transform: translate3d(25vw, 20vh, 0) scale(1);
+    }
+  }
+
+  .level2-result-buttons {
+    width: 90vw;
+    gap: 12px;
+    bottom: 4%;
+  }
+
+  .level2-main-button,
+  .level2-secondary-button {
+    flex: 1;
+    padding: 12px 14px;
+    font-size: 14px;
+  }
+}
