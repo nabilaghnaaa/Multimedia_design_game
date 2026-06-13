@@ -21,6 +21,18 @@ import sign8 from "../assets/signs/rambu 8.png";
 import motorCowok from "../assets/characters/asetmotor.png";
 import motorCewek from "../assets/characters/asetmotorcwek.png";
 
+import level1Unlocked from "../assets/stage-levels/stage1/level-1-unlocked.png";
+import level2Locked from "../assets/stage-levels/stage1/level-2-locked.png";
+import level2Unlocked from "../assets/stage-levels/stage1/level-2-unlocked.png";
+import level3Locked from "../assets/stage-levels/stage1/level-3-locked.png";
+import level3Unlocked from "../assets/stage-levels/stage1/level-3-unlocked.png";
+import level4Locked from "../assets/stage-levels/stage1/level-4-locked.png";
+import level4Unlocked from "../assets/stage-levels/stage1/level-4-unlocked.png";
+import level5Locked from "../assets/stage-levels/stage1/level-5-locked.png";
+import level5Unlocked from "../assets/stage-levels/stage1/level-5-unlocked.png";
+
+const STAGE1_PROGRESS_KEY = "stage1-progress";
+
 const signImages = {
   1: sign1,
   2: sign21,
@@ -34,6 +46,29 @@ const signImages = {
   10: sign7,
   11: sign5,
   12: sign8,
+};
+
+const stage1LevelImages = {
+  1: {
+    locked: level1Unlocked,
+    unlocked: level1Unlocked,
+  },
+  2: {
+    locked: level2Locked,
+    unlocked: level2Unlocked,
+  },
+  3: {
+    locked: level3Locked,
+    unlocked: level3Unlocked,
+  },
+  4: {
+    locked: level4Locked,
+    unlocked: level4Unlocked,
+  },
+  5: {
+    locked: level5Locked,
+    unlocked: level5Unlocked,
+  },
 };
 
 const defaultLevels = [
@@ -130,10 +165,6 @@ const stageData = {
   },
 };
 
-/*
-  Posisi karakter mengikuti gambar peta.
-  Kalau karakter kurang pas, ubah bagian left/top ini saja.
-*/
 const characterPositions = {
   1: { left: "14%", top: "50%" },
   2: { left: "31%", top: "56%" },
@@ -150,9 +181,6 @@ const characterPositions = {
   12: { left: "88%", top: "48%" },
 };
 
-/*
-  Area klik transparan di atas papan level.
-*/
 const levelClickAreas = {
   1: { left: "14%", top: "35%", width: "10%", height: "25%" },
   2: { left: "30%", top: "43%", width: "10%", height: "25%" },
@@ -169,8 +197,29 @@ const levelClickAreas = {
   12: { left: "85%", top: "35%", width: "10%", height: "25%" },
 };
 
+const levelSignPositions = {
+  1: { left: "19%", top: "42%" },
+  2: { left: "35%", top: "51%" },
+  3: { left: "50%", top: "42%" },
+  4: { left: "68%", top: "51%" },
+  5: { left: "84%", top: "42%" },
+};
+
 const isStage1Finished = (completedLevels) => {
   return [1, 2, 3, 4, 5].every((level) => completedLevels.includes(level));
+};
+
+const safeParseArray = (key, fallback) => {
+  try {
+    const saved = localStorage.getItem(key);
+    if (!saved) return fallback;
+
+    const parsed = JSON.parse(saved);
+    return Array.isArray(parsed) ? parsed : fallback;
+  } catch (error) {
+    console.error(`Gagal membaca ${key}:`, error);
+    return fallback;
+  }
 };
 
 const LevelMap = () => {
@@ -199,33 +248,53 @@ const LevelMap = () => {
       }
     };
 
-    const savedUnlocked = JSON.parse(
-      localStorage.getItem("unlockedLevels") || "[1]"
+    const savedUnlocked = safeParseArray("unlockedLevels", [1]);
+    const savedCompleted = safeParseArray("completedLevels", []);
+
+    let stage1Progress = {};
+
+    try {
+      const savedStage1Progress = localStorage.getItem(STAGE1_PROGRESS_KEY);
+      stage1Progress = savedStage1Progress
+        ? JSON.parse(savedStage1Progress)
+        : {};
+    } catch (error) {
+      console.error("Gagal membaca stage1-progress:", error);
+      stage1Progress = {};
+    }
+
+    const progressCompletedLevels = Array.isArray(stage1Progress.completedLevels)
+      ? stage1Progress.completedLevels
+      : [];
+
+    const progressUnlockedLevel = Number(stage1Progress.unlockedLevel || 1);
+
+    const mergedUnlockedLevels = [...new Set([...savedUnlocked, 1])];
+
+    for (let level = 1; level <= progressUnlockedLevel; level += 1) {
+      mergedUnlockedLevels.push(level);
+    }
+
+    const finalUnlockedLevels = [...new Set(mergedUnlockedLevels)].sort(
+      (a, b) => a - b
     );
 
-    const savedCompleted = JSON.parse(
-      localStorage.getItem("completedLevels") || "[]"
+    const finalCompletedLevels = [
+      ...new Set([...savedCompleted, ...progressCompletedLevels]),
+    ].sort((a, b) => a - b);
+
+    localStorage.setItem("unlockedLevels", JSON.stringify(finalUnlockedLevels));
+    localStorage.setItem(
+      "completedLevels",
+      JSON.stringify(finalCompletedLevels)
     );
+
+    setUnlockedLevels(finalUnlockedLevels);
+    setCompletedLevels(finalCompletedLevels);
 
     const selectedStage = Number(localStorage.getItem("selectedStage") || 1);
-    const stage1Done = isStage1Finished(savedCompleted);
+    const stage1Done = isStage1Finished(finalCompletedLevels);
 
-    setUnlockedLevels(savedUnlocked);
-    setCompletedLevels(savedCompleted);
-
-    if (!localStorage.getItem("unlockedLevels")) {
-      localStorage.setItem("unlockedLevels", JSON.stringify([1]));
-    }
-
-    if (!localStorage.getItem("completedLevels")) {
-      localStorage.setItem("completedLevels", JSON.stringify([]));
-    }
-
-    /*
-      Pengaman:
-      Kalau user belum selesai Stage 1 tapi maksa masuk Stage 2,
-      langsung balikin ke halaman pilih stage.
-    */
     if (selectedStage === 2 && !stage1Done) {
       alert("Stage 2 masih terkunci. Selesaikan semua level di Stage 1 dulu ya!");
       localStorage.setItem("selectedStage", "1");
@@ -290,6 +359,28 @@ const LevelMap = () => {
         <p>{currentStage.subtitle}</p>
       </div>
 
+      {activeStage === 1 &&
+        [1, 2, 3, 4, 5].map((levelNumber) => {
+          const isUnlocked = unlockedLevels.includes(levelNumber);
+          const position = levelSignPositions[levelNumber];
+          const imageData = stage1LevelImages[levelNumber];
+          const imageSrc = isUnlocked ? imageData.unlocked : imageData.locked;
+
+          return (
+            <img
+              key={`stage1-level-sign-${levelNumber}`}
+              src={imageSrc}
+              alt={`Level ${levelNumber}`}
+              className="map-level-sign"
+              draggable="false"
+              style={{
+                left: position.left,
+                top: position.top,
+              }}
+            />
+          );
+        })}
+
       <img
         src={currentStage.character}
         alt="Karakter pemain"
@@ -351,8 +442,14 @@ const LevelMap = () => {
           </>
         ) : (
           <>
-            <h2>Pilih Level</h2>
-            <p>Klik papan level pada peta untuk mulai bermain.</p>
+            <h2>
+              Stage {activeStage}:{" "}
+              {activeStage === 1 ? "Rambu Peringatan" : "Rambu Larangan"}
+            </h2>
+            <p>
+              Level berikutnya akan terbuka setelah kamu menyelesaikan level
+              sebelumnya dengan benar.
+            </p>
           </>
         )}
       </div>

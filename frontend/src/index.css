@@ -394,6 +394,25 @@ body {
   outline: 3px solid rgba(255, 230, 120, 0.8);
 }
 
+/* LEVEL 3 TERBUKA - KUNING */
+.level-hotspot.level-3-unlocked {
+  background: rgba(255, 216, 102, 0.45);
+  outline: 4px solid rgba(255, 242, 184, 0.95);
+  box-shadow:
+    0 0 18px rgba(255, 216, 102, 0.95),
+    0 0 34px rgba(239, 161, 38, 0.75),
+    inset 0 0 18px rgba(255, 255, 255, 0.35);
+}
+
+.level-hotspot.level-3-unlocked:hover {
+  background: rgba(255, 216, 102, 0.62);
+  outline: 4px solid rgba(255, 250, 210, 1);
+  box-shadow:
+    0 0 22px rgba(255, 216, 102, 1),
+    0 0 42px rgba(239, 161, 38, 0.9),
+    inset 0 0 20px rgba(255, 255, 255, 0.45);
+}
+
 .level-hotspot.locked {
   cursor: not-allowed;
 }
