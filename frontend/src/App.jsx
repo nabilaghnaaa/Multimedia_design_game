@@ -14,7 +14,11 @@ function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/stage-select" element={<StageSelectPage />} />
+
+        {/* MAP STAGE 1 YANG KAMU MAU */}
         <Route path="/stage1-select" element={<Stage1Select />} />
+
+        {/* BIAR ROUTE LAMA TETAP AMAN */}
         <Route path="/map" element={<LevelMap />} />
 
         {/* LEVEL 2 HARUS DI ATAS ROUTE DINAMIS */}

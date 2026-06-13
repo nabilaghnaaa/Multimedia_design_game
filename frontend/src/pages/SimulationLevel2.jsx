@@ -10,7 +10,7 @@ import policeGood from "../assets/simulation/stage1/level1/police-good.png";
 import policeStop from "../assets/simulation/stage1/level1/police-stop.png";
 
 import bubbleQuestionRight from "../assets/simulation/stage1/level1/bubble-question-right.png";
-import bubbleGoodLeft from "../assets/simulation/stage1/level1/bubble-good-left.png";
+import bubbleGoodRight from "../assets/simulation/stage1/level1/bubble-good-right.png";
 import bubbleWarningRight from "../assets/simulation/stage1/level1/bubble-warning-right.png";
 
 const STAGE1_PROGRESS_KEY = "stage1-progress";
@@ -39,27 +39,66 @@ export default function SimulationLevel2() {
     timersRef.current = [];
   };
 
+  const safeParseArray = (key, fallback) => {
+    try {
+      const saved = localStorage.getItem(key);
+      if (!saved) return fallback;
+
+      const parsed = JSON.parse(saved);
+
+      if (!Array.isArray(parsed)) return fallback;
+
+      return parsed
+        .map((item) => Number(item))
+        .filter((item) => Number.isFinite(item));
+    } catch (error) {
+      console.error(`Gagal membaca ${key}:`, error);
+      return fallback;
+    }
+  };
+
   const saveLevel2Progress = () => {
     try {
       const savedProgress = localStorage.getItem(STAGE1_PROGRESS_KEY);
       const progress = savedProgress ? JSON.parse(savedProgress) : {};
 
-      const completedLevels = Array.isArray(progress.completedLevels)
+      const progressCompletedLevels = Array.isArray(progress.completedLevels)
         ? progress.completedLevels
+            .map((item) => Number(item))
+            .filter((item) => Number.isFinite(item))
         : [];
 
-      const updatedCompletedLevels = [...new Set([...completedLevels, 2])];
+      const savedCompletedLevels = safeParseArray("completedLevels", []);
+      const savedUnlockedLevels = safeParseArray("unlockedLevels", [1]);
+
+      const updatedCompletedLevels = [
+        ...new Set([...progressCompletedLevels, ...savedCompletedLevels, 1, 2]),
+      ].sort((a, b) => a - b);
+
+      const updatedUnlockedLevels = [
+        ...new Set([...savedUnlockedLevels, 1, 2, 3]),
+      ].sort((a, b) => a - b);
 
       localStorage.setItem(
         STAGE1_PROGRESS_KEY,
         JSON.stringify({
           ...progress,
-          unlockedLevel: Math.max(progress.unlockedLevel || 1, 3),
+          unlockedLevel: 3,
           completedLevels: updatedCompletedLevels,
         })
       );
 
-      localStorage.setItem("unlockedLevels", JSON.stringify([1, 2, 3]));
+      localStorage.setItem(
+        "unlockedLevels",
+        JSON.stringify(updatedUnlockedLevels)
+      );
+
+      localStorage.setItem(
+        "completedLevels",
+        JSON.stringify(updatedCompletedLevels)
+      );
+
+      localStorage.setItem("selectedStage", "1");
     } catch (error) {
       console.error("Gagal menyimpan progress level 2:", error);
     }
@@ -290,7 +329,7 @@ export default function SimulationLevel2() {
 
               <div className="level2-result-bubble level2-result-bubble--good">
                 <img
-                  src={bubbleGoodLeft}
+                  src={bubbleGoodRight}
                   alt=""
                   className="level2-result-bubble-img"
                   draggable="false"

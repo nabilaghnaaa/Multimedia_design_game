@@ -379,6 +379,16 @@ body {
   pointer-events: none;
 }
 
+.map-level-3-unlocked-img {
+  position: absolute;
+  z-index: 23;
+  height: auto;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  user-select: none;
+  filter: drop-shadow(0 8px 8px rgba(0, 0, 0, 0.28));
+}
+
 .level-hotspot {
   position: absolute;
   z-index: 24;
@@ -394,23 +404,17 @@ body {
   outline: 3px solid rgba(255, 230, 120, 0.8);
 }
 
-/* LEVEL 3 TERBUKA - KUNING */
+/* LEVEL 3 TERBUKA - AREA KLIK */
 .level-hotspot.level-3-unlocked {
-  background: rgba(255, 216, 102, 0.45);
-  outline: 4px solid rgba(255, 242, 184, 0.95);
-  box-shadow:
-    0 0 18px rgba(255, 216, 102, 0.95),
-    0 0 34px rgba(239, 161, 38, 0.75),
-    inset 0 0 18px rgba(255, 255, 255, 0.35);
+  background: transparent;
+  outline: none;
+  box-shadow: none;
 }
 
 .level-hotspot.level-3-unlocked:hover {
-  background: rgba(255, 216, 102, 0.62);
-  outline: 4px solid rgba(255, 250, 210, 1);
-  box-shadow:
-    0 0 22px rgba(255, 216, 102, 1),
-    0 0 42px rgba(239, 161, 38, 0.9),
-    inset 0 0 20px rgba(255, 255, 255, 0.45);
+  background: rgba(255, 255, 255, 0.12);
+  outline: 3px solid rgba(255, 230, 120, 0.8);
+  box-shadow: none;
 }
 
 .level-hotspot.locked {
@@ -539,6 +543,10 @@ body {
     width: 92px;
   }
 
+  .map-level-3-unlocked-img {
+    width: 88px !important;
+  }
+
   .level-info-card {
     left: 14px;
     bottom: 14px;
@@ -578,6 +586,10 @@ body {
 
   .map-character {
     width: 76px;
+  }
+
+  .map-level-3-unlocked-img {
+    width: 72px !important;
   }
 
   .level-info-card {

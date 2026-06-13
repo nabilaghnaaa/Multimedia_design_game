@@ -21,15 +21,7 @@ import sign8 from "../assets/signs/rambu 8.png";
 import motorCowok from "../assets/characters/asetmotor.png";
 import motorCewek from "../assets/characters/asetmotorcwek.png";
 
-import level1Unlocked from "../assets/stage-levels/stage1/level-1-unlocked.png";
-import level2Locked from "../assets/stage-levels/stage1/level-2-locked.png";
-import level2Unlocked from "../assets/stage-levels/stage1/level-2-unlocked.png";
-import level3Locked from "../assets/stage-levels/stage1/level-3-locked.png";
 import level3Unlocked from "../assets/stage-levels/stage1/level-3-unlocked.png";
-import level4Locked from "../assets/stage-levels/stage1/level-4-locked.png";
-import level4Unlocked from "../assets/stage-levels/stage1/level-4-unlocked.png";
-import level5Locked from "../assets/stage-levels/stage1/level-5-locked.png";
-import level5Unlocked from "../assets/stage-levels/stage1/level-5-unlocked.png";
 
 const STAGE1_PROGRESS_KEY = "stage1-progress";
 
@@ -46,29 +38,6 @@ const signImages = {
   10: sign7,
   11: sign5,
   12: sign8,
-};
-
-const stage1LevelImages = {
-  1: {
-    locked: level1Unlocked,
-    unlocked: level1Unlocked,
-  },
-  2: {
-    locked: level2Locked,
-    unlocked: level2Unlocked,
-  },
-  3: {
-    locked: level3Locked,
-    unlocked: level3Unlocked,
-  },
-  4: {
-    locked: level4Locked,
-    unlocked: level4Unlocked,
-  },
-  5: {
-    locked: level5Locked,
-    unlocked: level5Unlocked,
-  },
 };
 
 const defaultLevels = [
@@ -165,6 +134,10 @@ const stageData = {
   },
 };
 
+/*
+  Posisi karakter mengikuti gambar peta.
+  Kalau karakter kurang pas, ubah bagian left/top ini saja.
+*/
 const characterPositions = {
   1: { left: "14%", top: "50%" },
   2: { left: "31%", top: "56%" },
@@ -181,6 +154,9 @@ const characterPositions = {
   12: { left: "88%", top: "48%" },
 };
 
+/*
+  Area klik transparan di atas papan level.
+*/
 const levelClickAreas = {
   1: { left: "14%", top: "35%", width: "10%", height: "25%" },
   2: { left: "30%", top: "43%", width: "10%", height: "25%" },
@@ -197,16 +173,32 @@ const levelClickAreas = {
   12: { left: "85%", top: "35%", width: "10%", height: "25%" },
 };
 
-const levelSignPositions = {
-  1: { left: "19%", top: "42%" },
-  2: { left: "35%", top: "51%" },
-  3: { left: "50%", top: "42%" },
-  4: { left: "68%", top: "51%" },
-  5: { left: "84%", top: "42%" },
+/*
+  Posisi gambar level-3-unlocked.png.
+  Kalau kurang pas, ubah left/top/width di sini saja.
+*/
+const level3UnlockedPosition = {
+  left: "50.1%",
+  top: "43.3%",
+  width: "112px",
+};
+
+const normalizeNumberArray = (data, fallback = []) => {
+  if (!Array.isArray(data)) return fallback;
+
+  return [
+    ...new Set(
+      data
+        .map((item) => Number(item))
+        .filter((item) => Number.isFinite(item))
+    ),
+  ].sort((a, b) => a - b);
 };
 
 const isStage1Finished = (completedLevels) => {
-  return [1, 2, 3, 4, 5].every((level) => completedLevels.includes(level));
+  return [1, 2, 3, 4, 5].every((level) =>
+    completedLevels.map(Number).includes(level)
+  );
 };
 
 const safeParseArray = (key, fallback) => {
@@ -215,10 +207,26 @@ const safeParseArray = (key, fallback) => {
     if (!saved) return fallback;
 
     const parsed = JSON.parse(saved);
-    return Array.isArray(parsed) ? parsed : fallback;
+    return normalizeNumberArray(parsed, fallback);
   } catch (error) {
     console.error(`Gagal membaca ${key}:`, error);
     return fallback;
+  }
+};
+
+const safeParseStage1Progress = () => {
+  try {
+    const savedStage1Progress = localStorage.getItem(STAGE1_PROGRESS_KEY);
+    const parsedProgress = savedStage1Progress
+      ? JSON.parse(savedStage1Progress)
+      : {};
+
+    return parsedProgress && typeof parsedProgress === "object"
+      ? parsedProgress
+      : {};
+  } catch (error) {
+    console.error("Gagal membaca stage1-progress:", error);
+    return {};
   }
 };
 
@@ -250,38 +258,32 @@ const LevelMap = () => {
 
     const savedUnlocked = safeParseArray("unlockedLevels", [1]);
     const savedCompleted = safeParseArray("completedLevels", []);
+    const stage1Progress = safeParseStage1Progress();
 
-    let stage1Progress = {};
-
-    try {
-      const savedStage1Progress = localStorage.getItem(STAGE1_PROGRESS_KEY);
-      stage1Progress = savedStage1Progress
-        ? JSON.parse(savedStage1Progress)
-        : {};
-    } catch (error) {
-      console.error("Gagal membaca stage1-progress:", error);
-      stage1Progress = {};
-    }
-
-    const progressCompletedLevels = Array.isArray(stage1Progress.completedLevels)
-      ? stage1Progress.completedLevels
-      : [];
+    const progressCompletedLevels = normalizeNumberArray(
+      stage1Progress.completedLevels || [],
+      []
+    );
 
     const progressUnlockedLevel = Number(stage1Progress.unlockedLevel || 1);
 
     const mergedUnlockedLevels = [...new Set([...savedUnlocked, 1])];
 
-    for (let level = 1; level <= progressUnlockedLevel; level += 1) {
-      mergedUnlockedLevels.push(level);
+    if (Number.isFinite(progressUnlockedLevel)) {
+      for (let level = 1; level <= progressUnlockedLevel; level += 1) {
+        mergedUnlockedLevels.push(level);
+      }
     }
 
-    const finalUnlockedLevels = [...new Set(mergedUnlockedLevels)].sort(
-      (a, b) => a - b
+    const finalUnlockedLevels = normalizeNumberArray(mergedUnlockedLevels, [1]);
+
+    const finalCompletedLevels = normalizeNumberArray(
+      [...savedCompleted, ...progressCompletedLevels],
+      []
     );
 
-    const finalCompletedLevels = [
-      ...new Set([...savedCompleted, ...progressCompletedLevels]),
-    ].sort((a, b) => a - b);
+    setUnlockedLevels(finalUnlockedLevels);
+    setCompletedLevels(finalCompletedLevels);
 
     localStorage.setItem("unlockedLevels", JSON.stringify(finalUnlockedLevels));
     localStorage.setItem(
@@ -289,12 +291,14 @@ const LevelMap = () => {
       JSON.stringify(finalCompletedLevels)
     );
 
-    setUnlockedLevels(finalUnlockedLevels);
-    setCompletedLevels(finalCompletedLevels);
-
     const selectedStage = Number(localStorage.getItem("selectedStage") || 1);
     const stage1Done = isStage1Finished(finalCompletedLevels);
 
+    /*
+      Pengaman:
+      Kalau user belum selesai Stage 1 tapi maksa masuk Stage 2,
+      langsung balikin ke halaman pilih stage.
+    */
     if (selectedStage === 2 && !stage1Done) {
       alert("Stage 2 masih terkunci. Selesaikan semua level di Stage 1 dulu ya!");
       localStorage.setItem("selectedStage", "1");
@@ -317,23 +321,26 @@ const LevelMap = () => {
   );
 
   const handleLevelClick = (level) => {
-    const isUnlocked = unlockedLevels.includes(level);
+    const levelNumber = Number(level);
+    const isUnlocked = unlockedLevels.includes(levelNumber);
 
     if (!isUnlocked) {
       alert("Level ini belum terbuka. Selesaikan level sebelumnya dulu ya.");
       return;
     }
 
-    setSelectedLevel(level);
-    setOpeningLevel(level);
+    setSelectedLevel(levelNumber);
+    setOpeningLevel(levelNumber);
 
     setTimeout(() => {
-      navigate(`/simulation/${level}`);
+      navigate(`/simulation/${levelNumber}`);
     }, 500);
   };
 
   const selectedCharacterPosition =
     characterPositions[selectedLevel || currentStage.firstLevel];
+
+  const isLevel3Unlocked = unlockedLevels.includes(3);
 
   return (
     <div className="map-photo-page">
@@ -359,27 +366,25 @@ const LevelMap = () => {
         <p>{currentStage.subtitle}</p>
       </div>
 
-      {activeStage === 1 &&
-        [1, 2, 3, 4, 5].map((levelNumber) => {
-          const isUnlocked = unlockedLevels.includes(levelNumber);
-          const position = levelSignPositions[levelNumber];
-          const imageData = stage1LevelImages[levelNumber];
-          const imageSrc = isUnlocked ? imageData.unlocked : imageData.locked;
-
-          return (
-            <img
-              key={`stage1-level-sign-${levelNumber}`}
-              src={imageSrc}
-              alt={`Level ${levelNumber}`}
-              className="map-level-sign"
-              draggable="false"
-              style={{
-                left: position.left,
-                top: position.top,
-              }}
-            />
-          );
-        })}
+      {activeStage === 1 && isLevel3Unlocked && (
+  <img
+    src={level3Unlocked}
+    alt="Level 3 terbuka"
+    draggable="false"
+    style={{
+      position: "absolute",
+      zIndex: 999,
+      left: "50.1%",
+      top: "43.3%",
+      width: "112px",
+      height: "auto",
+      transform: "translate(-50%, -50%)",
+      pointerEvents: "none",
+      userSelect: "none",
+      filter: "drop-shadow(0 8px 8px rgba(0, 0, 0, 0.28))",
+    }}
+  />
+)}
 
       <img
         src={currentStage.character}
@@ -403,7 +408,9 @@ const LevelMap = () => {
           <button
             key={levelNumber}
             type="button"
-            className={`level-hotspot ${isUnlocked ? "unlocked" : "locked"}`}
+            className={`level-hotspot ${isUnlocked ? "unlocked" : "locked"} ${
+              levelNumber === 3 && isUnlocked ? "level-3-unlocked" : ""
+            }`}
             style={{
               left: area.left,
               top: area.top,

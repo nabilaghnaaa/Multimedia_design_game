@@ -1,23 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
 import "./Stage1Select.css";
 
 import stage1Bg from "../assets/stage-levels/stage1/stage1-bg.png";
 
 import level1Unlocked from "../assets/stage-levels/stage1/level-1-unlocked.png";
-
 import level2Locked from "../assets/stage-levels/stage1/level-2-locked.png";
 import level2Unlocked from "../assets/stage-levels/stage1/level-2-unlocked.png";
-
 import level3Locked from "../assets/stage-levels/stage1/level-3-locked.png";
 import level3Unlocked from "../assets/stage-levels/stage1/level-3-unlocked.png";
-
 import level4Locked from "../assets/stage-levels/stage1/level-4-locked.png";
 import level4Unlocked from "../assets/stage-levels/stage1/level-4-unlocked.png";
-
 import level5Locked from "../assets/stage-levels/stage1/level-5-locked.png";
 import level5Unlocked from "../assets/stage-levels/stage1/level-5-unlocked.png";
+
+const STAGE1_PROGRESS_KEY = "stage1-progress";
 
 const stage1Levels = [
   {
@@ -67,11 +64,42 @@ const stage1Levels = [
   },
 ];
 
-const getCompletedLevels = () => {
+const normalizeNumberArray = (data, fallback = []) => {
+  if (!Array.isArray(data)) return fallback;
+
+  return [
+    ...new Set(
+      data
+        .map((item) => Number(item))
+        .filter((item) => Number.isFinite(item))
+    ),
+  ].sort((a, b) => a - b);
+};
+
+const safeParseArray = (key, fallback) => {
   try {
-    return JSON.parse(localStorage.getItem("completedLevels") || "[]");
-  } catch {
-    return [];
+    const saved = localStorage.getItem(key);
+    if (!saved) return fallback;
+
+    const parsed = JSON.parse(saved);
+    return normalizeNumberArray(parsed, fallback);
+  } catch (error) {
+    console.error(`Gagal membaca ${key}:`, error);
+    return fallback;
+  }
+};
+
+const safeParseStage1Progress = () => {
+  try {
+    const savedProgress = localStorage.getItem(STAGE1_PROGRESS_KEY);
+    const parsedProgress = savedProgress ? JSON.parse(savedProgress) : {};
+
+    return parsedProgress && typeof parsedProgress === "object"
+      ? parsedProgress
+      : {};
+  } catch (error) {
+    console.error("Gagal membaca stage1-progress:", error);
+    return {};
   }
 };
 
@@ -79,22 +107,47 @@ const Stage1Select = () => {
   const navigate = useNavigate();
 
   const [completedLevels, setCompletedLevels] = useState([]);
+  const [unlockedLevels, setUnlockedLevels] = useState([1]);
   const [showPage, setShowPage] = useState(false);
   const [popupMessage, setPopupMessage] = useState("");
 
   useEffect(() => {
     document.body.classList.add("stage1-no-scroll");
 
-    const savedCompletedLevels = getCompletedLevels();
-    setCompletedLevels(savedCompletedLevels);
+    const savedCompletedLevels = safeParseArray("completedLevels", []);
+    const savedUnlockedLevels = safeParseArray("unlockedLevels", [1]);
+    const stage1Progress = safeParseStage1Progress();
 
-    if (!localStorage.getItem("completedLevels")) {
-      localStorage.setItem("completedLevels", JSON.stringify([]));
+    const progressCompletedLevels = normalizeNumberArray(
+      stage1Progress.completedLevels || [],
+      []
+    );
+
+    const progressUnlockedLevel = Number(stage1Progress.unlockedLevel || 1);
+
+    const mergedUnlockedLevels = [...new Set([...savedUnlockedLevels, 1])];
+
+    if (Number.isFinite(progressUnlockedLevel)) {
+      for (let level = 1; level <= progressUnlockedLevel; level += 1) {
+        mergedUnlockedLevels.push(level);
+      }
     }
 
-    if (!localStorage.getItem("unlockedLevels")) {
-      localStorage.setItem("unlockedLevels", JSON.stringify([1]));
-    }
+    const finalUnlockedLevels = normalizeNumberArray(mergedUnlockedLevels, [1]);
+
+    const finalCompletedLevels = normalizeNumberArray(
+      [...savedCompletedLevels, ...progressCompletedLevels],
+      []
+    );
+
+    setUnlockedLevels(finalUnlockedLevels);
+    setCompletedLevels(finalCompletedLevels);
+
+    localStorage.setItem("unlockedLevels", JSON.stringify(finalUnlockedLevels));
+    localStorage.setItem(
+      "completedLevels",
+      JSON.stringify(finalCompletedLevels)
+    );
 
     const timer = setTimeout(() => {
       setShowPage(true);
@@ -107,17 +160,28 @@ const Stage1Select = () => {
   }, []);
 
   const isLevelUnlocked = (levelNumber) => {
-    if (levelNumber === 1) return true;
-    return completedLevels.includes(levelNumber - 1);
+    const numberLevel = Number(levelNumber);
+
+    if (numberLevel === 1) return true;
+
+    return (
+      unlockedLevels.includes(numberLevel) ||
+      completedLevels.includes(numberLevel - 1)
+    );
+  };
+
+  const isLevelCompleted = (levelNumber) => {
+    return completedLevels.includes(Number(levelNumber));
   };
 
   const handleLevelClick = (levelNumber) => {
-    const unlocked = isLevelUnlocked(levelNumber);
+    const numberLevel = Number(levelNumber);
+    const unlocked = isLevelUnlocked(numberLevel);
 
     if (!unlocked) {
       setPopupMessage(
-        `Level ${levelNumber} masih terkunci. Selesaikan Level ${
-          levelNumber - 1
+        `Level ${numberLevel} masih terkunci. Selesaikan Level ${
+          numberLevel - 1
         } dengan benar dulu ya!`
       );
 
@@ -129,16 +193,16 @@ const Stage1Select = () => {
     }
 
     localStorage.setItem("selectedStage", "1");
-    localStorage.setItem("selectedLevel", String(levelNumber));
+    localStorage.setItem("selectedLevel", String(numberLevel));
 
-    navigate(`/simulation/${levelNumber}`);
+    navigate(`/simulation/${numberLevel}`);
   };
 
   return (
     <main className={`stage1-page ${showPage ? "show" : ""}`}>
       <img
         src={stage1Bg}
-        alt="Stage 1 Background"
+        alt="Stage 1 Rambu Peringatan"
         className="stage1-bg"
         draggable="false"
       />
@@ -151,22 +215,21 @@ const Stage1Select = () => {
         ← Pilih Stage
       </button>
 
-      <div className="stage1-levels-layer">
+      <section className="stage1-levels-layer">
         {stage1Levels.map((item) => {
           const unlocked = isLevelUnlocked(item.level);
-          const completed = completedLevels.includes(item.level);
+          const completed = isLevelCompleted(item.level);
           const imageSrc = unlocked ? item.unlockedImage : item.lockedImage;
 
           return (
             <button
               key={item.level}
               type="button"
-              className={[
-                "stage1-level-btn",
-                showPage ? "fade-in-visible" : "",
-                unlocked ? "is-unlocked" : "is-locked",
-                completed ? "is-completed" : "",
-              ].join(" ")}
+              className={`stage1-level-btn ${
+                showPage ? "fade-in-visible" : ""
+              } ${unlocked ? "is-unlocked" : "is-locked"} ${
+                completed ? "is-completed" : ""
+              }`}
               style={{
                 left: item.left,
                 top: item.top,
@@ -194,20 +257,18 @@ const Stage1Select = () => {
             </button>
           );
         })}
-      </div>
+      </section>
 
-      <div className="stage1-info-card">
+      <section className="stage1-info-card">
         <h2>Stage 1: Rambu Peringatan</h2>
         <p>
           Level berikutnya akan terbuka setelah kamu menyelesaikan level
           sebelumnya dengan benar.
         </p>
-      </div>
+      </section>
 
       {popupMessage && (
-        <div className="stage1-popup-message">
-          {popupMessage}
-        </div>
+        <div className="stage1-popup-message">{popupMessage}</div>
       )}
     </main>
   );
