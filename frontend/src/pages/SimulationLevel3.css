@@ -1,0 +1,666 @@
+.simulation-level3-page {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: #10202a;
+  font-family: "Nunito", Arial, sans-serif;
+}
+
+.simulation-level3-page,
+.simulation-level3-page * {
+  box-sizing: border-box;
+}
+
+.level3-viewport {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* =========================
+   BACKGROUND LEVEL 3
+   SHOOT DARI KANAN KE KIRI
+========================= */
+.level3-bg-world {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 180vw;
+  height: 100vh;
+  z-index: 1;
+  transform: translate3d(calc(100vw - 180vw), 0, 0);
+  transition: transform 3.45s cubic-bezier(0.42, 0, 0.18, 1);
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+.level3-bg-world--move {
+  transform: translate3d(-18vw, 0, 0);
+}
+
+.level3-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  user-select: none;
+  pointer-events: none;
+}
+
+/* =========================
+   LAYER AKTOR
+========================= */
+.level3-actors-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.level3-actor {
+  position: absolute;
+  z-index: 10;
+  user-select: none;
+  pointer-events: none;
+  height: auto;
+  filter: drop-shadow(0 10px 10px rgba(0, 0, 0, 0.25));
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+}
+
+/* =========================
+   BACK BUTTON
+========================= */
+.level3-back-button {
+  position: absolute;
+  z-index: 100;
+  top: 18px;
+  left: 18px;
+  border: none;
+  border-radius: 18px;
+  padding: 11px 20px;
+  background: linear-gradient(180deg, #ffd866, #efa126);
+  color: #3b2208;
+  font-size: 15px;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 5px 0 #8c5200;
+  pointer-events: auto;
+}
+
+.level3-back-button:active {
+  transform: translateY(3px);
+  box-shadow: 0 2px 0 #8c5200;
+}
+
+/* =========================
+   BADGE
+========================= */
+.level3-badge {
+  position: absolute;
+  z-index: 100;
+  top: 18px;
+  right: 18px;
+  min-width: 325px;
+  padding: 10px 16px;
+  border-radius: 18px;
+  background: rgba(71, 39, 10, 0.86);
+  border: 2px solid rgba(255, 222, 134, 0.9);
+  color: #fff1c9;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.28);
+}
+
+.level3-badge span {
+  display: block;
+  font-size: 13px;
+  font-weight: 1000;
+  color: #ffd45a;
+}
+
+.level3-badge strong {
+  display: block;
+  margin-top: 3px;
+  font-size: 15px;
+  font-weight: 1000;
+}
+
+/* =========================
+   BOY STANDING / PEJALAN KAKI
+========================= */
+.level3-boy-standing {
+  width: 12vw;
+  left: 0;
+  top: 22vh;
+  z-index: 24;
+  opacity: 0;
+  transform: translate3d(20vw, 39vh, 0) scale(0.94);
+}
+
+.level3-boy-standing--show {
+  animation: level3BoyFadeInLate 0.65s ease-out forwards;
+}
+
+/* SALAH: COWOK TURUN KE TENGAH UNTUK DITABRAK */
+.level3-boy-standing--wrong-down {
+  animation: level3BoyWrongDown 1.45s cubic-bezier(0.25, 0.1, 0.2, 1) forwards;
+}
+
+/* BENAR: COWOK TURUN SMOOTH DULU */
+.level3-boy-standing--correct-down {
+  animation: level3BoyCorrectDown 2.45s cubic-bezier(0.22, 0.75, 0.22, 1) forwards;
+}
+
+@keyframes level3BoyFadeInLate {
+  from {
+    opacity: 0;
+    transform: translate3d(20vw, 39vh, 0) scale(0.94);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(20vw, 32vh, 0) scale(1);
+  }
+}
+
+/* SALAH: dibuat satu gerakan smooth, bukan patah-patah */
+@keyframes level3BoyWrongDown {
+  from {
+    opacity: 1;
+    transform: translate3d(20vw, 32vh, 0) scale(1);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(20vw, 45vh, 0) scale(1);
+  }
+}
+
+/* BENAR: cowok turun sampai selesai dulu */
+@keyframes level3BoyCorrectDown {
+  from {
+    opacity: 1;
+    transform: translate3d(20vw, 32vh, 0) scale(1);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(20vw, 52vh, 0) scale(1);
+  }
+}
+
+/* =========================
+   GIRL BLACK 2 / NORMAL
+   DI BELAKANG SEMUA KARAKTER UTAMA
+========================= */
+.level3-girl-black-normal {
+  width: 11vw;
+  left: 12vw;
+  top: 18vh;
+  z-index: 6;
+  opacity: 0;
+  transform: translate3d(15vw, 41vh, 0) scale(0.94);
+}
+
+.level3-girl-black-normal--show {
+  animation: level3GirlBlackNormalFadeInLate 0.65s ease-out forwards;
+}
+
+@keyframes level3GirlBlackNormalFadeInLate {
+  from {
+    opacity: 0;
+    transform: translate3d(15vw, 41vh, 0) scale(0.94);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(15vw, 38vh, 0) scale(1);
+  }
+}
+
+.level3-girl-black-normal-result {
+  z-index: 6;
+  left: 12vw;
+  top: 18vh;
+  width: 11vw;
+  transform: translate3d(15vw, 38vh, 0);
+}
+
+/* =========================
+   GIRL BLACK 1 / SHOCK RESULT
+   DI BELAKANG OVERLAY CRASH
+   DIAM, TIDAK GERAK-GERAK
+========================= */
+.level3-girl-black-shock-result {
+  z-index: 6;
+  left: 18vw;
+  top: 18vh;
+  width: 11vw;
+  transform: translate3d(9vw, 34vh, 0);
+}
+
+/* =========================
+   GIRL PINK STANDING
+========================= */
+.level3-girl-pink {
+  width: 11vw;
+  left: -8vw;
+  top: 18vh;
+  z-index: 20;
+  opacity: 0;
+  transform: translate3d(8vw, 42vh, 0) scale(0.94);
+}
+
+.level3-girl-pink--show {
+  animation: level3GirlPinkFadeInLate 0.65s ease-out forwards;
+}
+
+@keyframes level3GirlPinkFadeInLate {
+  from {
+    opacity: 0;
+    transform: translate3d(8vw, 42vh, 0) scale(0.94);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(8vw, 39vh, 0) scale(1);
+  }
+}
+
+/* =========================
+   GIRL RIDER PINK
+========================= */
+.level3-rider {
+  width: 15vw;
+  left: 0;
+  top: 40vh;
+  z-index: 18;
+  transform-origin: center center;
+  transform: translate3d(112vw, 24vh, 0);
+}
+
+.level3-rider--ride {
+  animation: level3RiderRideFromRight 3.4s cubic-bezier(0.42, 0, 0.18, 1) forwards;
+}
+
+.level3-rider--stop {
+  transform: translate3d(62vw, 24vh, 0);
+}
+
+/* SALAH: RIDER MAJU LANGSUNG KE TITIK TABRAK */
+.level3-rider--wrong-hit {
+  animation: level3RiderWrongHit 1.45s cubic-bezier(0.22, 0.65, 0.18, 1) forwards;
+}
+
+/* BENAR: RIDER NUNGGU COWOK TURUN, LALU LURUS LEWAT KE KIRI */
+.level3-rider--correct-wait {
+  animation: level3RiderCorrectWaitThenPass 2.45s linear forwards;
+}
+
+@keyframes level3RiderRideFromRight {
+  0% {
+    transform: translate3d(112vw, 24vh, 0);
+  }
+
+  100% {
+    transform: translate3d(62vw, 24vh, 0);
+  }
+}
+
+/* SALAH: rider maju ke titik tabrak */
+@keyframes level3RiderWrongHit {
+  from {
+    transform: translate3d(62vw, 24vh, 0);
+  }
+
+  to {
+    transform: translate3d(25vw, 24vh, 0);
+  }
+}
+
+/* BENAR:
+   0% - 62%  = rider diam dulu, nunggu cowok selesai turun
+   62% - 100% = rider jalan lurus ke kiri melewati posisi cowok
+*/
+@keyframes level3RiderCorrectWaitThenPass {
+  0% {
+    transform: translate3d(62vw, 24vh, 0);
+  }
+
+  62% {
+    transform: translate3d(62vw, 24vh, 0);
+  }
+
+  75% {
+    transform: translate3d(46vw, 24vh, 0);
+  }
+
+  88% {
+    transform: translate3d(30vw, 24vh, 0);
+  }
+
+  100% {
+    transform: translate3d(8vw, 24vh, 0);
+  }
+}
+
+/* =========================
+   CRASH
+========================= */
+.level3-crash {
+  z-index: 50;
+  left: -5%;
+  top: 40vh;
+  width: 20vw;
+  transform: translate3d(22vw, 15vh, 0);
+  animation: level3CrashPop 0.18s ease-out forwards;
+}
+
+@keyframes level3CrashPop {
+  from {
+    opacity: 0;
+    transform: translate3d(22vw, 15vh, 0) scale(0.92);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(24vw, 15vh, 0) scale(1);
+  }
+}
+
+/* =========================================================
+   BUBBLE QUESTION
+========================================================= */
+.level3-question-bubble {
+  position: absolute;
+  z-index: 50;
+  left: 43%;
+  top: 30%;
+  width: 24vw;
+  min-height: 0;
+  animation: level3BubblePop 0.28s ease-out forwards;
+}
+
+.level3-bubble-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  user-select: none;
+  pointer-events: none;
+  filter: drop-shadow(0 10px 0 rgba(0, 0, 0, 0.18));
+}
+
+.level3-question-bubble p {
+  position: absolute;
+  right: 16%;
+  top: 36%;
+  width: 64%;
+  margin: 0;
+  padding: 0;
+  color: #111;
+  font-size: 1.05vw;
+  font-weight: 1000;
+  line-height: 1.18;
+  text-align: center;
+  z-index: 5;
+  white-space: normal;
+}
+
+@keyframes level3BubblePop {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 18px, 0) scale(0.92);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+/* =========================
+   ANSWER BUTTON
+========================= */
+.level3-answer-wrapper {
+  position: fixed;
+  z-index: 70;
+  left: 50%;
+  bottom: 5.5%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 42px;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+}
+
+.level3-answer-button {
+  min-width: 360px;
+  min-height: 62px;
+  border: 4px solid rgba(255, 255, 255, 0.95);
+  border-radius: 22px;
+  outline: none;
+  background: rgba(255, 255, 255, 0.94);
+  color: #111;
+  font-size: 18px;
+  font-weight: 1000;
+  cursor: pointer;
+  box-shadow: 0 8px 0 rgba(0, 0, 0, 0.18);
+  transition: transform 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+}
+
+.level3-answer-button:hover {
+  transform: translateY(-4px);
+  background: #fff;
+}
+
+.level3-answer-button:active {
+  transform: translateY(3px);
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.18);
+}
+
+/* =========================
+   RESULT DIM
+========================= */
+.level3-result-dim {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  pointer-events: none;
+}
+
+.level3-result-dim--wrong {
+  background: rgba(104, 28, 18, 0.34);
+}
+
+.level3-result-dim--correct {
+  background: rgba(27, 93, 49, 0.22);
+}
+
+/* =========================
+   POLISI
+========================= */
+.level3-police {
+  position: fixed;
+  z-index: 55;
+  left: 62%;
+  top: 230px;
+  width: 37vw;
+  height: auto;
+}
+
+.level3-police--good {
+  left: 62%;
+  top: 230px;
+  width: 50vw;
+}
+
+.level3-police--stop {
+  left: 62%;
+  top: 230px;
+  width: 50vw;
+}
+
+/* =========================
+   RESULT BENAR
+========================= */
+.level3-boy-safe-result {
+  z-index: 44;
+  left: 0;
+  top: 0;
+  width: 12vw;
+  transform: translate3d(20vw, 80vh, 0);
+}
+
+/* hasil akhir rider benar harus sama dengan titik akhir animasi pass */
+.level3-rider-safe-result {
+  z-index: 43;
+  left: 0;
+  top: 0;
+  width: 15vw;
+  transform: translate3d(8vw, 64vh, 0);
+}
+
+.level3-girl-black-normal-result {
+  z-index: 6;
+  left: 12vw;
+  top: 18vh;
+  width: 11vw;
+  transform: translate3d(15vw, 38vh, 0);
+}
+
+/* =========================================================
+   BUBBLE RESULT BASE
+========================================================= */
+.level3-result-bubble {
+  position: fixed;
+  z-index: 58;
+  animation: level3BubblePop 0.28s ease-out forwards;
+}
+
+.level3-result-bubble-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  user-select: none;
+  pointer-events: none;
+  filter: drop-shadow(0 10px 0 rgba(0, 0, 0, 0.18));
+}
+
+/* =========================
+   BUBBLE WARNING
+========================= */
+.level3-result-bubble--warning {
+  left: 45%;
+  top: 0%;
+  width: 40vw;
+  min-height: 18vw;
+}
+
+.level3-result-text--warning {
+  position: absolute;
+  z-index: 3;
+  left: 16%;
+  top: 34%;
+  width: 68%;
+  color: #111;
+  text-align: center;
+}
+
+.level3-result-text--warning h2 {
+  margin: 0 0 10px;
+  font-size: 2vw;
+  font-weight: 1000;
+  text-align: center;
+}
+
+.level3-result-text--warning p {
+  margin: 0;
+  font-size: 1.15vw;
+  font-weight: 900;
+  line-height: 1.3;
+  text-align: center;
+}
+
+/* =========================
+   BUBBLE GOOD
+========================= */
+.level3-result-bubble--good {
+  left: 45%;
+  top: 0%;
+  width: 40vw;
+  min-height: 18vw;
+}
+
+.level3-result-text--good {
+  position: absolute;
+  z-index: 3;
+  left: 16%;
+  top: 34%;
+  width: 68%;
+  color: #111;
+  text-align: center;
+}
+
+.level3-result-text--good h2 {
+  margin: 0 0 10px;
+  font-size: 2vw;
+  font-weight: 1000;
+  text-align: center;
+}
+
+.level3-result-text--good p {
+  margin: 0;
+  font-size: 1.15vw;
+  font-weight: 900;
+  line-height: 1.3;
+  text-align: center;
+}
+
+/* =========================
+   RESULT BUTTON
+========================= */
+.level3-result-buttons {
+  position: fixed;
+  z-index: 75;
+  left: 50%;
+  bottom: 5%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+}
+
+.level3-main-button,
+.level3-secondary-button {
+  border: none;
+  border-radius: 18px;
+  padding: 15px 27px;
+  font-size: 22px;
+  font-weight: 1000;
+  cursor: pointer;
+}
+
+.level3-main-button {
+  color: #3b2208;
+  background: linear-gradient(180deg, #ffd866, #efa126);
+  box-shadow: 0 5px 0 #8c5200;
+}
+
+.level3-secondary-button {
+  color: #fff4d8;
+  background: linear-gradient(180deg, #7a4b22, #44250c);
+  box-shadow: 0 5px 0 #231204;
+}
+
+.level3-main-button:active,
+.level3-secondary-button:active {
+  transform: translateY(3px);
+}

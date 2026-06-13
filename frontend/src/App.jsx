@@ -6,6 +6,7 @@ import Stage1Select from "./pages/Stage1Select";
 import LevelMap from "./pages/LevelMap";
 import SimulationPage from "./pages/SimulationPage";
 import SimulationLevel2 from "./pages/SimulationLevel2";
+import SimulationLevel3 from "./pages/SimulationLevel3";
 import ChallengePage from "./pages/ChallengePage";
 
 function App() {
@@ -21,8 +22,9 @@ function App() {
         {/* BIAR ROUTE LAMA TETAP AMAN */}
         <Route path="/map" element={<LevelMap />} />
 
-        {/* LEVEL 2 HARUS DI ATAS ROUTE DINAMIS */}
+        {/* LEVEL KHUSUS HARUS DI ATAS ROUTE DINAMIS */}
         <Route path="/simulation/2" element={<SimulationLevel2 />} />
+        <Route path="/simulation/3" element={<SimulationLevel3 />} />
 
         {/* LEVEL 1 DAN LEVEL LAIN YANG MASIH PAKE FILE LAMA */}
         <Route path="/simulation/:levelNumber" element={<SimulationPage />} />

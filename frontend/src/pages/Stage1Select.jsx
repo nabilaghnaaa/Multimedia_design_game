@@ -103,7 +103,7 @@ const safeParseStage1Progress = () => {
   }
 };
 
-const Stage1Select = () => {
+export default function Stage1Select() {
   const navigate = useNavigate();
 
   const [completedLevels, setCompletedLevels] = useState([]);
@@ -144,10 +144,13 @@ const Stage1Select = () => {
     setCompletedLevels(finalCompletedLevels);
 
     localStorage.setItem("unlockedLevels", JSON.stringify(finalUnlockedLevels));
+
     localStorage.setItem(
       "completedLevels",
       JSON.stringify(finalCompletedLevels)
     );
+
+    localStorage.setItem("selectedStage", "1");
 
     const timer = setTimeout(() => {
       setShowPage(true);
@@ -171,11 +174,18 @@ const Stage1Select = () => {
   };
 
   const isLevelCompleted = (levelNumber) => {
-    return completedLevels.includes(Number(levelNumber));
+    const numberLevel = Number(levelNumber);
+    return completedLevels.includes(numberLevel);
   };
 
   const handleLevelClick = (levelNumber) => {
     const numberLevel = Number(levelNumber);
+
+    if (!Number.isFinite(numberLevel)) {
+      console.error("Level tidak valid:", levelNumber);
+      return;
+    }
+
     const unlocked = isLevelUnlocked(numberLevel);
 
     if (!unlocked) {
@@ -217,13 +227,14 @@ const Stage1Select = () => {
 
       <section className="stage1-levels-layer">
         {stage1Levels.map((item) => {
-          const unlocked = isLevelUnlocked(item.level);
-          const completed = isLevelCompleted(item.level);
+          const levelNumber = Number(item.level);
+          const unlocked = isLevelUnlocked(levelNumber);
+          const completed = isLevelCompleted(levelNumber);
           const imageSrc = unlocked ? item.unlockedImage : item.lockedImage;
 
           return (
             <button
-              key={item.level}
+              key={levelNumber}
               type="button"
               className={`stage1-level-btn ${
                 showPage ? "fade-in-visible" : ""
@@ -235,11 +246,11 @@ const Stage1Select = () => {
                 top: item.top,
                 animationDelay: item.delay,
               }}
-              onClick={() => handleLevelClick(item.level)}
+              onClick={() => handleLevelClick(levelNumber)}
               aria-label={
                 unlocked
-                  ? `Masuk ke Level ${item.level}`
-                  : `Level ${item.level} masih terkunci`
+                  ? `Masuk ke Level ${levelNumber}`
+                  : `Level ${levelNumber} masih terkunci`
               }
             >
               <img
@@ -251,8 +262,8 @@ const Stage1Select = () => {
 
               <span className="stage1-level-tooltip">
                 {unlocked
-                  ? `Mulai Level ${item.level}`
-                  : `Selesaikan Level ${item.level - 1} dulu`}
+                  ? `Mulai Level ${levelNumber}`
+                  : `Selesaikan Level ${levelNumber - 1} dulu`}
               </span>
             </button>
           );
@@ -272,6 +283,4 @@ const Stage1Select = () => {
       )}
     </main>
   );
-};
-
-export default Stage1Select;
+}
