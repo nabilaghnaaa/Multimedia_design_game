@@ -42,15 +42,15 @@ const StageSelectPage = () => {
   const handleStage1Click = () => {
     localStorage.setItem("selectedStage", "1");
 
-    const unlockedLevels = JSON.parse(
-      localStorage.getItem("unlockedLevels") || "[1]"
-    );
+    if (!localStorage.getItem("completedLevels")) {
+      localStorage.setItem("completedLevels", JSON.stringify([]));
+    }
 
-    if (!unlockedLevels.includes(1)) {
+    if (!localStorage.getItem("unlockedLevels")) {
       localStorage.setItem("unlockedLevels", JSON.stringify([1]));
     }
 
-    navigate("/map");
+    navigate("/stage1-select");
   };
 
   const handleStage2Click = () => {
@@ -130,7 +130,10 @@ const StageSelectPage = () => {
       </button>
 
       {showLockedPopup && (
-        <div className="stage-popup-overlay" onClick={() => setShowLockedPopup(false)}>
+        <div
+          className="stage-popup-overlay"
+          onClick={() => setShowLockedPopup(false)}
+        >
           <img
             src={stageLockedPopup}
             alt="Stage 2 masih terkunci"

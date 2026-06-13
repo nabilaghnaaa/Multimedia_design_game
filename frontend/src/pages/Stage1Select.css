@@ -1,0 +1,273 @@
+html:has(.stage1-page),
+body:has(.stage1-page),
+#root:has(.stage1-page) {
+  width: 100%;
+  height: 100vh;
+  min-height: 100vh;
+  overflow: hidden !important;
+}
+
+body.stage1-no-scroll {
+  width: 100%;
+  height: 100vh;
+  overflow: hidden !important;
+}
+
+.stage1-page {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  min-height: 100vh;
+  overflow: hidden !important;
+  background: #93dd6b;
+  opacity: 0;
+  transform: scale(1.015);
+  transition:
+    opacity 0.55s ease,
+    transform 0.55s ease;
+}
+
+.stage1-page.show {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.stage1-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  user-select: none;
+  pointer-events: none;
+}
+
+.stage1-back-button {
+  position: absolute;
+  z-index: 40;
+  top: 22px;
+  left: 24px;
+  border: none;
+  outline: none;
+  border-radius: 999px;
+  padding: 12px 20px;
+  background: linear-gradient(#ffe082, #f9a825);
+  color: #3b2505;
+  font-size: 15px;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 5px 0 #8a5a08, 0 10px 18px rgba(0, 0, 0, 0.25);
+  transition:
+    transform 0.15s ease,
+    filter 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.stage1-back-button:hover {
+  filter: brightness(1.08);
+}
+
+.stage1-back-button:active {
+  transform: translateY(4px);
+  box-shadow: 0 1px 0 #8a5a08;
+}
+
+.stage1-levels-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+}
+
+.stage1-level-btn {
+  position: absolute;
+  border: none;
+  outline: none;
+  padding: 0;
+  margin: 0;
+  background: transparent;
+  cursor: pointer;
+  opacity: 0;
+  transform: translate(-50%, -35%) scale(0.85);
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    transform 0.22s ease,
+    filter 0.22s ease,
+    opacity 0.22s ease;
+}
+
+.stage1-level-btn.fade-in-visible {
+  animation: stage1LevelFadeIn 0.65s ease forwards;
+}
+
+/* INI YANG DIBESARKAN */
+.stage1-level-sign {
+  display: block;
+  width: min(28vw, 200px);
+  height: auto;
+  user-select: none;
+  pointer-events: none;
+  filter: drop-shadow(0 12px 14px rgba(0, 0, 0, 0.27));
+}
+
+.stage1-level-btn.is-unlocked:hover {
+  transform: translate(-50%, -50%) scale(1.08);
+  filter: brightness(1.08);
+}
+
+.stage1-level-btn.is-unlocked:active {
+  transform: translate(-50%, -50%) scale(0.96);
+}
+
+.stage1-level-btn.is-locked {
+  cursor: not-allowed;
+}
+
+.stage1-level-btn.is-locked:hover {
+  transform: translate(-50%, -50%) scale(1.03);
+  filter: brightness(0.96);
+}
+
+.stage1-level-btn.is-completed .stage1-level-sign {
+  filter:
+    brightness(1.08)
+    saturate(1.12)
+    drop-shadow(0 0 12px rgba(255, 214, 67, 0.7))
+    drop-shadow(0 12px 14px rgba(0, 0, 0, 0.27));
+}
+
+.stage1-level-tooltip {
+  position: absolute;
+  left: 50%;
+  bottom: -34px;
+  transform: translateX(-50%);
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: rgba(43, 26, 7, 0.9);
+  color: #fff5d0;
+  font-size: 12px;
+  font-weight: 900;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: 0.18s ease;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.22);
+}
+
+.stage1-level-btn:hover .stage1-level-tooltip {
+  opacity: 1;
+}
+
+.stage1-info-card {
+  position: absolute;
+  z-index: 30;
+  left: 24px;
+  bottom: 24px;
+  width: min(34vw, 430px);
+  padding: 16px 20px;
+  border-radius: 22px;
+  background: rgba(43, 26, 7, 0.82);
+  border: 3px solid rgba(255, 224, 130, 0.9);
+  color: #fff5d0;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.32);
+}
+
+.stage1-info-card h2 {
+  margin: 0;
+  color: #ffe082;
+  font-size: 22px;
+  font-weight: 1000;
+}
+
+.stage1-info-card p {
+  margin: 6px 0 0;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.stage1-popup-message {
+  position: absolute;
+  z-index: 60;
+  left: 50%;
+  bottom: 42px;
+  transform: translateX(-50%);
+  padding: 14px 24px;
+  border-radius: 999px;
+  background: rgba(43, 26, 7, 0.92);
+  border: 3px solid rgba(255, 224, 130, 0.95);
+  color: #fff5d0;
+  font-size: 16px;
+  font-weight: 1000;
+  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.35);
+  animation: stage1PopupIn 0.25s ease forwards;
+}
+
+@keyframes stage1LevelFadeIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -35%) scale(0.85);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes stage1PopupIn {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(16px) scale(0.9);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1);
+  }
+}
+
+@media (max-width: 1200px) {
+  .stage1-level-sign {
+    width: min(11.5vw, 158px);
+  }
+
+  .stage1-info-card {
+    width: min(40vw, 420px);
+  }
+}
+
+@media (max-width: 900px) {
+  .stage1-back-button {
+    top: 16px;
+    left: 16px;
+    padding: 10px 16px;
+    font-size: 13px;
+  }
+
+  .stage1-level-sign {
+    width: 13.5vw;
+  }
+
+  .stage1-info-card {
+    width: 88%;
+    left: 50%;
+    bottom: 16px;
+    transform: translateX(-50%);
+  }
+
+  .stage1-info-card h2 {
+    font-size: 18px;
+  }
+
+  .stage1-info-card p {
+    font-size: 12px;
+  }
+
+  .stage1-popup-message {
+    width: 86%;
+    text-align: center;
+    font-size: 13px;
+  }
+}
