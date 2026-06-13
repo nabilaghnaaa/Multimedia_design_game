@@ -31,7 +31,7 @@ const StageSelectPage = () => {
 
     const timer = setTimeout(() => {
       setShowPage(true);
-    }, 100);
+    }, 0);
 
     return () => {
       clearTimeout(timer);
