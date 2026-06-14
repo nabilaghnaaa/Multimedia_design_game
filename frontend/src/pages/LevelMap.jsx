@@ -1,187 +1,105 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import "./Stage1Select.css";
 
-import bgStage1 from "../assets/backgrounds/backgrounds.png";
-import bgStage2 from "../assets/backgrounds/baground2.png";
+import stage2Bg from "../assets/stage-levels/stage2/stage2-bg.png";
 
-import sign1 from "../assets/signs/rambu_1-removebg-preview.png";
-import sign21 from "../assets/signs/rambu 2.1.png";
-import sign22 from "../assets/signs/rambu 2.2.png";
-import sign23 from "../assets/signs/rambu 2.3.png";
-import sign24 from "../assets/signs/rambu 2.4.png";
-import sign25 from "../assets/signs/rambu 2.5.png";
-import sign26 from "../assets/signs/rambu 2.6.png";
-import sign3 from "../assets/signs/rambu 3.png";
-import sign4 from "../assets/signs/rambu 4 .png";
-import sign5 from "../assets/signs/rambu 5.png";
-import sign7 from "../assets/signs/rambu 7.png";
-import sign8 from "../assets/signs/rambu 8.png";
-
-import motorCowok from "../assets/characters/asetmotor.png";
-import motorCewek from "../assets/characters/asetmotorcwek.png";
-
+import level1Unlocked from "../assets/stage-levels/stage1/level-1-unlocked.png";
+import level2Locked from "../assets/stage-levels/stage1/level-2-locked.png";
+import level2Unlocked from "../assets/stage-levels/stage1/level-2-unlocked.png";
+import level3Locked from "../assets/stage-levels/stage1/level-3-locked.png";
 import level3Unlocked from "../assets/stage-levels/stage1/level-3-unlocked.png";
+import level4Locked from "../assets/stage-levels/stage1/level-4-locked.png";
+import level4Unlocked from "../assets/stage-levels/stage1/level-4-unlocked.png";
+import level5Locked from "../assets/stage-levels/stage1/level-5-locked.png";
+import level5Unlocked from "../assets/stage-levels/stage1/level-5-unlocked.png";
+
+import level6Locked from "../assets/stage-levels/stage2/level-6-locked.png";
+import level6Unlocked from "../assets/stage-levels/stage2/level-6-unlocked.png";
+import level7Locked from "../assets/stage-levels/stage2/level-7-locked.png";
+import level7Unlocked from "../assets/stage-levels/stage2/level-7-unlocked.png";
 
 const STAGE1_PROGRESS_KEY = "stage1-progress";
 
-const signImages = {
-  1: sign1,
-  2: sign21,
-  3: sign22,
-  4: sign23,
-  5: sign24,
-  6: sign3,
-  7: sign4,
-  8: sign25,
-  9: sign26,
-  10: sign7,
-  11: sign5,
-  12: sign8,
-};
-
-const defaultLevels = [
+const stage2Levels = [
   {
-    id: 1,
-    stage: 1,
-    level: 1,
-    sign_name: "Tikungan Tajam",
+    displayLevel: 1,
+    actualLevel: 6,
+    title: "Level 1",
+    signName: "Batas Kecepatan Maksimum",
+    lockedImage: level1Unlocked,
+    unlockedImage: level1Unlocked,
+    left: "18.4%",
+    top: "40.4%",
+    delay: "0.1s",
   },
   {
-    id: 2,
-    stage: 1,
-    level: 2,
-    sign_name: "Jalan Licin / Bergelombang / Berlubang",
+    displayLevel: 2,
+    actualLevel: 7,
+    title: "Level 2",
+    signName: "Dilarang Menyalip",
+    lockedImage: level2Locked,
+    unlockedImage: level2Unlocked,
+    left: "29.7%",
+    top: "55.8%",
+    delay: "0.22s",
   },
   {
-    id: 3,
-    stage: 1,
-    level: 3,
-    sign_name: "Penyeberangan Pejalan Kaki",
+    displayLevel: 3,
+    actualLevel: 8,
+    title: "Level 3",
+    signName: "Dilarang Masuk",
+    lockedImage: level3Locked,
+    unlockedImage: level3Unlocked,
+    left: "41%",
+    top: "37.5%",
+    delay: "0.34s",
   },
   {
-    id: 4,
-    stage: 1,
-    level: 4,
-    sign_name: "Persimpangan",
+    displayLevel: 4,
+    actualLevel: 9,
+    title: "Level 4",
+    signName: "Dilarang Berhenti",
+    lockedImage: level4Locked,
+    unlockedImage: level4Unlocked,
+    left: "48%",
+    top: "61%",
+    delay: "0.46s",
   },
   {
-    id: 5,
-    stage: 1,
-    level: 5,
-    sign_name: "Lalu Lintas Dua Arah",
+    displayLevel: 5,
+    actualLevel: 10,
+    title: "Level 5",
+    signName: "Beri Prioritas",
+    lockedImage: level5Locked,
+    unlockedImage: level5Unlocked,
+    left: "63%",
+    top: "39%",
+    delay: "0.58s",
   },
   {
-    id: 6,
-    stage: 2,
-    level: 6,
-    sign_name: "Batas Kecepatan Maksimum",
+    displayLevel: 6,
+    actualLevel: 11,
+    title: "Level 6",
+    signName: "Dilarang Belok Kanan / Kiri",
+    lockedImage: level6Locked,
+    unlockedImage: level6Unlocked,
+    left: "75%",
+    top: "53%",
+    delay: "0.7s",
   },
   {
-    id: 7,
-    stage: 2,
-    level: 7,
-    sign_name: "Dilarang Menyalip",
-  },
-  {
-    id: 8,
-    stage: 2,
-    level: 8,
-    sign_name: "Dilarang Masuk",
-  },
-  {
-    id: 9,
-    stage: 2,
-    level: 9,
-    sign_name: "Dilarang Berhenti",
-  },
-  {
-    id: 10,
-    stage: 2,
-    level: 10,
-    sign_name: "Beri Prioritas",
-  },
-  {
-    id: 11,
-    stage: 2,
-    level: 11,
-    sign_name: "Dilarang Belok Kanan / Kiri",
-  },
-  {
-    id: 12,
-    stage: 2,
-    level: 12,
-    sign_name: "Dilarang Putar Balik",
+    displayLevel: 7,
+    actualLevel: 12,
+    title: "Level 7",
+    signName: "Dilarang Putar Balik",
+    lockedImage: level7Locked,
+    unlockedImage: level7Unlocked,
+    left: "86.1%",
+    top: "45.2%",
+    delay: "0.82s",
   },
 ];
-
-const stageData = {
-  1: {
-    title: "STAGE 1 : RAMBU PERINGATAN",
-    subtitle: "Pilih level untuk mulai belajar rambu peringatan.",
-    background: bgStage1,
-    character: motorCowok,
-    firstLevel: 1,
-    lastLevel: 5,
-  },
-  2: {
-    title: "STAGE 2 : RAMBU LARANGAN",
-    subtitle: "Pilih level untuk mulai belajar rambu larangan.",
-    background: bgStage2,
-    character: motorCewek,
-    firstLevel: 6,
-    lastLevel: 12,
-  },
-};
-
-/*
-  Posisi karakter mengikuti gambar peta.
-  Kalau karakter kurang pas, ubah bagian left/top ini saja.
-*/
-const characterPositions = {
-  1: { left: "14%", top: "50%" },
-  2: { left: "31%", top: "56%" },
-  3: { left: "47%", top: "48%" },
-  4: { left: "65%", top: "56%" },
-  5: { left: "82%", top: "48%" },
-
-  6: { left: "17%", top: "52%" },
-  7: { left: "31%", top: "58%" },
-  8: { left: "45%", top: "49%" },
-  9: { left: "55%", top: "58%" },
-  10: { left: "66%", top: "48%" },
-  11: { left: "77%", top: "56%" },
-  12: { left: "88%", top: "48%" },
-};
-
-/*
-  Area klik transparan di atas papan level.
-*/
-const levelClickAreas = {
-  1: { left: "14%", top: "35%", width: "10%", height: "25%" },
-  2: { left: "30%", top: "43%", width: "10%", height: "25%" },
-  3: { left: "45%", top: "35%", width: "10%", height: "25%" },
-  4: { left: "63%", top: "43%", width: "10%", height: "25%" },
-  5: { left: "79%", top: "35%", width: "10%", height: "25%" },
-
-  6: { left: "15%", top: "35%", width: "10%", height: "25%" },
-  7: { left: "28%", top: "43%", width: "10%", height: "25%" },
-  8: { left: "41%", top: "35%", width: "10%", height: "25%" },
-  9: { left: "52%", top: "43%", width: "10%", height: "25%" },
-  10: { left: "63%", top: "35%", width: "10%", height: "25%" },
-  11: { left: "74%", top: "43%", width: "10%", height: "25%" },
-  12: { left: "85%", top: "35%", width: "10%", height: "25%" },
-};
-
-/*
-  Posisi gambar level-3-unlocked.png.
-  Kalau kurang pas, ubah left/top/width di sini saja.
-*/
-const level3UnlockedPosition = {
-  left: "50.1%",
-  top: "43.3%",
-  width: "112px",
-};
 
 const normalizeNumberArray = (data, fallback = []) => {
   if (!Array.isArray(data)) return fallback;
@@ -193,12 +111,6 @@ const normalizeNumberArray = (data, fallback = []) => {
         .filter((item) => Number.isFinite(item))
     ),
   ].sort((a, b) => a - b);
-};
-
-const isStage1Finished = (completedLevels) => {
-  return [1, 2, 3, 4, 5].every((level) =>
-    completedLevels.map(Number).includes(level)
-  );
 };
 
 const safeParseArray = (key, fallback) => {
@@ -216,10 +128,8 @@ const safeParseArray = (key, fallback) => {
 
 const safeParseStage1Progress = () => {
   try {
-    const savedStage1Progress = localStorage.getItem(STAGE1_PROGRESS_KEY);
-    const parsedProgress = savedStage1Progress
-      ? JSON.parse(savedStage1Progress)
-      : {};
+    const savedProgress = localStorage.getItem(STAGE1_PROGRESS_KEY);
+    const parsedProgress = savedProgress ? JSON.parse(savedProgress) : {};
 
     return parsedProgress && typeof parsedProgress === "object"
       ? parsedProgress
@@ -230,34 +140,25 @@ const safeParseStage1Progress = () => {
   }
 };
 
-const LevelMap = () => {
+const isStage1Finished = (completedLevels) => {
+  return [1, 2, 3, 4, 5].every((level) =>
+    completedLevels.map(Number).includes(level)
+  );
+};
+
+export default function LevelMap() {
   const navigate = useNavigate();
 
-  const [levels, setLevels] = useState(defaultLevels);
-  const [activeStage, setActiveStage] = useState(1);
-  const [selectedLevel, setSelectedLevel] = useState(null);
-  const [openingLevel, setOpeningLevel] = useState(null);
-  const [unlockedLevels, setUnlockedLevels] = useState([1]);
   const [completedLevels, setCompletedLevels] = useState([]);
+  const [unlockedLevels, setUnlockedLevels] = useState([6]);
+  const [showPage, setShowPage] = useState(false);
+  const [popupMessage, setPopupMessage] = useState("");
 
   useEffect(() => {
-    const loadLevels = async () => {
-      try {
-        const res = await axios.get("http://localhost:5000/api/levels");
+    document.body.classList.add("stage1-no-scroll");
 
-        if (Array.isArray(res.data) && res.data.length > 0) {
-          setLevels(res.data);
-        } else {
-          setLevels(defaultLevels);
-        }
-      } catch (error) {
-        console.log("Backend level belum aktif, pakai data lokal dulu.");
-        setLevels(defaultLevels);
-      }
-    };
-
-    const savedUnlocked = safeParseArray("unlockedLevels", [1]);
-    const savedCompleted = safeParseArray("completedLevels", []);
+    const savedCompletedLevels = safeParseArray("completedLevels", []);
+    const savedUnlockedLevels = safeParseArray("unlockedLevels", [1]);
     const stage1Progress = safeParseStage1Progress();
 
     const progressCompletedLevels = normalizeNumberArray(
@@ -265,209 +166,169 @@ const LevelMap = () => {
       []
     );
 
-    const progressUnlockedLevel = Number(stage1Progress.unlockedLevel || 1);
+    const finalCompletedLevels = normalizeNumberArray(
+      [...savedCompletedLevels, ...progressCompletedLevels],
+      []
+    );
 
-    const mergedUnlockedLevels = [...new Set([...savedUnlocked, 1])];
+    const stage1Done = isStage1Finished(finalCompletedLevels);
 
-    if (Number.isFinite(progressUnlockedLevel)) {
-      for (let level = 1; level <= progressUnlockedLevel; level += 1) {
+    if (!stage1Done) {
+      localStorage.setItem("selectedStage", "1");
+      navigate("/stage-select");
+      return () => {
+        document.body.classList.remove("stage1-no-scroll");
+      };
+    }
+
+    const mergedUnlockedLevels = [...new Set([...savedUnlockedLevels, 6])];
+
+    for (let level = 6; level <= 12; level += 1) {
+      if (finalCompletedLevels.includes(level - 1)) {
         mergedUnlockedLevels.push(level);
       }
     }
 
-    const finalUnlockedLevels = normalizeNumberArray(mergedUnlockedLevels, [1]);
-
-    const finalCompletedLevels = normalizeNumberArray(
-      [...savedCompleted, ...progressCompletedLevels],
-      []
-    );
+    const finalUnlockedLevels = normalizeNumberArray(mergedUnlockedLevels, [6]);
 
     setUnlockedLevels(finalUnlockedLevels);
     setCompletedLevels(finalCompletedLevels);
 
+    localStorage.setItem("selectedStage", "2");
     localStorage.setItem("unlockedLevels", JSON.stringify(finalUnlockedLevels));
     localStorage.setItem(
       "completedLevels",
       JSON.stringify(finalCompletedLevels)
     );
 
-    const selectedStage = Number(localStorage.getItem("selectedStage") || 1);
-    const stage1Done = isStage1Finished(finalCompletedLevels);
+    const timer = setTimeout(() => {
+      setShowPage(true);
+    }, 120);
 
-    /*
-      Pengaman:
-      Kalau user belum selesai Stage 1 tapi maksa masuk Stage 2,
-      langsung balikin ke halaman pilih stage.
-    */
-    if (selectedStage === 2 && !stage1Done) {
-      alert("Stage 2 masih terkunci. Selesaikan semua level di Stage 1 dulu ya!");
-      localStorage.setItem("selectedStage", "1");
-      navigate("/stage-select");
-      return;
-    }
-
-    setActiveStage(selectedStage === 2 ? 2 : 1);
-
-    loadLevels();
+    return () => {
+      clearTimeout(timer);
+      document.body.classList.remove("stage1-no-scroll");
+    };
   }, [navigate]);
 
-  const currentStage = stageData[activeStage];
+  const isLevelUnlocked = (actualLevel) => {
+    const numberLevel = Number(actualLevel);
 
-  const currentLevels = levels.filter(
-    (item) =>
-      Number(item.stage) === activeStage &&
-      Number(item.level) >= currentStage.firstLevel &&
-      Number(item.level) <= currentStage.lastLevel
-  );
+    if (numberLevel === 6) return true;
 
-  const handleLevelClick = (level) => {
-    const levelNumber = Number(level);
-    const isUnlocked = unlockedLevels.includes(levelNumber);
+    return (
+      unlockedLevels.includes(numberLevel) ||
+      completedLevels.includes(numberLevel - 1)
+    );
+  };
 
-    if (!isUnlocked) {
-      alert("Level ini belum terbuka. Selesaikan level sebelumnya dulu ya.");
+  const isLevelCompleted = (actualLevel) => {
+    const numberLevel = Number(actualLevel);
+    return completedLevels.includes(numberLevel);
+  };
+
+  const handleLevelClick = (item) => {
+    const actualLevel = Number(item.actualLevel);
+    const displayLevel = Number(item.displayLevel);
+
+    if (!Number.isFinite(actualLevel)) {
+      console.error("Level tidak valid:", item);
       return;
     }
 
-    setSelectedLevel(levelNumber);
-    setOpeningLevel(levelNumber);
+    const unlocked = isLevelUnlocked(actualLevel);
 
-    setTimeout(() => {
-      navigate(`/simulation/${levelNumber}`);
-    }, 500);
+    if (!unlocked) {
+      setPopupMessage(
+        `Stage 2 Level ${displayLevel} masih terkunci. Selesaikan level sebelumnya dengan benar dulu ya!`
+      );
+
+      setTimeout(() => {
+        setPopupMessage("");
+      }, 2200);
+
+      return;
+    }
+
+    localStorage.setItem("selectedStage", "2");
+    localStorage.setItem("selectedLevel", String(actualLevel));
+    localStorage.setItem("selectedStage2Level", String(displayLevel));
+
+    navigate(`/simulation/${actualLevel}`);
   };
 
-  const selectedCharacterPosition =
-    characterPositions[selectedLevel || currentStage.firstLevel];
-
-  const isLevel3Unlocked = unlockedLevels.includes(3);
-
   return (
-    <div className="map-photo-page">
+    <main className={`stage1-page ${showPage ? "show" : ""}`}>
       <img
-        src={currentStage.background}
-        alt={currentStage.title}
-        className="map-photo-bg"
+        src={stage2Bg}
+        alt="Stage 2 Rambu Larangan"
+        className="stage1-bg"
         draggable="false"
       />
 
-      <div className="map-photo-overlay"></div>
-
       <button
         type="button"
-        className="map-back-btn"
+        className="stage1-back-button"
         onClick={() => navigate("/stage-select")}
       >
         ← Pilih Stage
       </button>
 
-      <div className="map-title-card">
-        <h1>{currentStage.title}</h1>
-        <p>{currentStage.subtitle}</p>
-      </div>
+      <section className="stage1-levels-layer">
+        {stage2Levels.map((item) => {
+          const unlocked = isLevelUnlocked(item.actualLevel);
+          const completed = isLevelCompleted(item.actualLevel);
+          const imageSrc = unlocked ? item.unlockedImage : item.lockedImage;
 
-      {activeStage === 1 && isLevel3Unlocked && (
-  <img
-    src={level3Unlocked}
-    alt="Level 3 terbuka"
-    draggable="false"
-    style={{
-      position: "absolute",
-      zIndex: 999,
-      left: "50.1%",
-      top: "43.3%",
-      width: "112px",
-      height: "auto",
-      transform: "translate(-50%, -50%)",
-      pointerEvents: "none",
-      userSelect: "none",
-      filter: "drop-shadow(0 8px 8px rgba(0, 0, 0, 0.28))",
-    }}
-  />
-)}
+          return (
+            <button
+              key={item.actualLevel}
+              type="button"
+              className={`stage1-level-btn ${
+                showPage ? "fade-in-visible" : ""
+              } ${unlocked ? "is-unlocked" : "is-locked"} ${
+                completed ? "is-completed" : ""
+              }`}
+              style={{
+                left: item.left,
+                top: item.top,
+                animationDelay: item.delay,
+              }}
+              onClick={() => handleLevelClick(item)}
+              aria-label={
+                unlocked
+                  ? `Masuk ke Stage 2 Level ${item.displayLevel}`
+                  : `Stage 2 Level ${item.displayLevel} masih terkunci`
+              }
+            >
+              <img
+                src={imageSrc}
+                alt={item.title}
+                className="stage1-level-sign"
+                draggable="false"
+              />
 
-      <img
-        src={currentStage.character}
-        alt="Karakter pemain"
-        className="map-character"
-        draggable="false"
-        style={{
-          left: selectedCharacterPosition.left,
-          top: selectedCharacterPosition.top,
-        }}
-      />
+              <span className="stage1-level-tooltip">
+                {unlocked
+                  ? `Mulai Level ${item.displayLevel}`
+                  : `Selesaikan Level ${item.displayLevel - 1} dulu`}
+              </span>
+            </button>
+          );
+        })}
+      </section>
 
-      {currentLevels.map((level) => {
-        const levelNumber = Number(level.level);
-        const area = levelClickAreas[levelNumber];
-        const isUnlocked = unlockedLevels.includes(levelNumber);
+      <section className="stage1-info-card">
+        <h2>Stage 2: Rambu Larangan</h2>
+        <p>
+          Level berikutnya akan terbuka setelah kamu menyelesaikan level
+          sebelumnya dengan benar.
+        </p>
+      </section>
 
-        if (!area) return null;
-
-        return (
-          <button
-            key={levelNumber}
-            type="button"
-            className={`level-hotspot ${isUnlocked ? "unlocked" : "locked"} ${
-              levelNumber === 3 && isUnlocked ? "level-3-unlocked" : ""
-            }`}
-            style={{
-              left: area.left,
-              top: area.top,
-              width: area.width,
-              height: area.height,
-            }}
-            onClick={() => handleLevelClick(levelNumber)}
-            title={level.sign_name}
-            aria-label={`Level ${levelNumber}: ${level.sign_name}`}
-          >
-            <span className="level-tooltip">
-              Level {levelNumber}: {level.sign_name}
-            </span>
-          </button>
-        );
-      })}
-
-      <div className="level-info-card">
-        {selectedLevel ? (
-          <>
-            <img
-              src={signImages[selectedLevel]}
-              alt="Rambu level"
-              className="level-info-sign"
-              draggable="false"
-            />
-            <div>
-              <h2>Level {selectedLevel}</h2>
-              <p>
-                {
-                  levels.find((item) => Number(item.level) === selectedLevel)
-                    ?.sign_name
-                }
-              </p>
-            </div>
-          </>
-        ) : (
-          <>
-            <h2>
-              Stage {activeStage}:{" "}
-              {activeStage === 1 ? "Rambu Peringatan" : "Rambu Larangan"}
-            </h2>
-            <p>
-              Level berikutnya akan terbuka setelah kamu menyelesaikan level
-              sebelumnya dengan benar.
-            </p>
-          </>
-        )}
-      </div>
-
-      {openingLevel && (
-        <div className="opening-level-modal">
-          Masuk ke Level {openingLevel}...
-        </div>
+      {popupMessage && (
+        <div className="stage1-popup-message">{popupMessage}</div>
       )}
-    </div>
+    </main>
   );
-};
-
-export default LevelMap;
+}

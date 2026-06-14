@@ -1,0 +1,654 @@
+.simulation-s2l1-page {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: #10202a;
+  font-family: "Nunito", Arial, sans-serif;
+}
+
+.simulation-s2l1-page,
+.simulation-s2l1-page * {
+  box-sizing: border-box;
+}
+
+.s2l1-viewport {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: #10202a;
+}
+
+/* =========================
+   BACKGROUND CAMERA
+========================= */
+.s2l1-bg-world {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 1;
+  width: 220vw;
+  height: 100vh;
+  transform: translate3d(-124vw, 0, 0);
+  transition: transform 4.2s cubic-bezier(0.3, 0.05, 0.12, 1);
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+.s2l1-bg-world--pan-left {
+  transform: translate3d(-76vw, 0, 0);
+}
+
+/* Jawab benar:
+   kamera/background bergerak, rider tetap diam. */
+.s2l1-viewport:has(.s2l1-rider--slow-stop) .s2l1-bg-world,
+.s2l1-viewport:has(.s2l1-rider--slow-stop) .s2l1-bg-world--pan-left {
+  animation: s2l1CameraOnlyMoveLeft 5.8s linear forwards;
+}
+
+/* Jawaban salah:
+   saat user memilih tetap ngebut, kamera langsung ikut jalan ke kiri sampai mentok. */
+.s2l1-viewport--wrong-camera-run .s2l1-bg-world,
+.s2l1-viewport--wrong-camera-run .s2l1-bg-world--pan-left {
+  animation: s2l1CameraWrongRun 3.2s linear forwards;
+}
+
+/* Setelah crash muncul, background berhenti di posisi mentok.
+   Tidak ada animasi lagi setelah crash. */
+.s2l1-viewport--wrong-camera-done .s2l1-bg-world,
+.s2l1-viewport--wrong-camera-done .s2l1-bg-world--pan-left {
+  transform: translate3d(-24vw, 0, 0);
+  animation: none;
+}
+
+@keyframes s2l1CameraOnlyMoveLeft {
+  0% {
+    transform: translate3d(-76vw, 0, 0);
+  }
+
+  100% {
+    transform: translate3d(-35vw, 0, 0);
+  }
+}
+
+@keyframes s2l1CameraWrongRun {
+  0% {
+    transform: translate3d(-76vw, 0, 0);
+  }
+
+  100% {
+    transform: translate3d(-24vw, 0, 0);
+  }
+}
+
+.s2l1-bg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  user-select: none;
+  pointer-events: none;
+}
+
+/* =========================
+   ACTORS
+========================= */
+.s2l1-actors-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.s2l1-actor {
+  position: absolute;
+  height: auto;
+  user-select: none;
+  pointer-events: none;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  filter: drop-shadow(0 10px 10px rgba(0, 0, 0, 0.25));
+}
+
+/* =========================
+   TOP UI
+========================= */
+.s2l1-back-button {
+  position: absolute;
+  z-index: 120;
+  top: 18px;
+  left: 18px;
+  border: none;
+  border-radius: 18px;
+  padding: 11px 20px;
+  background: linear-gradient(180deg, #ffd866, #efa126);
+  color: #3b2208;
+  font-size: 15px;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 5px 0 #8c5200;
+  pointer-events: auto;
+}
+
+.s2l1-back-button:active {
+  transform: translateY(3px);
+  box-shadow: 0 2px 0 #8c5200;
+}
+
+.s2l1-badge {
+  position: absolute;
+  z-index: 120;
+  top: 18px;
+  right: 18px;
+  min-width: 310px;
+  padding: 10px 16px;
+  border-radius: 18px;
+  background: rgba(71, 39, 10, 0.86);
+  border: 2px solid rgba(255, 222, 134, 0.9);
+  color: #fff1c9;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.28);
+}
+
+.s2l1-badge span {
+  display: block;
+  font-size: 13px;
+  font-weight: 1000;
+  color: #ffd45a;
+}
+
+.s2l1-badge strong {
+  display: block;
+  margin-top: 3px;
+  font-size: 15px;
+}
+
+/* =========================
+   RIDER
+========================= */
+.s2l1-rider {
+  z-index: 30;
+  width: 40vw;
+  left: 0;
+  top: -25vh;
+  opacity: 1;
+  transform: translate3d(112vw, 53vh, 0) scale(0.72);
+  transform-origin: center center;
+}
+
+.s2l1-rider--enter {
+  animation: s2l1RiderEnter 3.25s cubic-bezier(0.2, 0.85, 0.15, 1) forwards;
+}
+
+.s2l1-rider--question-stop {
+  transform: translate3d(67vw, 35vh, 0) scale(0.57);
+}
+
+/* Jawaban salah:
+   rider speed jalan lebih lama mengikuti kamera,
+   lurus ke kiri sampai dekat titik crash. */
+.s2l1-rider--speed-crash {
+  animation: s2l1RiderSpeedCrash 3.2s linear forwards;
+}
+
+.s2l1-rider--slow-stop {
+  animation: s2l1RiderHoldStill 5.8s linear forwards;
+}
+
+@keyframes s2l1RiderEnter {
+  0% {
+    opacity: 0;
+    transform: translate3d(112vw, 53vh, 0) scale(0.72);
+  }
+
+  8% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate3d(67vw, 35vh, 0) scale(0.57);
+  }
+}
+
+@keyframes s2l1RiderSpeedCrash {
+  0% {
+    opacity: 1;
+    transform: translate3d(67vw, 35vh, 0) scale(0.57);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate3d(68vw, 35vh, 0) scale(0.57);
+  }
+}
+
+@keyframes s2l1RiderHoldStill {
+  0% {
+    transform: translate3d(67vw, 35vh, 0) scale(0.57);
+  }
+
+  100% {
+    transform: translate3d(67vw, 35vh, 0) scale(0.57);
+  }
+}
+
+/* =========================
+   CRASH PORTAL LAYER
+========================= */
+.s2l1-crash-portal-layer {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 999999 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  overflow: hidden !important;
+  pointer-events: none;
+  transform: none !important;
+  animation: none !important;
+}
+
+/* Overlay dibuat lebih redup, tidak terlalu merah. */
+.s2l1-crash-red-overlay {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 999990 !important;
+  background: rgba(80, 18, 18, 0.34);
+  pointer-events: none;
+  transform: none !important;
+  animation: none !important;
+}
+
+.s2l1-crash {
+  position: fixed !important;
+  z-index: 999999 !important;
+  width: 30vw;
+  left: 57vw !important;
+  top: 30vh !important;
+  opacity: 1;
+  transform: none !important;
+  animation: s2l1CrashFadeOnly 0.12s linear forwards !important;
+  user-select: none;
+  pointer-events: none;
+  backface-visibility: hidden;
+  filter: drop-shadow(0 10px 10px rgba(0, 0, 0, 0.25));
+}
+
+@keyframes s2l1CrashFadeOnly {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+/* =========================
+   QUESTION
+========================= */
+.s2l1-question-bubble {
+  position: absolute;
+  z-index: 70;
+  right: 18%;
+  top: 15%;
+  width: 25vw;
+  animation: s2l1PopIn 0.28s ease-out forwards;
+}
+
+.s2l1-bubble-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  user-select: none;
+  pointer-events: none;
+  filter: drop-shadow(0 10px 0 rgba(0, 0, 0, 0.18));
+}
+
+.s2l1-question-bubble p {
+  position: absolute;
+  right: 15%;
+  top: 33%;
+  width: 66%;
+  margin: 0;
+  color: #111;
+  font-size: 1.02vw;
+  font-weight: 1000;
+  line-height: 1.25;
+  text-align: center;
+}
+
+@keyframes s2l1PopIn {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 16px, 0) scale(0.94);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+/* =========================
+   ANSWER BUTTON
+========================= */
+.s2l1-answer-wrapper {
+  position: fixed;
+  z-index: 85;
+  left: 50%;
+  bottom: 5.5%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 26px;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+}
+
+.s2l1-answer-button {
+  min-width: 340px;
+  min-height: 62px;
+  border: 4px solid rgba(255, 255, 255, 0.95);
+  border-radius: 22px;
+  outline: none;
+  background: rgba(255, 255, 255, 0.94);
+  color: #111;
+  font-size: 17px;
+  font-weight: 1000;
+  cursor: pointer;
+  box-shadow: 0 8px 0 rgba(0, 0, 0, 0.18);
+  transition:
+    transform 0.15s ease,
+    background 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.s2l1-answer-button:hover {
+  transform: translateY(-4px);
+  background: #fff;
+}
+
+.s2l1-answer-button:active {
+  transform: translateY(3px);
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.18);
+}
+
+.s2l1-answer-button--danger {
+  background: #fff2f2;
+}
+
+/* =========================
+   RESULT
+========================= */
+.s2l1-result-dim {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  pointer-events: none;
+  transform: none !important;
+  animation: none !important;
+}
+
+.s2l1-result-dim--wrong {
+  background: rgba(80, 18, 18, 0.34);
+}
+
+.s2l1-result-dim--good {
+  background: rgba(25, 85, 45, 0.18);
+}
+
+.s2l1-police {
+  position: fixed;
+  z-index: 999995;
+  height: auto;
+  user-select: none;
+  pointer-events: none;
+  filter: drop-shadow(0 12px 12px rgba(0, 0, 0, 0.28));
+}
+
+.s2l1-police--stop {
+  right: 65%;
+  bottom: -22%;
+  width: 50vw;
+}
+
+.s2l1-police--good {
+  right: 65%;
+  bottom: -20%;
+  width: 50vw;
+  z-index: 65;
+}
+
+.s2l1-result-bubble {
+  position: fixed;
+  z-index: 999996;
+  animation: s2l1PopIn 0.28s ease-out forwards;
+}
+
+.s2l1-result-bubble-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  user-select: none;
+  pointer-events: none;
+  filter: drop-shadow(0 10px 0 rgba(0, 0, 0, 0.18));
+}
+
+/* Warning bubble sekarang pakai LEFT. */
+.s2l1-result-bubble--warning-left {
+  left: 15%;
+  top: 20%;
+  width: 36vw;
+}
+
+.s2l1-result-bubble--good-left {
+  left: 12%;
+  top: 22%;
+  width: 35vw;
+  z-index: 75;
+}
+
+.s2l1-result-text {
+  position: absolute;
+  z-index: 3;
+  color: #111;
+  text-align: center;
+}
+
+.s2l1-result-text h2 {
+  margin: 0 0 10px;
+  font-size: 2vw;
+  font-weight: 1000;
+}
+
+.s2l1-result-text p {
+  margin: 0;
+  font-size: 1.05vw;
+  font-weight: 900;
+  line-height: 1.3;
+}
+
+.s2l1-result-text--warning {
+  left: 16%;
+  top: 34%;
+  width: 68%;
+}
+
+.s2l1-result-text--good {
+  left: 18%;
+  top: 32%;
+  width: 66%;
+}
+
+.s2l1-result-buttons {
+  position: fixed;
+  z-index: 999997;
+  left: 50%;
+  bottom: 5%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+}
+
+.s2l1-main-button,
+.s2l1-secondary-button {
+  border: none;
+  border-radius: 18px;
+  padding: 15px 27px;
+  font-size: 22px;
+  font-weight: 1000;
+  cursor: pointer;
+}
+
+.s2l1-main-button {
+  color: #3b2208;
+  background: linear-gradient(180deg, #ffd866, #efa126);
+  box-shadow: 0 5px 0 #8c5200;
+}
+
+.s2l1-secondary-button {
+  color: #fff4d8;
+  background: linear-gradient(180deg, #7a4b22, #44250c);
+  box-shadow: 0 5px 0 #231204;
+}
+
+.s2l1-main-button:active,
+.s2l1-secondary-button:active {
+  transform: translateY(3px);
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 900px) {
+  .s2l1-bg-world {
+    width: 230vw;
+    transform: translate3d(-132vw, 0, 0);
+  }
+
+  .s2l1-bg-world--pan-left {
+    transform: translate3d(-78vw, 0, 0);
+  }
+
+  .s2l1-viewport:has(.s2l1-rider--slow-stop) .s2l1-bg-world,
+  .s2l1-viewport:has(.s2l1-rider--slow-stop) .s2l1-bg-world--pan-left {
+    animation: s2l1CameraOnlyMoveLeftMobile 5.8s linear forwards;
+  }
+
+  .s2l1-viewport--wrong-camera-run .s2l1-bg-world,
+  .s2l1-viewport--wrong-camera-run .s2l1-bg-world--pan-left {
+    animation: s2l1CameraWrongRunMobile 3.2s linear forwards;
+  }
+
+  .s2l1-viewport--wrong-camera-done .s2l1-bg-world,
+  .s2l1-viewport--wrong-camera-done .s2l1-bg-world--pan-left {
+    transform: translate3d(-28vw, 0, 0);
+    animation: none;
+  }
+
+  @keyframes s2l1CameraOnlyMoveLeftMobile {
+    0% {
+      transform: translate3d(-78vw, 0, 0);
+    }
+
+    100% {
+      transform: translate3d(-38vw, 0, 0);
+    }
+  }
+
+  @keyframes s2l1CameraWrongRunMobile {
+    0% {
+      transform: translate3d(-78vw, 0, 0);
+    }
+
+    100% {
+      transform: translate3d(-28vw, 0, 0);
+    }
+  }
+
+  .s2l1-rider {
+    width: 50vw;
+    top: -25vh;
+  }
+
+  .s2l1-rider--question-stop {
+    transform: translate3d(65vw, 35vh, 0) scale(0.57);
+  }
+
+  .s2l1-rider--speed-crash {
+    animation: s2l1RiderSpeedCrashMobile 3.2s linear forwards;
+  }
+
+  @keyframes s2l1RiderSpeedCrashMobile {
+    0% {
+      opacity: 1;
+      transform: translate3d(65vw, 35vh, 0) scale(0.57);
+    }
+
+    100% {
+      opacity: 1;
+      transform: translate3d(8vw, 35vh, 0) scale(0.57);
+    }
+  }
+
+  .s2l1-question-bubble {
+    right: 2%;
+    top: 13%;
+    width: 52vw;
+  }
+
+  .s2l1-question-bubble p {
+    font-size: 1.8vw;
+  }
+
+  .s2l1-answer-wrapper {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .s2l1-answer-button {
+    min-width: 78vw;
+    font-size: 15px;
+  }
+
+  .s2l1-crash {
+    width: 84vw;
+    left: 8vw !important;
+    top: 32vh !important;
+    transform: none !important;
+  }
+
+  .s2l1-result-bubble--warning-left {
+    width: 54vw;
+    left: 4%;
+    top: 8%;
+  }
+
+  .s2l1-result-bubble--good-left {
+    width: 56vw;
+    left: 36%;
+    top: 10%;
+  }
+
+  .s2l1-result-text h2 {
+    font-size: 3vw;
+  }
+
+  .s2l1-result-text p {
+    font-size: 1.8vw;
+  }
+
+  .s2l1-police--stop,
+  .s2l1-police--good {
+    width: 48vw;
+    right: -7%;
+  }
+}
