@@ -228,7 +228,10 @@
   left: 12vw;
   top: 18vh;
   width: 11vw;
-  transform: translate3d(15vw, 38vh, 0);
+  opacity: 1;
+  transform: translate3d(15vw, 38vh, 0) scale(1);
+  animation: none !important;
+  transition: none !important;
 }
 
 /* =========================
@@ -239,9 +242,12 @@
 .level3-girl-black-shock-result {
   z-index: 6;
   left: 18vw;
-  top: 18vh;
+  top: 22vh;
   width: 11vw;
-  transform: translate3d(9vw, 34vh, 0);
+  opacity: 1;
+  transform: translate3d(9vw, 34vh, 0) scale(1);
+  animation: none !important;
+  transition: none !important;
 }
 
 /* =========================
@@ -270,6 +276,34 @@
     opacity: 1;
     transform: translate3d(8vw, 39vh, 0) scale(1);
   }
+}
+
+/* =========================
+   GIRL PINK RESULT
+   TETAP ADA, TAPI DI BELAKANG OVERLAY HIJAU/MERAH
+========================= */
+.level3-girl-pink-result {
+  z-index: 35;
+  left: -8vw;
+  top: 18vh;
+  width: 11vw;
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: block !important;
+  transform: translate3d(8vw, 39vh, 0) scale(1);
+  animation: none !important;
+  transition: none !important;
+  will-change: auto;
+}
+
+.level3-girl-pink.level3-girl-pink-result {
+  z-index: 35;
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: block !important;
+  transform: translate3d(8vw, 39vh, 0) scale(1);
+  animation: none !important;
+  transition: none !important;
 }
 
 /* =========================
@@ -354,9 +388,9 @@
 ========================= */
 .level3-crash {
   z-index: 50;
-  left: -5%;
-  top: 40vh;
-  width: 20vw;
+  left: -1.5%;
+  top: 45.5vh;
+  width: 17vw;
   transform: translate3d(22vw, 15vh, 0);
   animation: level3CrashPop 0.18s ease-out forwards;
 }
@@ -514,7 +548,10 @@
   left: 0;
   top: 0;
   width: 12vw;
+  opacity: 1;
   transform: translate3d(20vw, 80vh, 0);
+  animation: none !important;
+  transition: none !important;
 }
 
 /* hasil akhir rider benar harus sama dengan titik akhir animasi pass */
@@ -523,15 +560,10 @@
   left: 0;
   top: 0;
   width: 15vw;
+  opacity: 1;
   transform: translate3d(8vw, 64vh, 0);
-}
-
-.level3-girl-black-normal-result {
-  z-index: 6;
-  left: 12vw;
-  top: 18vh;
-  width: 11vw;
-  transform: translate3d(15vw, 38vh, 0);
+  animation: none !important;
+  transition: none !important;
 }
 
 /* =========================================================

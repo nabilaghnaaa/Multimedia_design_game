@@ -256,12 +256,14 @@ export default function SimulationLevel3() {
             />
           )}
 
-          {showGirlPink && !isResultPhase && (
+          {showGirlPink && (
             <img
               src={girlStandingPink}
               alt="Anak perempuan di dekat sekolah"
               className={`level3-actor level3-girl-pink ${
-                showGirlPink ? "level3-girl-pink--show" : ""
+                isResultPhase
+                  ? "level3-girl-pink-result"
+                  : "level3-girl-pink--show"
               }`}
               draggable="false"
             />
