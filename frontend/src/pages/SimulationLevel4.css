@@ -1,0 +1,621 @@
+.simulation-level4-page {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: #10202a;
+  font-family: "Nunito", Arial, sans-serif;
+}
+
+.simulation-level4-page,
+.simulation-level4-page * {
+  box-sizing: border-box;
+}
+
+.level4-viewport {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: #10202a;
+}
+
+/* =========================
+   BACKGROUND / SHOOT CAMERA
+   DARI BAWAH KE TENGAH PERSIMPANGAN
+========================= */
+.level4-bg-world {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 1;
+  width: 100vw;
+  height: 150vh;
+  transform: translate3d(0, -50vh, 0);
+  transition: transform 3.2s cubic-bezier(0.42, 0, 0.18, 1);
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+.level4-bg-world--move {
+  transform: translate3d(0px, -8vh, 0);
+}
+
+.level4-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  user-select: none;
+  pointer-events: none;
+}
+
+/* =========================
+   LAYER AKTOR
+========================= */
+.level4-actors-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.level4-actor {
+  position: absolute;
+  z-index: 10;
+  user-select: none;
+  pointer-events: none;
+  height: auto;
+  filter: drop-shadow(0 10px 10px rgba(0, 0, 0, 0.25));
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+}
+
+/* =========================
+   BACK BUTTON
+========================= */
+.level4-back-button {
+  position: absolute;
+  z-index: 100;
+  top: 18px;
+  left: 18px;
+  border: none;
+  border-radius: 18px;
+  padding: 11px 20px;
+  background: linear-gradient(180deg, #ffd866, #efa126);
+  color: #3b2208;
+  font-size: 15px;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 5px 0 #8c5200;
+  pointer-events: auto;
+}
+
+.level4-back-button:active {
+  transform: translateY(3px);
+  box-shadow: 0 2px 0 #8c5200;
+}
+
+/* =========================
+   BADGE
+========================= */
+.level4-badge {
+  position: absolute;
+  z-index: 100;
+  top: 18px;
+  right: 18px;
+  min-width: 295px;
+  padding: 10px 16px;
+  border-radius: 18px;
+  background: rgba(71, 39, 10, 0.86);
+  border: 2px solid rgba(255, 222, 134, 0.9);
+  color: #fff1c9;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.28);
+}
+
+.level4-badge span {
+  display: block;
+  font-size: 13px;
+  font-weight: 1000;
+  color: #ffd45a;
+}
+
+.level4-badge strong {
+  display: block;
+  margin-top: 3px;
+  font-size: 15px;
+  font-weight: 1000;
+}
+
+/* =========================
+   RIDER COWOK
+   DARI BAWAH KE ATAS
+========================= */
+.level4-rider {
+  width: 10vw;
+  left: 45vw;
+  top: 0;
+  z-index: 22;
+  opacity: 1;
+  transform: translate3d(0, 112vh, 0) scale(1);
+  transform-origin: center center;
+}
+
+/* awal: motor ikut shoot naik sampai tengah persimpangan */
+.level4-rider--enter {
+  animation: level4RiderEnter 3.2s cubic-bezier(0.42, 0, 0.18, 1) forwards;
+}
+
+/* saat pertanyaan: motor diam lebih naik, pas di area persimpangan */
+.level4-rider--stop {
+  transform: translate3d(0, 48vh, 0) scale(1);
+}
+
+/* salah: motor maju ke titik tabrakan */
+.level4-rider--wrong-go {
+  animation: level4RiderWrongGo 1.35s cubic-bezier(0.25, 0.1, 0.2, 1) forwards;
+}
+
+/* benar: motor diam dulu, mobil lewat, baru motor lanjut lurus ke atas */
+.level4-rider--correct-wait-go {
+  animation: level4RiderCorrectWaitGo 3.45s linear forwards;
+}
+
+@keyframes level4RiderEnter {
+  0% {
+    transform: translate3d(0, 112vh, 0) scale(1);
+  }
+
+  100% {
+    transform: translate3d(0, 48vh, 0) scale(1);
+  }
+}
+
+@keyframes level4RiderWrongGo {
+  0% {
+    transform: translate3d(0, 48vh, 0) scale(1);
+  }
+
+  100% {
+    transform: translate3d(0, 20vh, 0) scale(1);
+  }
+}
+
+@keyframes level4RiderCorrectWaitGo {
+  0% {
+    transform: translate3d(0, 48vh, 0) scale(1);
+  }
+
+  64% {
+    transform: translate3d(0, 48vh, 0) scale(1);
+  }
+
+  100% {
+    transform: translate3d(0, 8vh, 0) scale(1);
+  }
+}
+
+/* =========================
+   MOBIL HITAM
+   DARI KANAN KE KIRI
+========================= */
+.level4-car {
+  width: 20vw;
+  left: 0;
+  top:10vh;
+  z-index: 21;
+  opacity: 1;
+  transform: translate3d(112vw, 0, 0) scale(1);
+  transform-origin: center center;
+}
+
+/* mobil masuk sedikit dari kanan */
+.level4-car--enter {
+  animation: level4CarEnter 1.45s cubic-bezier(0.35, 0.75, 0.2, 1) forwards;
+}
+
+/* saat pertanyaan: mobil diam sedikit masuk dari kanan dan posisinya lebih naik */
+.level4-car--stop {
+  transform: translate3d(72vw, 0, 0) scale(1);
+}
+
+/* salah: mobil maju dari kanan ke kiri dan bertemu motor di tengah */
+.level4-car--wrong-hit {
+  animation: level4CarWrongHit 1.35s cubic-bezier(0.22, 0.65, 0.18, 1) forwards;
+}
+
+/* benar: mobil lurus dari kanan ke kiri, keluar layar */
+.level4-car--correct-pass {
+  animation: level4CarCorrectPass 2.25s cubic-bezier(0.22, 0.65, 0.18, 1) forwards;
+}
+
+@keyframes level4CarEnter {
+  0% {
+    transform: translate3d(112vw, 0, 0) scale(1);
+  }
+
+  100% {
+    transform: translate3d(72vw, 0, 0) scale(1);
+  }
+}
+
+@keyframes level4CarWrongHit {
+  0% {
+    transform: translate3d(72vw, 0, 0) scale(1);
+  }
+
+  100% {
+    transform: translate3d(50vw, 0, 0) scale(1);
+  }
+}
+
+@keyframes level4CarCorrectPass {
+  0% {
+    transform: translate3d(72vw, 0, 0) scale(1);
+  }
+
+  100% {
+    transform: translate3d(-42vw, 0, 0) scale(1);
+  }
+}
+
+/* =========================
+   CRASH RESULT
+   GAMBAR MOTOR + MOBIL BIASA HILANG
+   DIGANTI INI SAJA
+========================= */
+.level4-crash {
+  z-index: 45;
+  left: 20vw;
+  top: -19vh;
+  width: 25vw;
+  opacity: 1;
+  transform: translate3d(25vw, 22vh, 0) scale(1);
+  animation: level4CrashPop 0.22s ease-out forwards;
+}
+
+@keyframes level4CrashPop {
+  from {
+    opacity: 0;
+    transform: translate3d(25vw, 22vh, 0) scale(0.92);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(25vw, 22vh, 0) scale(1);
+  }
+}
+
+/* =========================
+   RESULT BENAR RIDER
+========================= */
+.level4-rider-safe-result {
+  z-index: 35;
+  left: 45vw;
+  top: 0;
+  width: 10vw;
+  opacity: 1;
+  transform: translate3d(0, 8vh, 0) scale(1);
+  animation: none !important;
+  transition: none !important;
+}
+
+/* =========================================================
+   BUBBLE QUESTION
+========================================================= */
+.level4-question-bubble {
+  position: absolute;
+  z-index: 50;
+  left: 55%;
+  top: 20%;
+  width: 24vw;
+  min-height: 0;
+  animation: level4BubblePop 0.28s ease-out forwards;
+}
+
+.level4-bubble-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  user-select: none;
+  pointer-events: none;
+  filter: drop-shadow(0 10px 0 rgba(0, 0, 0, 0.18));
+}
+
+.level4-question-bubble p {
+  position: absolute;
+  right: 16%;
+  top: 36%;
+  width: 64%;
+  margin: 0;
+  padding: 0;
+  color: #111;
+  font-size: 1.05vw;
+  font-weight: 1000;
+  line-height: 1.18;
+  text-align: center;
+  z-index: 5;
+  white-space: normal;
+}
+
+@keyframes level4BubblePop {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 18px, 0) scale(0.92);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+/* =========================
+   ANSWER BUTTON
+========================= */
+.level4-answer-wrapper {
+  position: fixed;
+  z-index: 70;
+  left: 50%;
+  bottom: 5.5%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 42px;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+}
+
+.level4-answer-button {
+  min-width: 390px;
+  min-height: 62px;
+  border: 4px solid rgba(255, 255, 255, 0.95);
+  border-radius: 22px;
+  outline: none;
+  background: rgba(255, 255, 255, 0.94);
+  color: #111;
+  font-size: 17px;
+  font-weight: 1000;
+  cursor: pointer;
+  box-shadow: 0 8px 0 rgba(0, 0, 0, 0.18);
+  transition: transform 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+}
+
+.level4-answer-button:hover {
+  transform: translateY(-4px);
+  background: #fff;
+}
+
+.level4-answer-button:active {
+  transform: translateY(3px);
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.18);
+}
+
+/* =========================
+   RESULT DIM
+========================= */
+.level4-result-dim {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  pointer-events: none;
+}
+
+.level4-result-dim--wrong {
+  background: rgba(104, 28, 18, 0.34);
+}
+
+.level4-result-dim--correct {
+  background: rgba(27, 93, 49, 0.22);
+}
+
+/* =========================
+   POLISI
+========================= */
+.level4-police {
+  position: fixed;
+  z-index: 55;
+  left: 62%;
+  top: 230px;
+  width: 37vw;
+  height: auto;
+}
+
+.level4-police--good {
+  left: 65%;
+  top: 230px;
+  width: 50vw;
+}
+
+.level4-police--stop {
+  left: -15%;
+  top: 230px;
+  width: 50vw;
+}
+
+/* =========================================================
+   BUBBLE RESULT BASE
+========================================================= */
+.level4-result-bubble {
+  position: fixed;
+  z-index: 58;
+  animation: level4BubblePop 0.28s ease-out forwards;
+}
+
+.level4-result-bubble-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  user-select: none;
+  pointer-events: none;
+  filter: drop-shadow(0 10px 0 rgba(0, 0, 0, 0.18));
+}
+
+/* =========================
+   BUBBLE WARNING
+========================= */
+.level4-result-bubble--warning {
+  left: 12%;
+  top: 25%;
+  width: 38vw;
+  min-height: 18vw;
+}
+
+.level4-result-text--warning {
+  position: absolute;
+  z-index: 3;
+  left: 16%;
+  top: 34%;
+  width: 68%;
+  color: #111;
+  text-align: center;
+}
+
+.level4-result-text--warning h2 {
+  margin: 0 0 10px;
+  font-size: 2vw;
+  font-weight: 1000;
+  text-align: center;
+}
+
+.level4-result-text--warning p {
+  margin: 0;
+  font-size: 1.15vw;
+  font-weight: 900;
+  line-height: 1.3;
+  text-align: center;
+}
+
+/* =========================
+   BUBBLE GOOD
+========================= */
+.level4-result-bubble--good {
+  left: 45%;
+  top: 20%;
+  width: 40vw;
+  min-height: 18vw;
+}
+
+.level4-result-text--good {
+  position: absolute;
+  z-index: 3;
+  left: 16%;
+  top: 34%;
+  width: 68%;
+  color: #111;
+  text-align: center;
+}
+
+.level4-result-text--good h2 {
+  margin: 0 0 10px;
+  font-size: 2vw;
+  font-weight: 1000;
+  text-align: center;
+}
+
+.level4-result-text--good p {
+  margin: 0;
+  font-size: 1.15vw;
+  font-weight: 900;
+  line-height: 1.3;
+  text-align: center;
+}
+
+/* =========================
+   RESULT BUTTON
+========================= */
+.level4-result-buttons {
+  position: fixed;
+  z-index: 75;
+  left: 50%;
+  bottom: 5%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+}
+
+.level4-main-button,
+.level4-secondary-button {
+  border: none;
+  border-radius: 18px;
+  padding: 15px 27px;
+  font-size: 22px;
+  font-weight: 1000;
+  cursor: pointer;
+}
+
+.level4-main-button {
+  color: #3b2208;
+  background: linear-gradient(180deg, #ffd866, #efa126);
+  box-shadow: 0 5px 0 #8c5200;
+}
+
+.level4-secondary-button {
+  color: #fff4d8;
+  background: linear-gradient(180deg, #7a4b22, #44250c);
+  box-shadow: 0 5px 0 #231204;
+}
+
+.level4-main-button:active,
+.level4-secondary-button:active {
+  transform: translateY(3px);
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 900px) {
+  .level4-bg-world {
+    height: 145vh;
+    transform: translate3d(0, -40vh, 0);
+  }
+
+  .level4-bg-world--move {
+    transform: translate3d(0, -17vh, 0);
+  }
+
+  .level4-rider,
+  .level4-rider-safe-result {
+    width: 16vw;
+    left: 42vw;
+  }
+
+  .level4-car {
+    width: 42vw;
+    top: 30vh;
+  }
+
+  .level4-crash {
+    width: 66vw;
+    transform: translate3d(17vw, 24vh, 0) scale(1);
+  }
+
+  .level4-question-bubble {
+    left: 38%;
+    top: 18%;
+    width: 42vw;
+  }
+
+  .level4-question-bubble p {
+    font-size: 2vw;
+  }
+
+  .level4-answer-wrapper {
+    flex-direction: column;
+    gap: 16px;
+    bottom: 4%;
+  }
+
+  .level4-answer-button {
+    min-width: 78vw;
+    font-size: 15px;
+  }
+}

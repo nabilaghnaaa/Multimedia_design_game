@@ -7,6 +7,7 @@ import LevelMap from "./pages/LevelMap";
 import SimulationPage from "./pages/SimulationPage";
 import SimulationLevel2 from "./pages/SimulationLevel2";
 import SimulationLevel3 from "./pages/SimulationLevel3";
+import SimulationLevel4 from "./pages/SimulationLevel4";
 import ChallengePage from "./pages/ChallengePage";
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
         {/* LEVEL KHUSUS HARUS DI ATAS ROUTE DINAMIS */}
         <Route path="/simulation/2" element={<SimulationLevel2 />} />
         <Route path="/simulation/3" element={<SimulationLevel3 />} />
+        <Route path="/simulation/4" element={<SimulationLevel4 />} />
 
         {/* LEVEL 1 DAN LEVEL LAIN YANG MASIH PAKE FILE LAMA */}
         <Route path="/simulation/:levelNumber" element={<SimulationPage />} />
