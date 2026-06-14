@@ -1,0 +1,850 @@
+.simulation-s2l2-page {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: #10202a;
+  font-family: "Nunito", Arial, sans-serif;
+}
+
+.simulation-s2l2-page,
+.simulation-s2l2-page * {
+  box-sizing: border-box;
+}
+
+.s2l2-viewport {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: #10202a;
+}
+
+.s2l2-viewport--crash-shake {
+  animation: s2l2ScreenCrashShake 0.48s cubic-bezier(0.36, 0.07, 0.19, 0.97)
+    both;
+}
+
+@keyframes s2l2ScreenCrashShake {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+
+  8% {
+    transform: translate3d(-8px, 5px, 0) rotate(-0.35deg);
+  }
+
+  16% {
+    transform: translate3d(9px, -6px, 0) rotate(0.35deg);
+  }
+
+  24% {
+    transform: translate3d(-10px, 4px, 0) rotate(-0.3deg);
+  }
+
+  32% {
+    transform: translate3d(8px, 7px, 0) rotate(0.28deg);
+  }
+
+  40% {
+    transform: translate3d(-7px, -5px, 0) rotate(-0.24deg);
+  }
+
+  52% {
+    transform: translate3d(6px, 4px, 0) rotate(0.2deg);
+  }
+
+  64% {
+    transform: translate3d(-5px, 3px, 0) rotate(-0.16deg);
+  }
+
+  76% {
+    transform: translate3d(4px, -2px, 0) rotate(0.12deg);
+  }
+
+  88% {
+    transform: translate3d(-2px, 1px, 0) rotate(-0.06deg);
+  }
+
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+}
+
+/* =========================
+   BACKGROUND / SHOOT DARI BAWAH
+========================= */
+.s2l2-bg-world {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 1;
+  width: 100vw;
+  height: 220vh;
+  transform: translate3d(0, -120vh, 0);
+  transition: transform 3.8s cubic-bezier(0.42, 0, 0.18, 1);
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+.s2l2-bg-world--move {
+  transform: translate3d(0, -26vh, 0);
+}
+
+.s2l2-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  user-select: none;
+  pointer-events: none;
+}
+
+/* =========================
+   LAYER AKTOR
+========================= */
+.s2l2-actors-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.s2l2-actor {
+  position: absolute;
+  height: auto;
+  user-select: none;
+  pointer-events: none;
+  filter: drop-shadow(0 10px 10px rgba(0, 0, 0, 0.25));
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+}
+
+/* =========================
+   BACK BUTTON
+========================= */
+.s2l2-back-button {
+  position: absolute;
+  z-index: 100;
+  top: 18px;
+  left: 18px;
+  border: none;
+  border-radius: 18px;
+  padding: 11px 20px;
+  background: linear-gradient(180deg, #ffd866, #efa126);
+  color: #3b2208;
+  font-size: 15px;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 5px 0 #8c5200;
+  pointer-events: auto;
+}
+
+.s2l2-back-button:active {
+  transform: translateY(3px);
+  box-shadow: 0 2px 0 #8c5200;
+}
+
+/* =========================
+   BADGE
+========================= */
+.s2l2-badge {
+  position: absolute;
+  z-index: 100;
+  top: 18px;
+  right: 18px;
+  min-width: 310px;
+  padding: 10px 16px;
+  border-radius: 18px;
+  background: rgba(71, 39, 10, 0.86);
+  border: 2px solid rgba(255, 222, 134, 0.9);
+  color: #fff1c9;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.28);
+}
+
+.s2l2-badge span {
+  display: block;
+  font-size: 13px;
+  font-weight: 1000;
+  color: #ffd45a;
+}
+
+.s2l2-badge strong {
+  display: block;
+  margin-top: 3px;
+  font-size: 15px;
+}
+
+/* =========================
+   TRUK
+========================= */
+.s2l2-truck {
+  width: 15vw;
+  left: 43vw;
+  top: 0;
+  z-index: 10;
+  opacity: 1;
+  transform: translate3d(-3vw, 118vh, 0) scale(1.12);
+  transform-origin: center center;
+}
+
+.s2l2-truck--enter {
+  animation: s2l2TruckEnter 3.8s cubic-bezier(0.42, 0, 0.18, 1) forwards;
+}
+
+.s2l2-truck--stop {
+  transform: translate3d(4vw, 30vh, 0) scale(0.7);
+}
+
+.s2l2-truck--overtake-go {
+  animation: s2l2TruckOvertakeGo 1.72s linear forwards;
+}
+
+.s2l2-truck--safe-go {
+  animation: s2l2TruckSafeGo 2.6s linear forwards;
+}
+
+@keyframes s2l2TruckEnter {
+  0% {
+    transform: translate3d(-3vw, 118vh, 0) scale(1.12);
+  }
+
+  100% {
+    transform: translate3d(4vw, 30vh, 0) scale(0.7);
+  }
+}
+
+@keyframes s2l2TruckOvertakeGo {
+  0% {
+    transform: translate3d(4vw, 30vh, 0) scale(0.7);
+  }
+
+  35% {
+    transform: translate3d(4.4vw, 24vh, 0) scale(0.62);
+  }
+
+  70% {
+    transform: translate3d(4.9vw, 17vh, 0) scale(0.5);
+  }
+
+  100% {
+    transform: translate3d(5.4vw, 10vh, 0) scale(0.38);
+  }
+}
+
+@keyframes s2l2TruckSafeGo {
+  0% {
+    transform: translate3d(4vw, 30vh, 0) scale(0.7);
+  }
+
+  100% {
+    transform: translate3d(6vw, 8vh, 0) scale(0.32);
+  }
+}
+
+/* =========================
+   RIDER
+========================= */
+.s2l2-rider {
+  width: 15vw;
+  left: 43vw;
+  top: 0;
+  z-index: 45;
+  opacity: 1;
+  transform: translate3d(-3vw, 138vh, 0) scale(0.88);
+  transform-origin: center center;
+}
+
+.s2l2-rider--enter {
+  animation: s2l2RiderEnter 3.8s cubic-bezier(0.42, 0, 0.18, 1) forwards;
+}
+
+.s2l2-rider--stop {
+  transform: translate3d(3vw, 72vh, 0) scale(0.62);
+}
+
+.s2l2-rider--overtake-go {
+  z-index: 45;
+  animation: s2l2RiderOvertakeGo 1.72s linear forwards;
+}
+
+.s2l2-rider--safe-go {
+  animation: s2l2RiderSafeGo 2.6s linear forwards;
+}
+
+@keyframes s2l2RiderEnter {
+  0% {
+    transform: translate3d(-3vw, 138vh, 0) scale(0.88);
+  }
+
+  100% {
+    transform: translate3d(3vw, 72vh, 0) scale(0.62);
+  }
+}
+
+@keyframes s2l2RiderOvertakeGo {
+  0% {
+    transform: translate3d(3vw, 72vh, 0) scale(0.62);
+  }
+
+  4% {
+    transform: translate3d(3.25vw, 70.7vh, 0) scale(0.614);
+  }
+
+  8% {
+    transform: translate3d(3.52vw, 69.2vh, 0) scale(0.608);
+  }
+
+  12% {
+    transform: translate3d(3.82vw, 67.4vh, 0) scale(0.6);
+  }
+
+  16% {
+    transform: translate3d(4.15vw, 65.3vh, 0) scale(0.59);
+  }
+
+  20% {
+    transform: translate3d(4.5vw, 63vh, 0) scale(0.578);
+  }
+
+  24% {
+    transform: translate3d(4.88vw, 60.5vh, 0) scale(0.565);
+  }
+
+  28% {
+    transform: translate3d(5.28vw, 57.8vh, 0) scale(0.55);
+  }
+
+  32% {
+    transform: translate3d(5.68vw, 55vh, 0) scale(0.535);
+  }
+
+  36% {
+    transform: translate3d(6.08vw, 52.2vh, 0) scale(0.515);
+  }
+
+  40% {
+    transform: translate3d(6.48vw, 49.4vh, 0) scale(0.495);
+  }
+
+  44% {
+    transform: translate3d(6.88vw, 46.7vh, 0) scale(0.475);
+  }
+
+  48% {
+    transform: translate3d(7.25vw, 44.1vh, 0) scale(0.455);
+  }
+
+  52% {
+    transform: translate3d(7.6vw, 41.6vh, 0) scale(0.435);
+  }
+
+  56% {
+    transform: translate3d(7.92vw, 39.2vh, 0) scale(0.416);
+  }
+
+  60% {
+    transform: translate3d(8.22vw, 37vh, 0) scale(0.398);
+  }
+
+  64% {
+    transform: translate3d(8.48vw, 34.9vh, 0) scale(0.382);
+  }
+
+  68% {
+    transform: translate3d(8.72vw, 33vh, 0) scale(0.367);
+  }
+
+  72% {
+    transform: translate3d(8.95vw, 31.2vh, 0) scale(0.354);
+  }
+
+  76% {
+    transform: translate3d(9.16vw, 29.6vh, 0) scale(0.342);
+  }
+
+  80% {
+    transform: translate3d(9.35vw, 28.1vh, 0) scale(0.332);
+  }
+
+  84% {
+    transform: translate3d(9.52vw, 26.8vh, 0) scale(0.323);
+  }
+
+  88% {
+    transform: translate3d(9.66vw, 25.8vh, 0) scale(0.315);
+  }
+
+  92% {
+    transform: translate3d(9.78vw, 25vh, 0) scale(0.308);
+  }
+
+  96% {
+    transform: translate3d(9.87vw, 24.4vh, 0) scale(0.302);
+  }
+
+  100% {
+    transform: translate3d(9.95vw, 24vh, 0) scale(0.3);
+  }
+}
+
+@keyframes s2l2RiderSafeGo {
+  0% {
+    transform: translate3d(3vw, 72vh, 0) scale(0.62);
+  }
+
+  100% {
+    transform: translate3d(6vw, 24vh, 0) scale(0.26);
+  }
+}
+
+/* =========================
+   MOBIL LAWAN ARAH
+========================= */
+.s2l2-oncoming-car {
+  width: 12.5vw;
+  left: 48vw;
+  top: -13vh;
+  z-index: 35;
+  opacity: 1;
+  transform: translate3d(4.1vw, 9vh, 0) scale(0.018);
+  transform-origin: center center;
+}
+
+.s2l2-oncoming-car--enter {
+  animation: s2l2OncomingCarEnter 1.72s linear forwards;
+}
+
+@keyframes s2l2OncomingCarEnter {
+  0% {
+    opacity: 0;
+    transform: translate3d(4.1vw, 9vh, 0) scale(0.018);
+  }
+
+  10% {
+    opacity: 0.15;
+    transform: translate3d(4.12vw, 9.5vh, 0) scale(0.022);
+  }
+
+  18% {
+    opacity: 0.35;
+    transform: translate3d(4.14vw, 10.2vh, 0) scale(0.03);
+  }
+
+  26% {
+    opacity: 0.55;
+    transform: translate3d(4.17vw, 11.2vh, 0) scale(0.045);
+  }
+
+  34% {
+    opacity: 0.75;
+    transform: translate3d(4.2vw, 12.6vh, 0) scale(0.065);
+  }
+
+  42% {
+    opacity: 1;
+    transform: translate3d(4.25vw, 14.2vh, 0) scale(0.095);
+  }
+
+  50% {
+    opacity: 1;
+    transform: translate3d(4.32vw, 16.2vh, 0) scale(0.135);
+  }
+
+  58% {
+    opacity: 1;
+    transform: translate3d(4.42vw, 18.4vh, 0) scale(0.185);
+  }
+
+  66% {
+    opacity: 1;
+    transform: translate3d(4.55vw, 20.8vh, 0) scale(0.245);
+  }
+
+  74% {
+    opacity: 1;
+    transform: translate3d(4.72vw, 23.6vh, 0) scale(0.325);
+  }
+
+  82% {
+    opacity: 1;
+    transform: translate3d(4.92vw, 26.1vh, 0) scale(0.41);
+  }
+
+  90% {
+    opacity: 1;
+    transform: translate3d(5.12vw, 28.2vh, 0) scale(0.49);
+  }
+
+  96% {
+    opacity: 1;
+    transform: translate3d(5.3vw, 29.6vh, 0) scale(0.55);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate3d(5.42vw, 30.4vh, 0) scale(0.58);
+  }
+}
+
+/* =========================
+   CRASH
+========================= */
+.s2l2-crash {
+  z-index: 100;
+  left: 18vw;
+  top: 2vh;
+  width: 8.5vw;
+  opacity: 1;
+  transform: translate3d(37.2vw, 24vh, 0) scale(1);
+  animation: s2l2CrashPop 0.22s ease-out forwards;
+}
+
+@keyframes s2l2CrashPop {
+  from {
+    opacity: 0;
+    transform: translate3d(37.2vw, 24vh, 0) scale(0.92);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(37.2vw, 24vh, 0) scale(1);
+  }
+}
+
+/* =========================
+   QUESTION BUBBLE
+========================= */
+.s2l2-question-bubble {
+  position: absolute;
+  z-index: 70;
+  right: 60%;
+  top: 15%;
+  width: 25vw;
+  min-height: 0;
+  animation: s2l2PopIn 0.28s ease-out forwards;
+}
+
+.s2l2-bubble-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  user-select: none;
+  pointer-events: none;
+  filter: drop-shadow(0 10px 0 rgba(0, 0, 0, 0.18));
+}
+
+.s2l2-question-bubble p {
+  position: absolute;
+  right: 16%;
+  top: 40%;
+  width: 64%;
+  margin: 0;
+  padding: 0;
+  color: #111;
+  font-size: 1.05vw;
+  font-weight: 1000;
+  line-height: 1.22;
+  text-align: center;
+  z-index: 5;
+  white-space: normal;
+}
+
+@keyframes s2l2PopIn {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 16px, 0) scale(0.94);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+/* =========================
+   ANSWER BUTTONS
+========================= */
+.s2l2-answer-wrapper {
+  position: fixed;
+  z-index: 80;
+  left: 50%;
+  bottom: 5.5%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 26px;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+}
+
+.s2l2-answer-button {
+  min-width: 360px;
+  min-height: 62px;
+  border: 4px solid rgba(255, 255, 255, 0.95);
+  border-radius: 22px;
+  outline: none;
+  background: rgba(255, 255, 255, 0.94);
+  color: #111;
+  font-size: 17px;
+  font-weight: 1000;
+  cursor: pointer;
+  box-shadow: 0 8px 0 rgba(0, 0, 0, 0.18);
+  transition:
+    transform 0.15s ease,
+    background 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.s2l2-answer-button:hover {
+  transform: translateY(-4px);
+  background: #fff;
+}
+
+.s2l2-answer-button:active {
+  transform: translateY(3px);
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.18);
+}
+
+.s2l2-answer-button--danger {
+  background: #fff2f2;
+}
+
+/* =========================
+   RESULT OVERLAY
+========================= */
+.s2l2-result-dim {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  pointer-events: none;
+}
+
+.s2l2-result-dim--wrong {
+  background: rgba(85, 15, 15, 0.3);
+}
+
+.s2l2-result-dim--good {
+  background: rgba(25, 85, 45, 0.18);
+}
+
+/* =========================
+   POLICE
+========================= */
+.s2l2-police {
+  position: fixed;
+  z-index: 65;
+  height: auto;
+  user-select: none;
+  pointer-events: none;
+  filter: drop-shadow(0 12px 12px rgba(0, 0, 0, 0.28));
+}
+
+.s2l2-police--stop {
+  right: -15%;
+  bottom: -22%;
+  width: 50vw;
+}
+
+.s2l2-police--good {
+  right: -15%;
+  bottom: -22%;
+  width: 50vw;
+}
+
+/* =========================
+   RESULT BUBBLE
+========================= */
+.s2l2-result-bubble {
+  position: fixed;
+  z-index: 75;
+  animation: s2l2PopIn 0.28s ease-out forwards;
+}
+
+.s2l2-result-bubble-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  user-select: none;
+  pointer-events: none;
+  filter: drop-shadow(0 10px 0 rgba(0, 0, 0, 0.18));
+}
+
+.s2l2-result-bubble--warning-right {
+  right: 16%;
+  top: 30%;
+  width: 35vw;
+}
+
+.s2l2-result-bubble--good {
+  left: 50%;
+  top: 30%;
+  width: 35vw;
+}
+
+.s2l2-result-text {
+  position: absolute;
+  z-index: 3;
+  color: #111;
+  text-align: center;
+}
+
+.s2l2-result-text h2 {
+  margin: 0 0 10px;
+  font-size: 2vw;
+  font-weight: 1000;
+  text-align: center;
+}
+
+.s2l2-result-text p {
+  margin: 0;
+  font-size: 1.08vw;
+  font-weight: 900;
+  line-height: 1.3;
+  text-align: center;
+}
+
+.s2l2-result-text--warning {
+  left: 16%;
+  top: 34%;
+  width: 68%;
+}
+
+.s2l2-result-text--good {
+  left: 17%;
+  top: 32%;
+  width: 68%;
+}
+
+/* =========================
+   RESULT BUTTONS
+========================= */
+.s2l2-result-buttons {
+  position: fixed;
+  z-index: 85;
+  left: 50%;
+  bottom: 5%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+}
+
+.s2l2-main-button,
+.s2l2-secondary-button {
+  border: none;
+  border-radius: 18px;
+  padding: 15px 27px;
+  font-size: 22px;
+  font-weight: 1000;
+  cursor: pointer;
+}
+
+.s2l2-main-button {
+  color: #3b2208;
+  background: linear-gradient(180deg, #ffd866, #efa126);
+  box-shadow: 0 5px 0 #8c5200;
+}
+
+.s2l2-secondary-button {
+  color: #fff4d8;
+  background: linear-gradient(180deg, #7a4b22, #44250c);
+  box-shadow: 0 5px 0 #231204;
+}
+
+.s2l2-main-button:active,
+.s2l2-secondary-button:active {
+  transform: translateY(3px);
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 900px) {
+  .s2l2-bg-world {
+    height: 220vh;
+    transform: translate3d(0, -56vh, 0);
+  }
+
+  .s2l2-bg-world--move {
+    transform: translate3d(0, -22vh, 0);
+  }
+
+  .s2l2-truck {
+    width: 26vw;
+    left: 37vw;
+    z-index: 10;
+  }
+
+  .s2l2-rider {
+    width: 11vw;
+    left: 44.7vw;
+    z-index: 45;
+  }
+
+  .s2l2-rider--overtake-go {
+    z-index: 45;
+  }
+
+  .s2l2-oncoming-car {
+    width: 18vw;
+    left: 50vw;
+    z-index: 35;
+    transform: translate3d(4.1vw, 9vh, 0) scale(0.018);
+  }
+
+  .s2l2-crash {
+    width: 52vw;
+    z-index: 100;
+    transform: translate3d(27vw, 25vh, 0) scale(1);
+  }
+
+  .s2l2-question-bubble {
+    right: 2%;
+    top: 14%;
+    width: 48vw;
+  }
+
+  .s2l2-question-bubble p {
+    font-size: 1.8vw;
+  }
+
+  .s2l2-police--stop,
+  .s2l2-police--good {
+    width: 48vw;
+    right: -7%;
+  }
+
+  .s2l2-result-bubble--warning-right,
+  .s2l2-result-bubble--good {
+    width: 54vw;
+    left: 4%;
+    right: auto;
+    top: 8%;
+  }
+
+  .s2l2-result-text h2 {
+    font-size: 3vw;
+  }
+
+  .s2l2-result-text p {
+    font-size: 1.8vw;
+  }
+
+  .s2l2-answer-wrapper {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .s2l2-answer-button {
+    min-width: 78vw;
+    font-size: 15px;
+  }
+}
