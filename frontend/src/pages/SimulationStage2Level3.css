@@ -1,0 +1,796 @@
+.simulation-s2l3-page {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: #10202a;
+  font-family: "Nunito", Arial, sans-serif;
+}
+
+.simulation-s2l3-page,
+.simulation-s2l3-page * {
+  box-sizing: border-box;
+}
+
+.s2l3-viewport {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* =========================
+   BACKGROUND CAMERA
+========================= */
+.s2l3-bg-world {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 150vw;
+  min-height: 165vh;
+  z-index: 1;
+  transform: translateY(calc(100vh - 100%));
+  transition: transform 3.65s ease-in-out;
+}
+
+.s2l3-bg-world--top {
+  transform: translateY(-32vh);
+}
+
+.s2l3-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  user-select: none;
+  pointer-events: none;
+}
+
+/* =========================
+   LAYER AKTOR
+========================= */
+.s2l3-actors-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+}
+
+/* =========================
+   BACK BUTTON
+========================= */
+.s2l3-back-button {
+  position: absolute;
+  z-index: 100;
+  top: 18px;
+  left: 18px;
+  border: none;
+  border-radius: 18px;
+  padding: 11px 20px;
+  background: linear-gradient(180deg, #ffd866, #efa126);
+  color: #3b2208;
+  font-size: 15px;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 5px 0 #8c5200;
+  pointer-events: auto;
+}
+
+.s2l3-back-button:active {
+  transform: translateY(3px);
+  box-shadow: 0 2px 0 #8c5200;
+}
+
+/* =========================
+   BADGE LEVEL
+========================= */
+.s2l3-level-badge {
+  position: absolute;
+  z-index: 100;
+  top: 18px;
+  right: 18px;
+  min-width: 250px;
+  padding: 10px 16px;
+  border-radius: 18px;
+  background: rgba(71, 39, 10, 0.86);
+  border: 2px solid rgba(255, 222, 134, 0.9);
+  color: #fff1c9;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.28);
+}
+
+.s2l3-level-badge span {
+  display: block;
+  font-size: 13px;
+  font-weight: 1000;
+  color: #ffd45a;
+}
+
+.s2l3-level-badge strong {
+  display: block;
+  margin-top: 3px;
+  font-size: 16px;
+  font-weight: 1000;
+}
+
+/* =========================
+   AKTOR UMUM
+========================= */
+.s2l3-actor {
+  position: absolute;
+  z-index: 10;
+  user-select: none;
+  pointer-events: none;
+  height: auto;
+  filter: drop-shadow(0 10px 10px rgba(0, 0, 0, 0.25));
+}
+
+/* =========================
+   CEWEK PINK
+========================= */
+.s2l3-girl-back {
+  width: 11.5vw;
+  left: 50%;
+  top: 108%;
+  transform: translateX(-50%) scale(1);
+}
+
+.s2l3-girl-back--walk {
+  animation: s2l3GirlMoveWithCamera 3.65s ease-in-out forwards;
+}
+
+.s2l3-girl-back--stop {
+  left: 50%;
+  top: 74% !important;
+  transform: translateX(-50%) scale(1.14) !important;
+}
+
+@keyframes s2l3GirlMoveWithCamera {
+  0% {
+    left: 50%;
+    top: 108%;
+    transform: translateX(-50%) scale(1.2);
+  }
+
+  35% {
+    left: 50%;
+    top: 94%;
+    transform: translateX(-50%) scale(1.18);
+  }
+
+  70% {
+    left: 50%;
+    top: 84%;
+    transform: translateX(-50%) scale(1.16);
+  }
+
+  100% {
+    left: 50%;
+    top: 74%;
+    transform: translateX(-50%) scale(1.14);
+  }
+}
+
+/* =========================
+   MOBIL HITAM
+========================= */
+.s2l3-car {
+  width: 15vw;
+  left: 112%;
+  top: 47%;
+}
+
+.s2l3-car--enter {
+  animation: s2l3CarEnterFromRight 1.15s ease-out forwards;
+}
+
+.s2l3-car--stop {
+  left: 55%;
+  top: 47%;
+}
+
+.s2l3-car--correct-drive {
+  left: 55%;
+  top: 47%;
+  animation: s2l3CarCorrectDriveStraight 1.1s ease-in-out forwards;
+}
+
+.s2l3-car--wrong-drive {
+  left: 55%;
+  top: 47%;
+  animation: s2l3CarWrongDriveForward 0.9s ease-in-out forwards;
+}
+
+@keyframes s2l3CarEnterFromRight {
+  0% {
+    left: 112%;
+    top: 47%;
+  }
+
+  100% {
+    left: 55%;
+    top: 47%;
+  }
+}
+
+@keyframes s2l3CarCorrectDriveStraight {
+  0% {
+    left: 55%;
+    top: 47%;
+  }
+
+  100% {
+    left: 45%;
+    top: 47%;
+  }
+}
+
+@keyframes s2l3CarWrongDriveForward {
+  0% {
+    left: 55%;
+    top: 47%;
+  }
+
+  100% {
+    left: 50%;
+    top: 47%;
+  }
+}
+
+/* =========================
+   COWOK BIRU
+========================= */
+.s2l3-boy {
+  width: 12vw;
+  left: 112%;
+  top: 60%;
+  transform: none !important;
+  transform-origin: center;
+}
+
+.s2l3-boy--enter {
+  animation: s2l3BoyEnterFromRight 1.15s ease-out forwards;
+}
+
+.s2l3-boy--stop {
+  left: 76%;
+  top: 60%;
+  transform: none !important;
+}
+
+.s2l3-boy--wrong-move {
+  left: 76%;
+  top: 60%;
+  transform: none !important;
+  animation: s2l3BoyWrongMoveForward 0.9s ease-in-out forwards;
+}
+
+.s2l3-boy--correct-drive {
+  left: 76%;
+  top: 60%;
+  transform: none !important;
+  animation: s2l3BoyCorrectDriveStraight 1.1s ease-in-out forwards;
+}
+
+@keyframes s2l3BoyEnterFromRight {
+  0% {
+    left: 112%;
+    top: 60%;
+    transform: none;
+  }
+
+  100% {
+    left: 76%;
+    top: 60%;
+    transform: none;
+  }
+}
+
+@keyframes s2l3BoyWrongMoveForward {
+  0% {
+    left: 76%;
+    top: 60%;
+    transform: none;
+  }
+
+  100% {
+    left: 68%;
+    top: 60%;
+    transform: none;
+  }
+}
+
+@keyframes s2l3BoyCorrectDriveStraight {
+  0% {
+    left: 76%;
+    top: 60%;
+    transform: none;
+  }
+
+  100% {
+    left: 52%;
+    top: 60%;
+    transform: none;
+  }
+}
+
+/* =========================
+   BUBBLE QUESTION
+========================= */
+.simulation-s2l3-page .s2l3-question-bubble {
+  position: absolute !important;
+  z-index: 50 !important;
+  left: 5% !important;
+  top: 10% !important;
+  width: 29vw !important;
+  min-height: 0 !important;
+  transform: none !important;
+  animation: s2l3BubblePop 0.28s ease-out forwards !important;
+}
+
+.simulation-s2l3-page .s2l3-question-bubble .s2l3-bubble-img {
+  display: block !important;
+  width: 100% !important;
+  height: auto !important;
+  user-select: none;
+  pointer-events: none;
+  filter: drop-shadow(0 10px 0 rgba(0, 0, 0, 0.18));
+}
+
+.simulation-s2l3-page .s2l3-question-bubble p {
+  position: absolute !important;
+  right: 16% !important;
+  top: 35% !important;
+  width: 62% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  color: #111 !important;
+  font-size: 1.05vw !important;
+  font-weight: 1000 !important;
+  line-height: 1.18 !important;
+  text-align: center !important;
+  z-index: 5 !important;
+  white-space: normal !important;
+}
+
+@keyframes s2l3BubblePop {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.92);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* =========================
+   BUTTON JAWABAN
+========================= */
+.s2l3-answer-wrapper {
+  position: fixed;
+  z-index: 70;
+  left: 50%;
+  bottom: 5.5%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 52px;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+}
+
+.s2l3-answer-button {
+  min-width: 255px;
+  min-height: 62px;
+  border: 4px solid rgba(255, 255, 255, 0.95);
+  border-radius: 22px;
+  outline: none;
+  background: rgba(255, 255, 255, 0.94);
+  color: #111;
+  font-size: 23px;
+  font-weight: 1000;
+  cursor: pointer;
+  box-shadow: 0 8px 0 rgba(0, 0, 0, 0.18);
+  transition: 0.15s ease;
+}
+
+.s2l3-answer-button:hover {
+  transform: translateY(-4px);
+  background: #fff;
+}
+
+.s2l3-answer-button:active {
+  transform: translateY(3px);
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.18);
+}
+
+.s2l3-answer-button--danger {
+  background: #fff2f2;
+}
+
+/* =========================
+   GERAKAN SALAH
+========================= */
+.s2l3-girl-wrong {
+  width: 11.5vw;
+  left: 50%;
+  top: 74%;
+  transform: translateX(-50%) scale(1.14);
+  animation: s2l3GirlWrongToCrash 0.9s ease-in-out forwards;
+}
+
+@keyframes s2l3GirlWrongToCrash {
+  0% {
+    left: 50%;
+    top: 74%;
+    transform: translateX(-50%) scale(1.14);
+  }
+
+  100% {
+    left: 68%;
+    top: 60%;
+    transform: translateX(-50%) scale(0.98);
+  }
+}
+
+/* =========================
+   GERAKAN BENAR
+========================= */
+.s2l3-girl-correct {
+  width: 11.5vw;
+  left: 50%;
+  top: 74%;
+  transform: translateX(-50%) scale(1.14);
+  animation: s2l3GirlCorrectLeft 1.1s ease-in-out forwards;
+}
+
+@keyframes s2l3GirlCorrectLeft {
+  0% {
+    left: 50%;
+    top: 74%;
+    transform: translateX(-50%) scale(1.14);
+  }
+
+  100% {
+    left: 22%;
+    top: 49%;
+    transform: translateX(-50%) scale(0.98);
+  }
+}
+
+.s2l3-girl-safe-final {
+  width: 11.5vw;
+  left: 22%;
+  top: 49%;
+  transform: translateX(-50%) scale(0.98);
+}
+
+/* =========================
+   RESULT DIM
+========================= */
+.s2l3-result-dim {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  pointer-events: none;
+}
+
+.s2l3-result-dim--wrong {
+  background: rgba(104, 28, 18, 0.34);
+}
+
+.s2l3-result-dim--correct {
+  background: rgba(27, 93, 49, 0.22);
+}
+
+/* =========================
+   POLISI
+========================= */
+.s2l3-police {
+  position: fixed;
+  z-index: 55;
+  width: 80vw;
+  max-width: 500px;
+  height: auto;
+}
+
+.s2l3-police--stop {
+  left: 37%;
+  top: 500px;
+  bottom: auto;
+  width: 40vw;
+  max-width: 600px;
+}
+
+.s2l3-police--good {
+  left: 37%;
+  top: 500px;
+  bottom: auto;
+  width: 40vw;
+  max-width: 600px;
+}
+
+/* =========================
+   CRASH
+========================= */
+.s2l3-crash {
+  z-index: 56;
+  left: 70%;
+  top: 70%;
+  width: 20vw;
+  transform: translate(-50%, -50%);
+  animation: s2l3CrashPop 0.1s ease-out forwards;
+}
+
+@keyframes s2l3CrashPop {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.75);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+/* =========================
+   RESULT BUBBLE
+========================= */
+.s2l3-result-bubble {
+  position: fixed;
+  z-index: 58;
+  left: 43%;
+  top: 12%;
+  width: 44vw;
+  min-height: 18vw;
+  animation: s2l3BubblePop 0.28s ease-out forwards;
+}
+
+.s2l3-result-bubble--good {
+  left: 52%;
+  top: 1%;
+}
+
+.s2l3-result-bubble--warning {
+  left: 5%;
+  top: 0%;
+}
+
+.s2l3-result-bubble-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  user-select: none;
+  pointer-events: none;
+  filter: drop-shadow(0 10px 0 rgba(0, 0, 0, 0.18));
+}
+
+.s2l3-result-text {
+  position: absolute;
+  z-index: 3;
+  left: 14%;
+  top: 35%;
+  width: 70%;
+  color: #111;
+  text-align: center;
+}
+
+.s2l3-result-bubble--warning .s2l3-result-text--warning {
+  left: 16%;
+  top: 35%;
+  width: 68%;
+}
+
+.s2l3-result-text h2 {
+  margin: 0 0 10px;
+  font-size: 2vw;
+  font-weight: 1000;
+  text-align: center;
+}
+
+.s2l3-result-text p {
+  margin: 0;
+  font-size: 1.25vw;
+  font-weight: 900;
+  line-height: 1.3;
+  text-align: center;
+}
+
+/* =========================
+   RESULT BUTTON
+========================= */
+.s2l3-result-buttons {
+  position: fixed;
+  z-index: 75;
+  left: 50%;
+  bottom: 5%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+}
+
+.s2l3-main-button,
+.s2l3-secondary-button {
+  border: none;
+  border-radius: 18px;
+  padding: 15px 27px;
+  font-size: 22px;
+  font-weight: 1000;
+  cursor: pointer;
+}
+
+.s2l3-main-button {
+  color: #3b2208;
+  background: linear-gradient(180deg, #ffd866, #efa126);
+  box-shadow: 0 5px 0 #8c5200;
+}
+
+.s2l3-secondary-button {
+  color: #fff4d8;
+  background: linear-gradient(180deg, #7a4b22, #44250c);
+  box-shadow: 0 5px 0 #231204;
+}
+
+.s2l3-main-button:active,
+.s2l3-secondary-button:active {
+  transform: translateY(3px);
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 1200px) {
+  .s2l3-bg-world--top {
+    transform: translateY(-28vh);
+  }
+
+  .simulation-s2l3-page .s2l3-question-bubble {
+    left: 10% !important;
+    top: 10% !important;
+    width: 34vw !important;
+  }
+
+  .simulation-s2l3-page .s2l3-question-bubble p {
+    left: 20% !important;
+    top: 34% !important;
+    width: 62% !important;
+    font-size: 1.35vw !important;
+    line-height: 1.17 !important;
+  }
+
+  .s2l3-answer-wrapper {
+    gap: 35px;
+  }
+
+  .s2l3-answer-button {
+    min-width: 220px;
+  }
+
+  .s2l3-result-bubble {
+    width: 50vw;
+  }
+
+  .s2l3-result-text h2 {
+    font-size: 2.4vw;
+  }
+
+  .s2l3-result-text p {
+    font-size: 1.45vw;
+  }
+}
+
+@media (max-width: 760px) {
+  .s2l3-bg-world {
+    height: 150vw;
+    min-height: 190vh;
+  }
+
+  .s2l3-bg-world--top {
+    transform: translateY(-22vh);
+  }
+
+  .s2l3-back-button {
+    padding: 9px 14px;
+    font-size: 12px;
+  }
+
+  .s2l3-level-badge {
+    min-width: 165px;
+    padding: 8px 11px;
+  }
+
+  .s2l3-level-badge span {
+    font-size: 11px;
+  }
+
+  .s2l3-level-badge strong {
+    font-size: 12px;
+  }
+
+  .s2l3-girl-back,
+  .s2l3-girl-wrong,
+  .s2l3-girl-correct,
+  .s2l3-girl-safe-final {
+    width: 18vw;
+  }
+
+  .s2l3-car {
+    width: 22vw;
+  }
+
+  .s2l3-boy {
+    width: 18vw;
+  }
+
+  .simulation-s2l3-page .s2l3-question-bubble {
+    left: 50% !important;
+    top: 20% !important;
+    width: 82vw !important;
+    transform: translateX(-50%) !important;
+  }
+
+  .simulation-s2l3-page .s2l3-question-bubble p {
+    left: 18% !important;
+    top: 20% !important;
+    width: 62% !important;
+    font-size: 16px !important;
+    line-height: 1.18 !important;
+  }
+
+  .s2l3-answer-wrapper {
+    width: 90vw;
+    flex-direction: column;
+    gap: 14px;
+    bottom: 5%;
+  }
+
+  .s2l3-answer-button {
+    width: 100%;
+    min-width: unset;
+    min-height: 58px;
+    font-size: 17px;
+  }
+
+  .s2l3-result-bubble {
+    left: 50%;
+    top: 13%;
+    width: 82vw;
+    transform: translateX(-50%);
+  }
+
+  .s2l3-result-text h2 {
+    font-size: 24px;
+  }
+
+  .s2l3-result-text p {
+    font-size: 14px;
+  }
+
+  .s2l3-police {
+    left: 2%;
+    bottom: 9%;
+    width: 38vw;
+  }
+
+  .s2l3-result-buttons {
+    width: 90vw;
+    gap: 12px;
+    bottom: 4%;
+  }
+
+  .s2l3-main-button,
+  .s2l3-secondary-button {
+    flex: 1;
+    padding: 12px 14px;
+    font-size: 14px;
+  }
+}
