@@ -1,0 +1,668 @@
+.simulation-s2l5-page {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: #10202a;
+  font-family: "Nunito", Arial, sans-serif;
+}
+
+.simulation-s2l5-page,
+.simulation-s2l5-page * {
+  box-sizing: border-box;
+}
+
+.s2l5-viewport {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: #10202a;
+}
+
+.s2l5-viewport--crash-shake {
+  animation: s2l5CrashShake 0.48s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+@keyframes s2l5CrashShake {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+
+  8% {
+    transform: translate3d(-8px, 5px, 0) rotate(-0.35deg);
+  }
+
+  16% {
+    transform: translate3d(9px, -6px, 0) rotate(0.35deg);
+  }
+
+  24% {
+    transform: translate3d(-10px, 4px, 0) rotate(-0.3deg);
+  }
+
+  32% {
+    transform: translate3d(8px, 7px, 0) rotate(0.28deg);
+  }
+
+  40% {
+    transform: translate3d(-7px, -5px, 0) rotate(-0.24deg);
+  }
+
+  52% {
+    transform: translate3d(6px, 4px, 0) rotate(0.2deg);
+  }
+
+  64% {
+    transform: translate3d(-5px, 3px, 0) rotate(-0.16deg);
+  }
+
+  76% {
+    transform: translate3d(4px, -2px, 0) rotate(0.12deg);
+  }
+
+  88% {
+    transform: translate3d(-2px, 1px, 0) rotate(-0.06deg);
+  }
+
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+}
+
+/* =========================
+   BACKGROUND CAMERA
+========================= */
+.s2l5-bg-world {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 1;
+  width: 100vw;
+  height: 185vh;
+  transform: translate3d(0, -85vh, 0);
+  transition: transform 4s cubic-bezier(0.32, 0.04, 0.15, 1);
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+.s2l5-bg-world--pan-up {
+  transform: translate3d(0, 0, 0);
+}
+
+.s2l5-bg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  user-select: none;
+  pointer-events: none;
+}
+
+/* =========================
+   ACTORS
+========================= */
+.s2l5-actors-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.s2l5-actor {
+  position: absolute;
+  height: auto;
+  user-select: none;
+  pointer-events: none;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  filter: drop-shadow(0 10px 10px rgba(0, 0, 0, 0.25));
+}
+
+/* =========================
+   TOP UI
+========================= */
+.s2l5-back-button {
+  position: absolute;
+  z-index: 150;
+  top: 18px;
+  left: 18px;
+  border: none;
+  border-radius: 18px;
+  padding: 11px 20px;
+  background: linear-gradient(180deg, #ffd866, #efa126);
+  color: #3b2208;
+  font-size: 15px;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 5px 0 #8c5200;
+  pointer-events: auto;
+}
+
+.s2l5-back-button:active {
+  transform: translateY(3px);
+  box-shadow: 0 2px 0 #8c5200;
+}
+
+.s2l5-badge {
+  position: absolute;
+  z-index: 150;
+  top: 18px;
+  right: 18px;
+  min-width: 310px;
+  padding: 10px 16px;
+  border-radius: 18px;
+  background: rgba(71, 39, 10, 0.86);
+  border: 2px solid rgba(255, 222, 134, 0.9);
+  color: #fff1c9;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.28);
+}
+
+.s2l5-badge span {
+  display: block;
+  font-size: 13px;
+  font-weight: 1000;
+  color: #ffd45a;
+}
+
+.s2l5-badge strong {
+  display: block;
+  margin-top: 3px;
+  font-size: 15px;
+}
+
+/* =========================
+   RIDER CEWEK BACK
+   POSISI JAWABAN BENAR TIDAK DIUBAH.
+========================= */
+.s2l5-rider-girl-back {
+  z-index: 35;
+  width: 12vw;
+  left: 0;
+  top: 0;
+  opacity: 1;
+  transform: translate3d(44vw, 92vh, 0) scale(0.7);
+  transform-origin: center center;
+}
+
+.s2l5-rider-girl-back--enter {
+  animation: s2l5GirlBackEnter 4s cubic-bezier(0.32, 0.04, 0.15, 1) forwards;
+}
+
+.s2l5-rider-girl-back--stop,
+.s2l5-rider-girl-back--wait {
+  transform: translate3d(44vw, 44vh, 0) scale(0.74);
+}
+
+.s2l5-rider-girl-back--wrong-advance {
+  animation: s2l5GirlBackWrongAdvance 0.52s ease-out forwards;
+}
+
+@keyframes s2l5GirlBackEnter {
+  0% {
+    transform: translate3d(44vw, 92vh, 0) scale(0.7);
+  }
+
+  100% {
+    transform: translate3d(44vw, 44vh, 0) scale(0.74);
+  }
+}
+
+@keyframes s2l5GirlBackWrongAdvance {
+  0% {
+    transform: translate3d(44vw, 44vh, 0) scale(0.74);
+  }
+
+  100% {
+    transform: translate3d(43vw, 20vh, 0) scale(0.76);
+  }
+}
+
+/* =========================
+   RIDER COWOK
+   Disesuaikan dengan posisi cewek.
+========================= */
+.s2l5-rider-boy {
+  z-index: 38;
+  width: 15vw;
+  left: 0;
+  top: -20vh;
+  opacity: 1;
+  transform: translate3d(91vw, 29vh, 0) scale(0.78);
+  transform-origin: center center;
+}
+
+.s2l5-rider-boy--half {
+  animation: s2l5BoyHalfIn 0.45s ease-out forwards;
+}
+
+.s2l5-rider-boy--pass {
+  animation: s2l5BoyPass 1.8s ease-in-out forwards;
+}
+
+@keyframes s2l5BoyHalfIn {
+  0% {
+    transform: translate3d(112vw, 29vh, 0) scale(0.78);
+  }
+
+  100% {
+    transform: translate3d(80vw, 29vh, 0) scale(0.78);
+  }
+}
+
+@keyframes s2l5BoyPass {
+  0% {
+    transform: translate3d(91vw, 29vh, 0) scale(0.78);
+  }
+
+  100% {
+    transform: translate3d(5vw, 29vh, 0) scale(0.78);
+  }
+}
+
+/* =========================
+   WRONG MOVE
+   Girl-left tetap jadi patokan.
+   Cowok sekarang ngejar titik akhir girl-left.
+========================= */
+.s2l5-rider-girl-left {
+  z-index: 40;
+  width: 15vw;
+  left: 0;
+  top: -30vh;
+  transform: translate3d(40vw, 38vh, 0) scale(0.78);
+  animation: s2l5GirlTurnLeft 1.35s ease-in-out forwards;
+  transform-origin: center center;
+}
+
+@keyframes s2l5GirlTurnLeft {
+  0% {
+    transform: translate3d(40vw, 38vh, 0) scale(0.78);
+  }
+
+  100% {
+    transform: translate3d(29vw, 38vh, 0) scale(0.78);
+  }
+}
+
+/* INI YANG DIROMBAK:
+   top cowok disamakan dengan girl-left (-30vh),
+   titik akhirnya didekatkan ke titik akhir girl-left. */
+.s2l5-rider-boy-crash-move {
+  z-index: 42;
+  width: 15vw;
+  left: 0;
+  top: -30vh;
+  transform: translate3d(91vw, 38vh, 0) scale(0.78);
+  animation: s2l5BoyCrashMove 1.45s ease-in forwards;
+  transform-origin: center center;
+}
+
+@keyframes s2l5BoyCrashMove {
+  0% {
+    transform: translate3d(80vw, 38vh, 0) scale(0.78);
+  }
+
+  55% {
+    transform: translate3d(58vw, 38vh, 0) scale(0.78);
+  }
+
+  82% {
+    transform: translate3d(40vw, 38vh, 0) scale(0.78);
+  }
+
+  100% {
+    transform: translate3d(30vw, 38vh, 0) scale(0.78);
+  }
+}
+
+/* =========================
+   CRASH RESULT
+   Titik crash dibuat ngikut titik akhir girl-left.
+========================= */
+.s2l5-crash {
+  z-index: 80;
+  width: 20vw;
+  left: 10vw;
+  top: -35vh;
+  opacity: 1;
+  transform: translate3d(18vw, 38vh, 0) scale(1);
+  animation: s2l5CrashPop 0.18s ease-out forwards;
+}
+
+@keyframes s2l5CrashPop {
+  from {
+    opacity: 0;
+    transform: translate3d(18vw, 38vh, 0) scale(0.92);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(18vw, 38vh, 0) scale(1);
+  }
+}
+
+/* =========================
+   QUESTION
+========================= */
+.s2l5-question-bubble {
+  position: absolute;
+  z-index: 75;
+  left: 60%;
+  top: 30%;
+  width: 30vw;
+  animation: s2l5PopIn 0.28s ease-out forwards;
+}
+
+.s2l5-bubble-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  user-select: none;
+  pointer-events: none;
+  filter: drop-shadow(0 10px 0 rgba(0, 0, 0, 0.18));
+}
+
+.s2l5-question-bubble p {
+  position: absolute;
+  right: 20%;
+  top: 40%;
+  width: 64%;
+  margin: 0;
+  color: #111;
+  font-size: 1.08vw;
+  font-weight: 1000;
+  line-height: 1.22;
+  text-align: center;
+}
+
+@keyframes s2l5PopIn {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 16px, 0) scale(0.94);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+/* =========================
+   ANSWER BUTTON
+========================= */
+.s2l5-answer-wrapper {
+  position: fixed;
+  z-index: 95;
+  left: 50%;
+  bottom: 5.5%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 26px;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+}
+
+.s2l5-answer-button {
+  min-width: 330px;
+  min-height: 62px;
+  border: 4px solid rgba(255, 255, 255, 0.95);
+  border-radius: 22px;
+  outline: none;
+  background: rgba(255, 255, 255, 0.94);
+  color: #111;
+  font-size: 17px;
+  font-weight: 1000;
+  cursor: pointer;
+  box-shadow: 0 8px 0 rgba(0, 0, 0, 0.18);
+  transition:
+    transform 0.15s ease,
+    background 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.s2l5-answer-button:hover {
+  transform: translateY(-4px);
+  background: #fff;
+}
+
+.s2l5-answer-button:active {
+  transform: translateY(3px);
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.18);
+}
+
+.s2l5-answer-button--danger {
+  background: #fff2f2;
+}
+
+/* =========================
+   RESULT
+========================= */
+.s2l5-result-dim {
+  position: fixed;
+  inset: 0;
+  z-index: 55;
+  pointer-events: none;
+}
+
+.s2l5-result-dim--wrong {
+  background: rgba(85, 15, 15, 0.28);
+}
+
+.s2l5-result-dim--good {
+  background: rgba(25, 85, 45, 0.18);
+}
+
+.s2l5-police {
+  position: fixed;
+  z-index: 65;
+  height: auto;
+  user-select: none;
+  pointer-events: none;
+  filter: drop-shadow(0 12px 12px rgba(0, 0, 0, 0.28));
+}
+
+.s2l5-police--stop {
+  right: -13%;
+  bottom: -22%;
+  width: 50vw;
+}
+
+.s2l5-police--good {
+  right: -13%;
+  bottom: -22%;
+  width: 50vw;
+}
+
+.s2l5-result-bubble {
+  position: fixed;
+  z-index: 90;
+  animation: s2l5PopIn 0.28s ease-out forwards;
+}
+
+.s2l5-result-bubble-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  user-select: none;
+  pointer-events: none;
+  filter: drop-shadow(0 10px 0 rgba(0, 0, 0, 0.18));
+}
+
+.s2l5-result-bubble--warning {
+  left: 50%;
+  top: 4%;
+  width: 38vw;
+}
+
+.s2l5-result-bubble--good {
+  left: 50%;
+  top: 8%;
+  width: 36vw;
+}
+
+.s2l5-result-text {
+  position: absolute;
+  z-index: 3;
+  color: #111;
+  text-align: center;
+}
+
+.s2l5-result-text h2 {
+  margin: 0 0 10px;
+  font-size: 2vw;
+  font-weight: 1000;
+}
+
+.s2l5-result-text p {
+  margin: 0;
+  font-size: 1.05vw;
+  font-weight: 900;
+  line-height: 1.3;
+}
+
+.s2l5-result-text--warning {
+  left: 16%;
+  top: 33%;
+  width: 68%;
+}
+
+.s2l5-result-text--good {
+  right: 18%;
+  top: 32%;
+  width: 66%;
+}
+
+.s2l5-result-buttons {
+  position: fixed;
+  z-index: 100;
+  left: 50%;
+  bottom: 5%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+}
+
+.s2l5-main-button,
+.s2l5-secondary-button {
+  border: none;
+  border-radius: 18px;
+  padding: 15px 27px;
+  font-size: 22px;
+  font-weight: 1000;
+  cursor: pointer;
+}
+
+.s2l5-main-button {
+  color: #3b2208;
+  background: linear-gradient(180deg, #ffd866, #efa126);
+  box-shadow: 0 5px 0 #8c5200;
+}
+
+.s2l5-secondary-button {
+  color: #fff4d8;
+  background: linear-gradient(180deg, #7a4b22, #44250c);
+  box-shadow: 0 5px 0 #231204;
+}
+
+.s2l5-main-button:active,
+.s2l5-secondary-button:active {
+  transform: translateY(3px);
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 900px) {
+  .s2l5-bg-world {
+    height: 210vh;
+    transform: translate3d(0, -110vh, 0);
+  }
+
+  .s2l5-bg-world--pan-up {
+    transform: translate3d(0, 0, 0);
+  }
+
+  .s2l5-rider-girl-back {
+    width: 26vw;
+  }
+
+  .s2l5-rider-boy {
+    width: 38vw;
+  }
+
+  .s2l5-rider-girl-left {
+    width: 38vw;
+  }
+
+  .s2l5-rider-boy-crash-move {
+    width: 38vw;
+  }
+
+  .s2l5-crash {
+    width: 82vw;
+    top: -30vh;
+    transform: translate3d(8vw, 38vh, 0) scale(1);
+  }
+
+  @keyframes s2l5CrashPop {
+    from {
+      opacity: 0;
+      transform: translate3d(8vw, 38vh, 0) scale(0.92);
+    }
+
+    to {
+      opacity: 1;
+      transform: translate3d(8vw, 38vh, 0) scale(1);
+    }
+  }
+
+  .s2l5-question-bubble {
+    left: 4%;
+    top: 8%;
+    width: 56vw;
+  }
+
+  .s2l5-question-bubble p {
+    font-size: 1.85vw;
+  }
+
+  .s2l5-answer-wrapper {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .s2l5-answer-button {
+    min-width: 78vw;
+    font-size: 15px;
+  }
+
+  .s2l5-result-bubble--warning,
+  .s2l5-result-bubble--good {
+    width: 56vw;
+    left: 4%;
+    top: 8%;
+  }
+
+  .s2l5-result-text h2 {
+    font-size: 3vw;
+  }
+
+  .s2l5-result-text p {
+    font-size: 1.8vw;
+  }
+
+  .s2l5-police--stop,
+  .s2l5-police--good {
+    width: 48vw;
+    right: -7%;
+  }
+}
