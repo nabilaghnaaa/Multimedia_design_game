@@ -2,14 +2,14 @@ import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./SimulationStage2Level3.css";
 
-import level3Bg from "../assets/simulation/stage2/stage3/level3-bg.png";
+import level3Bg from "../assets/simulation/stage2/level3/level3-bg.png";
 
-import girlPinkBack from "../assets/simulation/stage2/stage3/girl-pink-back.png";
-import girlPinkLeft from "../assets/simulation/stage2/stage3/girl-pink-left.png";
-import girlPinkRight from "../assets/simulation/stage2/stage3/girl-pink-right.png";
-import boyBlue from "../assets/simulation/stage2/stage3/boy-blue.png";
-import carBlack from "../assets/simulation/stage2/stage3/car-black.png";
-import crashImg from "../assets/simulation/stage2/stage3/crash.png";
+import girlPinkBack from "../assets/simulation/stage2/level3/girl-pink-back.png";
+import girlPinkLeft from "../assets/simulation/stage2/level3/girl-pink-left.png";
+import girlPinkRight from "../assets/simulation/stage2/level3/girl-pink-right.png";
+import boyBlue from "../assets/simulation/stage2/level3/boy-blue.png";
+import carBlack from "../assets/simulation/stage2/level3/car-black.png";
+import crashImg from "../assets/simulation/stage2/level3/crash.png";
 
 import policeGood from "../assets/simulation/stage1/level1/police-good.png";
 import policeStop from "../assets/simulation/stage1/level1/police-stop.png";

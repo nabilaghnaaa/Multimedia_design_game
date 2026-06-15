@@ -1,0 +1,758 @@
+.simulation-s2l4-page {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: #10202a;
+  font-family: "Nunito", Arial, sans-serif;
+}
+
+.simulation-s2l4-page,
+.simulation-s2l4-page * {
+  box-sizing: border-box;
+}
+
+.s2l4-viewport {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: #10202a;
+}
+
+.s2l4-viewport--crash-shake {
+  animation: s2l4CrashShake 0.48s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+@keyframes s2l4CrashShake {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+
+  8% {
+    transform: translate3d(-8px, 5px, 0) rotate(-0.35deg);
+  }
+
+  16% {
+    transform: translate3d(9px, -6px, 0) rotate(0.35deg);
+  }
+
+  24% {
+    transform: translate3d(-10px, 4px, 0) rotate(-0.3deg);
+  }
+
+  32% {
+    transform: translate3d(8px, 7px, 0) rotate(0.28deg);
+  }
+
+  40% {
+    transform: translate3d(-7px, -5px, 0) rotate(-0.24deg);
+  }
+
+  52% {
+    transform: translate3d(6px, 4px, 0) rotate(0.2deg);
+  }
+
+  64% {
+    transform: translate3d(-5px, 3px, 0) rotate(-0.16deg);
+  }
+
+  76% {
+    transform: translate3d(4px, -2px, 0) rotate(0.12deg);
+  }
+
+  88% {
+    transform: translate3d(-2px, 1px, 0) rotate(-0.06deg);
+  }
+
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+}
+
+/* =========================
+   BACKGROUND CAMERA
+   Masuk dari kanan ke kiri,
+   tapi stop dulu di tengah.
+========================= */
+.s2l4-bg-world {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 1;
+  width: 185vw;
+  height: 100vh;
+  transform: translate3d(-78vw, 0, 0);
+  transition: transform 4s cubic-bezier(0.32, 0.04, 0.15, 1);
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+.s2l4-bg-world--pan-left {
+  transform: translate3d(-38vw, 0, 0);
+}
+
+/* Tetap pakai transisi punya kamu.
+   Ini hanya mengunci posisi akhir ketika polisi good muncul. */
+.s2l4-viewport:has(.s2l4-rider-blue--correct-go) .s2l4-bg-world,
+.s2l4-viewport:has(.s2l4-rider-blue--correct-go) .s2l4-bg-world--pan-left {
+  animation: s2l4CameraContinueLeft 1.8s ease-in-out forwards;
+}
+
+.s2l4-viewport--correct-result .s2l4-bg-world,
+.s2l4-viewport--correct-result .s2l4-bg-world--pan-left {
+  transform: translate3d(0, 0, 0);
+  transition: none;
+}
+
+@keyframes s2l4CameraContinueLeft {
+  0% {
+    transform: translate3d(-38vw, 0, 0);
+  }
+
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.s2l4-bg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  user-select: none;
+  pointer-events: none;
+}
+
+/* =========================
+   ACTORS
+========================= */
+.s2l4-actors-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.s2l4-actor {
+  position: absolute;
+  height: auto;
+  user-select: none;
+  pointer-events: none;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  filter: drop-shadow(0 10px 10px rgba(0, 0, 0, 0.25));
+}
+
+/* =========================
+   TOP UI
+========================= */
+.s2l4-back-button {
+  position: absolute;
+  z-index: 150;
+  top: 18px;
+  left: 18px;
+  border: none;
+  border-radius: 18px;
+  padding: 11px 20px;
+  background: linear-gradient(180deg, #ffd866, #efa126);
+  color: #3b2208;
+  font-size: 15px;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 5px 0 #8c5200;
+  pointer-events: auto;
+}
+
+.s2l4-back-button:active {
+  transform: translateY(3px);
+  box-shadow: 0 2px 0 #8c5200;
+}
+
+.s2l4-badge {
+  position: absolute;
+  z-index: 150;
+  top: 18px;
+  right: 18px;
+  min-width: 310px;
+  padding: 10px 16px;
+  border-radius: 18px;
+  background: rgba(71, 39, 10, 0.86);
+  border: 2px solid rgba(255, 222, 134, 0.9);
+  color: #fff1c9;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.28);
+}
+
+.s2l4-badge span {
+  display: block;
+  font-size: 13px;
+  font-weight: 1000;
+  color: #ffd45a;
+}
+
+.s2l4-badge strong {
+  display: block;
+  margin-top: 3px;
+  font-size: 15px;
+}
+
+/* =========================
+   RIDER BIRU
+   Ukuran sesuai request: 12vw.
+   Stop di tengah, biru lebih kiri dari merah.
+========================= */
+.s2l4-rider-blue {
+  z-index: 36;
+  width: 12vw;
+  left: 0;
+  top: 16%;
+  opacity: 1;
+  transform: translate3d(118vw, 43vh, 0) scale(0.92);
+  transform-origin: center center;
+}
+
+.s2l4-rider-blue--enter {
+  animation: s2l4BlueEnter 4s cubic-bezier(0.32, 0.04, 0.15, 1) forwards;
+}
+
+.s2l4-rider-blue--stop {
+  transform: translate3d(45vw, 43vh, 0) scale(0.92);
+}
+
+.s2l4-rider-blue--wrong-stop {
+  animation: s2l4BlueWrongStop 0.9s ease-out forwards;
+}
+
+.s2l4-rider-blue--correct-go {
+  animation: s2l4BlueCorrectGo 1.8s ease-in-out forwards;
+}
+
+@keyframes s2l4BlueEnter {
+  0% {
+    transform: translate3d(118vw, 43vh, 0) scale(0.92);
+  }
+
+  100% {
+    transform: translate3d(45vw, 43vh, 0) scale(0.92);
+  }
+}
+
+/* Kalau pilih "Berhenti di sini":
+   tetap pakai angka punya kamu. */
+@keyframes s2l4BlueWrongStop {
+  0% {
+    transform: translate3d(45vw, 43vh, 0) scale(0.92);
+  }
+
+  100% {
+    transform: translate3d(35vw, 43vh, 0) scale(0.92);
+  }
+}
+
+@keyframes s2l4BlueCorrectGo {
+  0% {
+    transform: translate3d(45vw, 43vh, 0) scale(0.92);
+  }
+
+  100% {
+    transform: translate3d(-32vw, 43vh, 0) scale(0.92);
+  }
+}
+
+/* =========================
+   RIDER MERAH
+   Layer dinaikkan di atas rider pink.
+========================= */
+.s2l4-rider-red {
+  z-index: 60;
+  width: 15vw;
+  left: 0;
+  top: 0;
+  opacity: 1;
+  transform: translate3d(138vw, 56vh, 0) scale(0.82);
+  transform-origin: center center;
+}
+
+.s2l4-rider-red--enter {
+  animation: s2l4RedEnter 4s cubic-bezier(0.32, 0.04, 0.15, 1) forwards;
+}
+
+.s2l4-rider-red--follow-stop {
+  transform: translate3d(64vw, 56vh, 0) scale(0.82);
+}
+
+.s2l4-rider-red--warning {
+  animation: s2l4RedWarning 1.6s ease-in-out forwards;
+}
+
+.s2l4-rider-red--correct-go {
+  animation: s2l4RedCorrectGo 1.8s ease-in-out forwards;
+}
+
+@keyframes s2l4RedEnter {
+  0% {
+    transform: translate3d(138vw, 56vh, 0) scale(0.82);
+  }
+
+  100% {
+    transform: translate3d(64vw, 56vh, 0) scale(0.82);
+  }
+}
+
+@keyframes s2l4RedWarning {
+  0% {
+    transform: translate3d(64vw, 56vh, 0) scale(0.82);
+  }
+
+  100% {
+    transform: translate3d(63vw, 56vh, 0) scale(0.82);
+  }
+}
+
+@keyframes s2l4RedCorrectGo {
+  0% {
+    transform: translate3d(64vw, 56vh, 0) scale(0.82);
+  }
+
+  100% {
+    transform: translate3d(-18vw, 56vh, 0) scale(0.82);
+  }
+}
+
+/* =========================
+   RIDER PINK PENABRAK
+   Tetap gerak seperti punya kamu, cuma layer di bawah rider merah.
+========================= */
+.s2l4-rider-pink-crash {
+  z-index: 45;
+  width: 15vw;
+  left: 0;
+  top: 0;
+  opacity: 1;
+  transform: translate3d(128vw, 55vh, 0) scale(0.82);
+  animation: s2l4PinkCrashMove 1.6s ease-in forwards;
+  transform-origin: center center;
+}
+
+@keyframes s2l4PinkCrashMove {
+  0% {
+    transform: translate3d(128vw, 55vh, 0) scale(0.82);
+  }
+
+  35% {
+    transform: translate3d(92vw, 55vh, 0) scale(0.82);
+  }
+
+  70% {
+    transform: translate3d(67vw, 55vh, 0) scale(0.82);
+  }
+
+  100% {
+    transform: translate3d(40vw, 55vh, 0) scale(0.82);
+  }
+}
+
+/* =========================
+   CRASH RESULT
+========================= */
+.s2l4-crash {
+  z-index: 80;
+  width: 18vw;
+  left: -2%;
+  top: 10%;
+  opacity: 1;
+  transform: translate3d(39vw, 42vh, 0) scale(1);
+  animation: s2l4CrashPop 0.18s ease-out forwards;
+}
+
+@keyframes s2l4CrashPop {
+  from {
+    opacity: 0;
+    transform: translate3d(39vw, 42vh, 0) scale(0.92);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(39vw, 42vh, 0) scale(1);
+  }
+}
+
+.s2l4-rider-red-angry {
+  z-index: 82;
+  width: 15vw;
+  left: 0;
+  top: 3%;
+  transform: translate3d(64vw, 54vh, 0) scale(0.82);
+  animation: s2l4AngryPop 0.22s ease-out forwards;
+}
+
+@keyframes s2l4AngryPop {
+  from {
+    opacity: 0;
+    transform: translate3d(64vw, 54vh, 0) scale(0.76);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(64vw, 54vh, 0) scale(0.82);
+  }
+}
+
+/* =========================
+   QUESTION
+   Pakai bubble left.
+========================= */
+.s2l4-question-bubble {
+  position: absolute;
+  z-index: 75;
+  left: 50%;
+  top: 11%;
+  width: 25vw;
+  animation: s2l4PopIn 0.28s ease-out forwards;
+}
+
+.s2l4-bubble-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  user-select: none;
+  pointer-events: none;
+  filter: drop-shadow(0 10px 0 rgba(0, 0, 0, 0.18));
+}
+
+.s2l4-question-bubble p {
+  position: absolute;
+  left: 17%;
+  top: 40%;
+  width: 64%;
+  margin: 0;
+  color: #111;
+  font-size: 1.08vw;
+  font-weight: 1000;
+  line-height: 1.22;
+  text-align: center;
+}
+
+@keyframes s2l4PopIn {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 16px, 0) scale(0.94);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+/* =========================
+   ANSWER BUTTON
+========================= */
+.s2l4-answer-wrapper {
+  position: fixed;
+  z-index: 95;
+  left: 50%;
+  bottom: 5.5%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 26px;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+}
+
+.s2l4-answer-button {
+  min-width: 310px;
+  min-height: 62px;
+  border: 4px solid rgba(255, 255, 255, 0.95);
+  border-radius: 22px;
+  outline: none;
+  background: rgba(255, 255, 255, 0.94);
+  color: #111;
+  font-size: 18px;
+  font-weight: 1000;
+  cursor: pointer;
+  box-shadow: 0 8px 0 rgba(0, 0, 0, 0.18);
+  transition:
+    transform 0.15s ease,
+    background 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.s2l4-answer-button:hover {
+  transform: translateY(-4px);
+  background: #fff;
+}
+
+.s2l4-answer-button:active {
+  transform: translateY(3px);
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.18);
+}
+
+.s2l4-answer-button--danger {
+  background: #fff2f2;
+}
+
+/* =========================
+   RESULT
+========================= */
+.s2l4-result-dim {
+  position: fixed;
+  inset: 0;
+  z-index: 55;
+  pointer-events: none;
+}
+
+.s2l4-result-dim--wrong {
+  background: rgba(85, 15, 15, 0.28);
+}
+
+.s2l4-result-dim--good {
+  background: rgba(25, 85, 45, 0.18);
+}
+
+.s2l4-police {
+  position: fixed;
+  z-index: 65;
+  height: auto;
+  user-select: none;
+  pointer-events: none;
+  filter: drop-shadow(0 12px 12px rgba(0, 0, 0, 0.28));
+}
+
+.s2l4-police--stop {
+  right: -13%;
+  bottom: -22%;
+  width: 50vw;
+}
+
+.s2l4-police--good {
+  right: 65%;
+  bottom: -22%;
+  width: 50vw;
+}
+
+.s2l4-result-bubble {
+  position: fixed;
+  z-index: 90;
+  animation: s2l4PopIn 0.28s ease-out forwards;
+}
+
+.s2l4-result-bubble-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  user-select: none;
+  pointer-events: none;
+  filter: drop-shadow(0 10px 0 rgba(0, 0, 0, 0.18));
+}
+
+.s2l4-result-bubble--warning {
+  left: 50%;
+  top: -2%;
+  width: 38vw;
+}
+
+.s2l4-result-bubble--good {
+  left: 15%;
+  top: 18%;
+  width: 36vw;
+}
+
+.s2l4-result-text {
+  position: absolute;
+  z-index: 3;
+  color: #111;
+  text-align: center;
+}
+
+.s2l4-result-text h2 {
+  margin: 0 0 10px;
+  font-size: 2vw;
+  font-weight: 1000;
+}
+
+.s2l4-result-text p {
+  margin: 0;
+  font-size: 1.05vw;
+  font-weight: 900;
+  line-height: 1.3;
+}
+
+.s2l4-result-text--warning {
+  left: 15%;
+  top: 33%;
+  width: 68%;
+}
+
+.s2l4-result-text--good {
+  left: 16%;
+  top: 32%;
+  width: 66%;
+}
+
+.s2l4-result-buttons {
+  position: fixed;
+  z-index: 100;
+  left: 50%;
+  bottom: 5%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+}
+
+.s2l4-main-button,
+.s2l4-secondary-button {
+  border: none;
+  border-radius: 18px;
+  padding: 15px 27px;
+  font-size: 22px;
+  font-weight: 1000;
+  cursor: pointer;
+}
+
+.s2l4-main-button {
+  color: #3b2208;
+  background: linear-gradient(180deg, #ffd866, #efa126);
+  box-shadow: 0 5px 0 #8c5200;
+}
+
+.s2l4-secondary-button {
+  color: #fff4d8;
+  background: linear-gradient(180deg, #7a4b22, #44250c);
+  box-shadow: 0 5px 0 #231204;
+}
+
+.s2l4-main-button:active,
+.s2l4-secondary-button:active {
+  transform: translateY(3px);
+}
+
+/* =========================
+   SAFE FINAL
+========================= */
+.s2l4-rider-blue-safe-final {
+  z-index: 40;
+  width: 12vw;
+  left: 0;
+  top: 16%;
+  transform: translate3d(35vw, 43vh, 0) scale(0.92);
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 900px) {
+  .s2l4-bg-world {
+    width: 220vw;
+    transform: translate3d(-105vw, 0, 0);
+  }
+
+  .s2l4-bg-world--pan-left {
+    transform: translate3d(-48vw, 0, 0);
+  }
+
+  .s2l4-viewport:has(.s2l4-rider-blue--correct-go) .s2l4-bg-world,
+  .s2l4-viewport:has(.s2l4-rider-blue--correct-go) .s2l4-bg-world--pan-left {
+    animation: s2l4CameraContinueLeftMobile 1.8s ease-in-out forwards;
+  }
+
+  .s2l4-viewport--correct-result .s2l4-bg-world,
+  .s2l4-viewport--correct-result .s2l4-bg-world--pan-left {
+    transform: translate3d(0, 0, 0);
+    transition: none;
+  }
+
+  @keyframes s2l4CameraContinueLeftMobile {
+    0% {
+      transform: translate3d(-48vw, 0, 0);
+    }
+
+    100% {
+      transform: translate3d(0, 0, 0);
+    }
+  }
+
+  .s2l4-rider-blue {
+    width: 26vw;
+    top: 16%;
+  }
+
+  .s2l4-rider-red {
+    width: 30vw;
+  }
+
+  .s2l4-rider-pink-crash {
+    width: 30vw;
+  }
+
+  .s2l4-crash {
+    width: 68vw;
+    transform: translate3d(18vw, 40vh, 0) scale(1);
+  }
+
+  @keyframes s2l4CrashPop {
+    from {
+      opacity: 0;
+      transform: translate3d(18vw, 40vh, 0) scale(0.92);
+    }
+
+    to {
+      opacity: 1;
+      transform: translate3d(18vw, 40vh, 0) scale(1);
+    }
+  }
+
+  .s2l4-rider-red-angry {
+    width: 30vw;
+    transform: translate3d(48vw, 54vh, 0) scale(0.82);
+  }
+
+  .s2l4-question-bubble {
+    left: 4%;
+    top: 10%;
+    width: 55vw;
+  }
+
+  .s2l4-question-bubble p {
+    font-size: 1.85vw;
+  }
+
+  .s2l4-answer-wrapper {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .s2l4-answer-button {
+    min-width: 78vw;
+    font-size: 15px;
+  }
+
+  .s2l4-result-bubble--warning,
+  .s2l4-result-bubble--good {
+    width: 56vw;
+    left: 4%;
+    top: 8%;
+  }
+
+  .s2l4-result-text h2 {
+    font-size: 3vw;
+  }
+
+  .s2l4-result-text p {
+    font-size: 1.8vw;
+  }
+
+  .s2l4-police--stop,
+  .s2l4-police--good {
+    width: 48vw;
+    right: -7%;
+  }
+}
