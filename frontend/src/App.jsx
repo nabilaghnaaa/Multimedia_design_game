@@ -9,12 +9,15 @@ import SimulationLevel2 from "./pages/SimulationLevel2";
 import SimulationLevel3 from "./pages/SimulationLevel3";
 import SimulationLevel4 from "./pages/SimulationLevel4";
 import SimulationLevel5 from "./pages/SimulationLevel5";
+
 import SimulationStage2Level1 from "./pages/SimulationStage2Level1";
 import SimulationStage2Level2 from "./pages/SimulationStage2Level2";
 import SimulationStage2Level3 from "./pages/SimulationStage2Level3";
 import SimulationStage2Level4 from "./pages/SimulationStage2Level4";
 import SimulationStage2Level5 from "./pages/SimulationStage2Level5";
 import SimulationStage2Level6 from "./pages/SimulationStage2Level6";
+import SimulationStage2Level7 from "./pages/SimulationStage2Level7";
+
 import ChallengePage from "./pages/ChallengePage";
 
 function App() {
@@ -53,6 +56,9 @@ function App() {
 
         {/* STAGE 2 LEVEL 6 */}
         <Route path="/simulation/11" element={<SimulationStage2Level6 />} />
+
+        {/* STAGE 2 LEVEL 7 */}
+        <Route path="/simulation/12" element={<SimulationStage2Level7 />} />
 
         {/* LEVEL STAGE 1 YANG PAKE SIMULATIONPAGE */}
         <Route path="/simulation/:levelNumber" element={<SimulationPage />} />

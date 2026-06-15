@@ -1,0 +1,717 @@
+.simulation-s2l7-page {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: #18313a;
+  font-family: "Nunito", Arial, sans-serif;
+}
+
+.simulation-s2l7-page,
+.simulation-s2l7-page * {
+  box-sizing: border-box;
+}
+
+.s2l7-viewport {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: #18313a;
+}
+
+.s2l7-viewport--crash-shake {
+  animation: s2l7CrashShake 0.48s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+@keyframes s2l7CrashShake {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+
+  8% {
+    transform: translate3d(-8px, 5px, 0) rotate(-0.35deg);
+  }
+
+  16% {
+    transform: translate3d(9px, -6px, 0) rotate(0.35deg);
+  }
+
+  24% {
+    transform: translate3d(-10px, 4px, 0) rotate(-0.3deg);
+  }
+
+  32% {
+    transform: translate3d(8px, 7px, 0) rotate(0.28deg);
+  }
+
+  40% {
+    transform: translate3d(-7px, -5px, 0) rotate(-0.24deg);
+  }
+
+  52% {
+    transform: translate3d(6px, 4px, 0) rotate(0.2deg);
+  }
+
+  64% {
+    transform: translate3d(-5px, 3px, 0) rotate(-0.16deg);
+  }
+
+  76% {
+    transform: translate3d(4px, -2px, 0) rotate(0.12deg);
+  }
+
+  88% {
+    transform: translate3d(-2px, 1px, 0) rotate(-0.06deg);
+  }
+
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+}
+
+/* =========================
+   BACKGROUND / CAMERA
+   POV kamera mengikuti rider di awal.
+   Saat jawaban salah kamera DIAM, tidak geser lagi.
+========================= */
+.s2l7-bg-world {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 1;
+  width: 165vw;
+  height: 100vh;
+  transform: translate3d(0, 0, 0);
+  transition: transform 4.3s cubic-bezier(0.32, 0.04, 0.15, 1);
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+.s2l7-bg-world--follow-rider {
+  transform: translate3d(-31vw, 0, 0);
+}
+
+/* salah: kamera tetap di posisi freeze */
+.s2l7-bg-world--wrong-result {
+  transform: translate3d(-31vw, 0, 0);
+  transition: none;
+}
+
+.s2l7-bg-world--correct-follow {
+  transform: translate3d(-65vw, 0, 0);
+  transition: transform 1.9s ease-in-out;
+}
+
+.s2l7-bg-world--correct-result {
+  transform: translate3d(-65vw, 0, 0);
+  transition: none;
+}
+
+.s2l7-bg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  object-position: center center;
+  user-select: none;
+  pointer-events: none;
+}
+
+/* =========================
+   LAYER AKTOR
+========================= */
+.s2l7-actors-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* =========================
+   AKTOR UMUM
+========================= */
+.s2l7-actor {
+  position: absolute;
+  z-index: 10;
+  height: auto;
+  user-select: none;
+  pointer-events: none;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  filter: drop-shadow(0 10px 10px rgba(0, 0, 0, 0.26));
+}
+
+/* =========================
+   BACK BUTTON
+========================= */
+.s2l7-back-button {
+  position: absolute;
+  z-index: 150;
+  top: 18px;
+  left: 18px;
+  border: none;
+  border-radius: 18px;
+  padding: 11px 20px;
+  background: linear-gradient(180deg, #ffd866, #efa126);
+  color: #3b2208;
+  font-size: 15px;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 5px 0 #8c5200;
+  pointer-events: auto;
+}
+
+.s2l7-back-button:active {
+  transform: translateY(3px);
+  box-shadow: 0 2px 0 #8c5200;
+}
+
+/* =========================
+   BADGE LEVEL
+========================= */
+.s2l7-level-badge {
+  position: absolute;
+  z-index: 150;
+  top: 18px;
+  right: 18px;
+  min-width: 310px;
+  padding: 10px 16px;
+  border-radius: 18px;
+  background: rgba(71, 39, 10, 0.86);
+  border: 2px solid rgba(255, 222, 134, 0.9);
+  color: #fff1c9;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.28);
+}
+
+.s2l7-level-badge span {
+  display: block;
+  font-size: 13px;
+  font-weight: 1000;
+  color: #ffd45a;
+}
+
+.s2l7-level-badge strong {
+  display: block;
+  margin-top: 3px;
+  font-size: 15px;
+  font-weight: 1000;
+}
+
+/* =========================
+   RIDER CEWEK SIDE
+   FIX:
+   gerak kiri ke kanan dibuat satu animasi linear,
+   tidak ada titik 35% / 70% supaya tidak patah-patah.
+========================= */
+.s2l7-rider-side {
+  z-index: 35;
+  width: 13vw;
+  left: 0;
+  top: 0;
+  transform: translate3d(-18vw, 57vh, 0) scale(0.82);
+  transform-origin: center center;
+}
+
+.s2l7-rider-side--enter {
+  animation: s2l7RiderSideEnter 4.3s linear forwards;
+}
+
+.s2l7-rider-side--stop {
+  transform: translate3d(43vw, 57vh, 0) scale(0.86);
+}
+
+.s2l7-rider-side--start-turn {
+  animation: s2l7RiderStartTurn 0.5s ease-in-out forwards;
+}
+
+.s2l7-rider-side--correct-go {
+  animation: s2l7RiderCorrectGo 1.9s ease-in-out forwards;
+}
+
+@keyframes s2l7RiderSideEnter {
+  0% {
+    transform: translate3d(-18vw, 57vh, 0) scale(0.82);
+  }
+
+  100% {
+    transform: translate3d(43vw, 57vh, 0) scale(0.86);
+  }
+}
+
+/* Salah awal: cewek maju dikit saja */
+@keyframes s2l7RiderStartTurn {
+  0% {
+    transform: translate3d(43vw, 57vh, 0) scale(0.86);
+  }
+
+  100% {
+    transform: translate3d(45vw, 57vh, 0) scale(0.86);
+  }
+}
+
+/* Jawaban benar: rider lurus terus ke kanan */
+@keyframes s2l7RiderCorrectGo {
+  0% {
+    transform: translate3d(43vw, 57vh, 0) scale(0.86);
+  }
+
+  100% {
+    transform: translate3d(113vw, 57vh, 0) scale(0.86);
+  }
+}
+
+/* =========================
+   RIDER CEWEK BACK
+   Salah: rider maju lurus ke atas.
+   Tidak geser kanan.
+========================= */
+.s2l7-rider-back {
+  z-index: 40;
+  width: 10vw;
+  left: 0;
+  top: 0;
+  transform: translate3d(45vw, 56vh, 0) scale(0.84);
+  transform-origin: center center;
+}
+
+.s2l7-rider-back--wrong-cross {
+  animation: s2l7RiderBackWrongCross 1.15s ease-in-out forwards;
+}
+
+@keyframes s2l7RiderBackWrongCross {
+  0% {
+    transform: translate3d(45vw, 56vh, 0) scale(0.84);
+  }
+
+  100% {
+    transform: translate3d(45vw,30vh, 0) scale(0.82);
+  }
+}
+
+/* =========================
+   MOBIL HITAM JALUR ATAS
+   FIX:
+   mobil dinaikkan dari 29vh ke 24vh.
+========================= */
+.s2l7-car {
+  z-index: 32;
+  width: 13vw;
+  left: 0;
+  top: 0;
+  transform: translate3d(112vw, 24vh, 0) scale(0.82);
+  transform-origin: center center;
+}
+
+.s2l7-car--half-enter {
+  animation: s2l7CarHalfEnter 0.7s ease-out forwards;
+}
+
+.s2l7-car--wrong-drive {
+  animation: s2l7CarWrongDrive 1.7s ease-in forwards;
+}
+
+.s2l7-car--correct-pass {
+  animation: s2l7CarCorrectPass 1.9s ease-in-out forwards;
+}
+
+@keyframes s2l7CarHalfEnter {
+  0% {
+    transform: translate3d(112vw, 24vh, 0) scale(0.82);
+  }
+
+  100% {
+    transform: translate3d(83vw, 24vh, 0) scale(0.82);
+  }
+}
+
+/* Salah: mobil masuk ke kiri menuju posisi akhir rider back */
+@keyframes s2l7CarWrongDrive {
+  0% {
+    transform: translate3d(83vw, 24vh, 0) scale(0.82);
+  }
+
+  55% {
+    transform: translate3d(62vw, 24vh, 0) scale(0.82);
+  }
+
+  100% {
+    transform: translate3d(50vw, 24vh, 0) scale(0.82);
+  }
+}
+
+/* Benar: mobil tetap lewat dari kanan ke kiri */
+@keyframes s2l7CarCorrectPass {
+  0% {
+    transform: translate3d(83vw, 24vh, 0) scale(0.82);
+  }
+
+  100% {
+    transform: translate3d(-30vw, 24vh, 0) scale(0.82);
+  }
+}
+
+/* =========================
+   CRASH
+   Disesuaikan dengan posisi rider back dan mobil.
+========================= */
+.s2l7-crash {
+  z-index: 80;
+  width: 20vw;
+  left: 10vw;
+  top: -4vh;
+  transform: translate3d(33vw, 22vh, 0) scale(1);
+  animation: s2l7CrashPop 0.14s ease-out forwards;
+}
+
+@keyframes s2l7CrashPop {
+  from {
+    opacity: 0;
+    transform: translate3d(33vw, 22vh, 0) scale(0.82);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(33vw, 22vh, 0) scale(1);
+  }
+}
+
+/* =========================
+   BUBBLE QUESTION
+========================= */
+.s2l7-question-bubble {
+  position: absolute;
+  z-index: 75;
+  left: 52%;
+  top: 35%;
+  width: 22vw;
+  animation: s2l7BubblePop 0.28s ease-out forwards;
+}
+
+.s2l7-bubble-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  user-select: none;
+  pointer-events: none;
+  filter: drop-shadow(0 10px 0 rgba(0, 0, 0, 0.18));
+}
+
+.s2l7-question-bubble p {
+  position: absolute;
+  left: 16%;
+  top: 33%;
+  width: 65%;
+  margin: 0;
+  color: #111;
+  font-size: 1.02vw;
+  font-weight: 1000;
+  line-height: 1.2;
+  text-align: center;
+  z-index: 5;
+}
+
+@keyframes s2l7BubblePop {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 16px, 0) scale(0.94);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+/* =========================
+   BUTTON JAWABAN
+========================= */
+.s2l7-answer-wrapper {
+  position: fixed;
+  z-index: 95;
+  left: 50%;
+  bottom: 5.5%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 26px;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+}
+
+.s2l7-answer-button {
+  min-width: 300px;
+  min-height: 62px;
+  border: 4px solid rgba(255, 255, 255, 0.95);
+  border-radius: 22px;
+  outline: none;
+  background: rgba(255, 255, 255, 0.94);
+  color: #111;
+  font-size: 18px;
+  font-weight: 1000;
+  cursor: pointer;
+  box-shadow: 0 8px 0 rgba(0, 0, 0, 0.18);
+  transition:
+    transform 0.15s ease,
+    background 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.s2l7-answer-button:hover {
+  transform: translateY(-4px);
+  background: #fff;
+}
+
+.s2l7-answer-button:active {
+  transform: translateY(3px);
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.18);
+}
+
+.s2l7-answer-button--danger {
+  background: #fff2f2;
+}
+
+/* =========================
+   RESULT DIM
+========================= */
+.s2l7-result-dim {
+  position: fixed;
+  inset: 0;
+  z-index: 55;
+  pointer-events: none;
+}
+
+.s2l7-result-dim--wrong {
+  background: rgba(104, 28, 18, 0.34);
+}
+
+.s2l7-result-dim--correct {
+  background: rgba(27, 93, 49, 0.22);
+}
+
+/* =========================
+   POLISI
+========================= */
+.s2l7-police {
+  position: fixed;
+  z-index: 68;
+  height: auto;
+  user-select: none;
+  pointer-events: none;
+  filter: drop-shadow(0 12px 12px rgba(0, 0, 0, 0.28));
+}
+
+.s2l7-police--stop {
+  right: -13%;
+  bottom: -22%;
+  width: 50vw;
+}
+
+.s2l7-police--good {
+  right: 65%;
+  bottom: -22%;
+  width: 50vw;
+}
+
+/* =========================
+   RESULT BUBBLE
+========================= */
+.s2l7-result-bubble {
+  position: fixed;
+  z-index: 90;
+  animation: s2l7BubblePop 0.28s ease-out forwards;
+}
+
+.s2l7-result-bubble-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  user-select: none;
+  pointer-events: none;
+  filter: drop-shadow(0 10px 0 rgba(0, 0, 0, 0.18));
+}
+
+.s2l7-result-bubble--warning {
+  left: 50%;
+  top: 40%;
+  width: 32vw;
+}
+
+.s2l7-result-bubble--good {
+  left: 15%;
+  top: 16%;
+  width: 38vw;
+}
+
+.s2l7-result-text {
+  position: absolute;
+  z-index: 3;
+  color: #111;
+  text-align: center;
+}
+
+.s2l7-result-text h2 {
+  margin: 0 0 10px;
+  font-size: 2vw;
+  font-weight: 1000;
+}
+
+.s2l7-result-text p {
+  margin: 0;
+  font-size: 1.03vw;
+  font-weight: 900;
+  line-height: 1.3;
+}
+
+.s2l7-result-text--warning {
+  left: 18%;
+  top: 30%;
+  width: 68%;
+}
+
+.s2l7-result-text--good {
+  left: 18%;
+  top: 32%;
+  width: 66%;
+}
+
+/* =========================
+   RESULT BUTTON
+========================= */
+.s2l7-result-buttons {
+  position: fixed;
+  z-index: 100;
+  left: 50%;
+  bottom: 5%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+}
+
+.s2l7-main-button,
+.s2l7-secondary-button {
+  border: none;
+  border-radius: 18px;
+  padding: 15px 27px;
+  font-size: 22px;
+  font-weight: 1000;
+  cursor: pointer;
+}
+
+.s2l7-main-button {
+  color: #3b2208;
+  background: linear-gradient(180deg, #ffd866, #efa126);
+  box-shadow: 0 5px 0 #8c5200;
+}
+
+.s2l7-secondary-button {
+  color: #fff4d8;
+  background: linear-gradient(180deg, #7a4b22, #44250c);
+  box-shadow: 0 5px 0 #231204;
+}
+
+.s2l7-main-button:active,
+.s2l7-secondary-button:active {
+  transform: translateY(3px);
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 900px) {
+  .s2l7-bg-world {
+    width: 190vw;
+  }
+
+  .s2l7-bg-world--follow-rider {
+    transform: translate3d(-42vw, 0, 0);
+  }
+
+  .s2l7-bg-world--wrong-result {
+    transform: translate3d(-42vw, 0, 0);
+  }
+
+  .s2l7-bg-world--correct-follow,
+  .s2l7-bg-world--correct-result {
+    transform: translate3d(-90vw, 0, 0);
+  }
+
+  .s2l7-rider-side,
+  .s2l7-rider-back {
+    width: 22vw;
+  }
+
+  .s2l7-car {
+    width: 28vw;
+  }
+
+  .s2l7-crash {
+    width: 58vw;
+  }
+
+  .s2l7-question-bubble {
+    left: 50%;
+    top: 40%;
+    width: 82vw;
+    transform: translateX(-50%);
+  }
+
+  .s2l7-question-bubble p {
+    font-size: 15px;
+  }
+
+  .s2l7-answer-wrapper {
+    width: 90vw;
+    flex-direction: column;
+    gap: 14px;
+    bottom: 5%;
+  }
+
+  .s2l7-answer-button {
+    width: 100%;
+    min-width: unset;
+    min-height: 58px;
+    font-size: 17px;
+  }
+
+  .s2l7-result-bubble--warning,
+  .s2l7-result-bubble--good {
+    left: 50%;
+    top: 13%;
+    width: 82vw;
+    transform: translateX(-50%);
+  }
+
+  .s2l7-result-text h2 {
+    font-size: 24px;
+  }
+
+  .s2l7-result-text p {
+    font-size: 14px;
+  }
+
+  .s2l7-police--stop,
+  .s2l7-police--good {
+    width: 48vw;
+    right: -7%;
+  }
+
+  .s2l7-result-buttons {
+    width: 90vw;
+    gap: 12px;
+    bottom: 4%;
+  }
+
+  .s2l7-main-button,
+  .s2l7-secondary-button {
+    flex: 1;
+    padding: 12px 14px;
+    font-size: 14px;
+  }
+}
