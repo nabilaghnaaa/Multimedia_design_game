@@ -608,14 +608,14 @@
 }
 
 .s2l6-result-bubble--good {
-  left: 8%;
-  top: 16%;
+  left: 45%;
+  top: -10%;
   width: 38vw;
 }
 
 .s2l6-result-bubble--warning {
-  left: 5%;
-  top: 5%;
+  left: 45%;
+  top: -10%;
   width: 40vw;
 }
 

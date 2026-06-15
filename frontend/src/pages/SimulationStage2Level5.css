@@ -244,6 +244,20 @@
   animation: s2l5BoyPass 1.8s ease-in-out forwards;
 }
 
+/* FIX:
+   Posisi akhir rider cowok tetap ditampilkan saat police good muncul.
+   Ini titik akhir yang sama dengan animasi s2l5BoyPass.
+*/
+.s2l5-rider-boy-safe-final {
+  z-index: 38;
+  width: 15vw;
+  left: 0;
+  top: -20vh;
+  opacity: 1;
+  transform: translate3d(5vw, 29vh, 0) scale(0.78);
+  transform-origin: center center;
+}
+
 @keyframes s2l5BoyHalfIn {
   0% {
     transform: translate3d(112vw, 29vh, 0) scale(0.78);
@@ -595,7 +609,8 @@
     width: 26vw;
   }
 
-  .s2l5-rider-boy {
+  .s2l5-rider-boy,
+  .s2l5-rider-boy-safe-final {
     width: 38vw;
   }
 

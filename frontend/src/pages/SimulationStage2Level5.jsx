@@ -155,13 +155,13 @@ export default function SimulationStage2Level5() {
     );
 
     const updatedUnlockedLevels = normalizeNumberArray(
-      [...unlockedLevels, 6, 7, 8, 9, 10],
+      [...unlockedLevels, 6, 7, 8, 9, 10, 11],
       [1, 6]
     );
 
     localStorage.setItem("selectedStage", "2");
-    localStorage.setItem("selectedLevel", "10");
-    localStorage.setItem("selectedStage2Level", "5");
+    localStorage.setItem("selectedLevel", "11");
+    localStorage.setItem("selectedStage2Level", "6");
     localStorage.setItem(
       "completedLevels",
       JSON.stringify(updatedCompletedLevels)
@@ -254,7 +254,7 @@ export default function SimulationStage2Level5() {
   };
 
   const handleFinish = () => {
-    navigate("/map");
+    navigate("/simulation/11");
   };
 
   const isQuestion = phase === PHASE.QUESTION;
@@ -446,6 +446,13 @@ export default function SimulationStage2Level5() {
               <div className="s2l5-result-dim s2l5-result-dim--good" />
 
               <img
+                src={riderBoyBlue}
+                alt="Rider laki-laki biru sudah lewat"
+                className="s2l5-actor s2l5-rider-boy-safe-final"
+                draggable="false"
+              />
+
+              <img
                 src={policeGood}
                 alt="Polisi good"
                 className="s2l5-actor s2l5-police s2l5-police--good"
@@ -484,7 +491,7 @@ export default function SimulationStage2Level5() {
                   className="s2l5-secondary-button"
                   onClick={handleFinish}
                 >
-                  Lanjut Pilih Level
+                  Lanjut Level 6
                 </button>
               </div>
             </>

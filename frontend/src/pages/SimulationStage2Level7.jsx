@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./SimulationStage2Level7.css";
 
+import StageCompleteOverlay from "../components/StageCompleteOverlay/StageCompleteOverlay";
+
 import bgLevel7 from "../assets/simulation/stage2/level7/bg-level7.png";
 import carBlackTop from "../assets/simulation/stage2/level7/car-black-top.png";
 import crashGirlCar from "../assets/simulation/stage2/level7/crash-girl-car.png";
@@ -60,6 +62,7 @@ export default function SimulationStage2Level7() {
   const [showCar, setShowCar] = useState(false);
   const [answerLocked, setAnswerLocked] = useState(false);
   const [restartKey, setRestartKey] = useState(0);
+  const [showStageComplete, setShowStageComplete] = useState(false);
 
   const clearTimers = () => {
     timersRef.current.forEach((timer) => clearTimeout(timer));
@@ -102,6 +105,7 @@ export default function SimulationStage2Level7() {
     setShowRider(false);
     setShowCar(false);
     setAnswerLocked(false);
+    setShowStageComplete(false);
 
     timersRef.current.push(
       setTimeout(() => {
@@ -173,7 +177,15 @@ export default function SimulationStage2Level7() {
   };
 
   const handleFinish = () => {
-    navigate("/map");
+    setShowStageComplete(true);
+  };
+
+  const handleBackToStageSelect = () => {
+    navigate("/stage-select");
+  };
+
+  const handleCloseStageComplete = () => {
+    setShowStageComplete(false);
   };
 
   const isIntro = phase === PHASE.INTRO;
@@ -404,13 +416,21 @@ export default function SimulationStage2Level7() {
                   className="s2l7-secondary-button"
                   onClick={handleFinish}
                 >
-                  Lanjut Pilih Level
+                  Selesai Stage 2
                 </button>
               </div>
             </>
           )}
         </div>
       </section>
+
+      {showStageComplete && (
+        <StageCompleteOverlay
+          stage={2}
+          onMainClick={handleBackToStageSelect}
+          onSecondaryClick={handleCloseStageComplete}
+        />
+      )}
     </main>
   );
 }

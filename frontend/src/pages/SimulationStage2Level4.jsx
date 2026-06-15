@@ -466,7 +466,7 @@ export default function SimulationStage2Level4() {
                   className="s2l4-secondary-button"
                   onClick={handleFinish}
                 >
-                  Lanjut Pilih Level
+                  Lanjut Level 5
                 </button>
               </div>
             </>

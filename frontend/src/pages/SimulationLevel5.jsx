@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./SimulationLevel5.css";
 
+import StageCompleteOverlay from "../components/StageCompleteOverlay/StageCompleteOverlay";
+
 import level5Bg from "../assets/simulation/stage1/level5/level5-bg.png";
 import truckBack from "../assets/simulation/stage1/level5/truck-back.png";
 import girlRiderBack from "../assets/simulation/stage1/level5/girl-rider-back.png";
@@ -37,6 +39,7 @@ export default function SimulationLevel5() {
   const [showRider, setShowRider] = useState(false);
   const [answerLocked, setAnswerLocked] = useState(false);
   const [restartKey, setRestartKey] = useState(0);
+  const [showStageComplete, setShowStageComplete] = useState(false);
 
   const clearTimers = () => {
     timersRef.current.forEach((timer) => clearTimeout(timer));
@@ -203,6 +206,7 @@ export default function SimulationLevel5() {
     setShowTruck(false);
     setShowRider(false);
     setAnswerLocked(false);
+    setShowStageComplete(false);
 
     timersRef.current.push(
       setTimeout(() => {
@@ -265,7 +269,31 @@ export default function SimulationLevel5() {
   };
 
   const handleFinish = () => {
-    navigate("/stage1-select");
+    setShowStageComplete(true);
+  };
+
+  const handleGoToStage2 = () => {
+    localStorage.setItem("selectedStage", "2");
+
+    const savedUnlockedLevels = localStorage.getItem("unlockedLevels");
+    const unlockedLevels = savedUnlockedLevels
+      ? JSON.parse(savedUnlockedLevels)
+      : [1];
+
+    const updatedUnlockedLevels = [
+      ...new Set([...unlockedLevels, 1, 2, 3, 4, 5, 6]),
+    ].sort((a, b) => a - b);
+
+    localStorage.setItem(
+      "unlockedLevels",
+      JSON.stringify(updatedUnlockedLevels)
+    );
+
+    navigate("/map");
+  };
+
+  const handleCloseStageComplete = () => {
+    setShowStageComplete(false);
   };
 
   const isQuestion = phase === PHASE.QUESTION;
@@ -487,6 +515,14 @@ export default function SimulationLevel5() {
           )}
         </div>
       </section>
+
+      {showStageComplete && (
+        <StageCompleteOverlay
+          stage={1}
+          onMainClick={handleGoToStage2}
+          onSecondaryClick={handleCloseStageComplete}
+        />
+      )}
     </main>
   );
 }

@@ -1,0 +1,126 @@
+.stage-complete-overlay-wrapper {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  pointer-events: auto;
+}
+
+.stage-complete-overlay-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: rgba(5, 15, 10, 0.72);
+  backdrop-filter: blur(5px);
+}
+
+.stage-complete-overlay-content {
+  position: relative;
+  z-index: 2;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3vh 4vw 13vh;
+  animation: stageCompleteOverlayPop 0.35s ease-out forwards;
+}
+
+.stage-complete-overlay-popup {
+  display: block;
+  width: min(82vw, 980px);
+  height: auto;
+  object-fit: contain;
+  user-select: none;
+  pointer-events: none;
+  filter: drop-shadow(0 24px 34px rgba(0, 0, 0, 0.45));
+}
+
+.stage-complete-overlay-buttons {
+  position: fixed;
+  z-index: 3;
+  left: 50%;
+  bottom: 5.5%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+}
+
+.stage-complete-overlay-main-button,
+.stage-complete-overlay-secondary-button {
+  border: none;
+  border-radius: 18px;
+  padding: 15px 30px;
+  font-size: 22px;
+  font-weight: 1000;
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    filter 0.15s ease;
+}
+
+.stage-complete-overlay-main-button {
+  color: #3b2208;
+  background: linear-gradient(180deg, #ffe27a, #f0a520);
+  box-shadow:
+    0 6px 0 #8c5200,
+    0 12px 22px rgba(0, 0, 0, 0.25);
+}
+
+.stage-complete-overlay-secondary-button {
+  color: #fff4d8;
+  background: linear-gradient(180deg, #7a4b22, #44250c);
+  box-shadow:
+    0 6px 0 #231204,
+    0 12px 22px rgba(0, 0, 0, 0.25);
+}
+
+.stage-complete-overlay-main-button:hover,
+.stage-complete-overlay-secondary-button:hover {
+  transform: translateY(-4px);
+  filter: brightness(1.05);
+}
+
+.stage-complete-overlay-main-button:active,
+.stage-complete-overlay-secondary-button:active {
+  transform: translateY(3px);
+}
+
+@keyframes stageCompleteOverlayPop {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.92);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (max-width: 900px) {
+  .stage-complete-overlay-content {
+    padding: 2vh 3vw 16vh;
+  }
+
+  .stage-complete-overlay-popup {
+    width: 96vw;
+  }
+
+  .stage-complete-overlay-buttons {
+    width: 90vw;
+    bottom: 4%;
+    gap: 12px;
+  }
+
+  .stage-complete-overlay-main-button,
+  .stage-complete-overlay-secondary-button {
+    flex: 1;
+    padding: 13px 14px;
+    font-size: 15px;
+  }
+}

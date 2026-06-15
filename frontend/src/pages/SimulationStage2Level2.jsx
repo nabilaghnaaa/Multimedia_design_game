@@ -153,13 +153,13 @@ export default function SimulationStage2Level2() {
     );
 
     const updatedUnlockedLevels = normalizeNumberArray(
-      [...unlockedLevels, 6, 7],
+      [...unlockedLevels, 6, 7, 8],
       [1, 6]
     );
 
     localStorage.setItem("selectedStage", "2");
-    localStorage.setItem("selectedLevel", "7");
-    localStorage.setItem("selectedStage2Level", "2");
+    localStorage.setItem("selectedLevel", "8");
+    localStorage.setItem("selectedStage2Level", "3");
     localStorage.setItem(
       "completedLevels",
       JSON.stringify(updatedCompletedLevels)
@@ -241,7 +241,7 @@ export default function SimulationStage2Level2() {
   };
 
   const handleFinish = () => {
-    navigate("/map");
+    navigate("/simulation/8");
   };
 
   const isQuestion = phase === PHASE.QUESTION;
@@ -456,7 +456,7 @@ export default function SimulationStage2Level2() {
                   className="s2l2-secondary-button"
                   onClick={handleFinish}
                 >
-                  Lanjut Pilih Level
+                  Lanjut Level 4
                 </button>
               </div>
             </>

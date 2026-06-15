@@ -311,8 +311,8 @@
 .level4-question-bubble {
   position: absolute;
   z-index: 50;
-  left: 55%;
-  top: 20%;
+  left: 15%;
+  top: 30%;
   width: 24vw;
   min-height: 0;
   animation: level4BubblePop 0.28s ease-out forwards;

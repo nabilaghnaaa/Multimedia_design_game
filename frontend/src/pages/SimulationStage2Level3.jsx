@@ -16,7 +16,7 @@ import policeStop from "../assets/simulation/stage1/level1/police-stop.png";
 
 import bubbleQuestionRight from "../assets/simulation/stage1/level1/bubble-question-right.png";
 import bubbleGoodLeft from "../assets/simulation/stage1/level1/bubble-good-left.png";
-import bubbleWarningRight from "../assets/simulation/stage1/level1/bubble-warning-right.png";
+import bubbleWarningLeft from "../assets/simulation/stage1/level1/bubble-warning-left.png";
 
 const PHASE = {
   INTRO: "intro",
@@ -159,13 +159,13 @@ export default function SimulationStage2Level3() {
     );
 
     const updatedUnlockedLevels = normalizeNumberArray(
-      [...unlockedLevels, 6, 7, 8],
+      [...unlockedLevels, 6, 7, 8, 9],
       [1, 6]
     );
 
     localStorage.setItem("selectedStage", "2");
-    localStorage.setItem("selectedLevel", "8");
-    localStorage.setItem("selectedStage2Level", "3");
+    localStorage.setItem("selectedLevel", "9");
+    localStorage.setItem("selectedStage2Level", "4");
     localStorage.setItem(
       "completedLevels",
       JSON.stringify(updatedCompletedLevels)
@@ -259,7 +259,7 @@ export default function SimulationStage2Level3() {
   };
 
   const handleFinish = () => {
-    navigate("/map");
+    navigate("/simulation/9");
   };
 
   const isIntro = phase === PHASE.INTRO;
@@ -432,7 +432,7 @@ export default function SimulationStage2Level3() {
 
               <div className="s2l3-result-bubble s2l3-result-bubble--warning">
                 <img
-                  src={bubbleWarningRight}
+                  src={bubbleWarningLeft}
                   alt=""
                   className="s2l3-result-bubble-img"
                   draggable="false"
@@ -518,7 +518,7 @@ export default function SimulationStage2Level3() {
                   className="s2l3-secondary-button"
                   onClick={handleFinish}
                 >
-                  Lanjut Pilih Level
+                  Lanjut Level 4
                 </button>
               </div>
             </>

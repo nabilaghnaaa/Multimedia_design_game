@@ -395,7 +395,7 @@ export default function SimulationLevel4() {
                   className="level4-secondary-button"
                   onClick={handleFinish}
                 >
-                  Selesai Stage 1
+                  Lanjut Level 5
                 </button>
               </div>
             </>

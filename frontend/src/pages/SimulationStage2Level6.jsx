@@ -15,7 +15,7 @@ import policeGood from "../assets/simulation/stage1/level1/police-good.png";
 import policeStop from "../assets/simulation/stage1/level1/police-stop.png";
 
 import bubbleQuestionRight from "../assets/simulation/stage1/level1/bubble-question-right.png";
-import bubbleGoodLeft from "../assets/simulation/stage1/level1/bubble-good-left.png";
+import bubbleGoodRight from "../assets/simulation/stage1/level1/bubble-good-right.png";
 import bubbleWarningRight from "../assets/simulation/stage1/level1/bubble-warning-right.png";
 
 const PHASE = {
@@ -80,13 +80,13 @@ export default function SimulationStage2Level6() {
     );
 
     const updatedUnlockedLevels = normalizeNumberArray(
-      [...unlockedLevels, 6, 7, 8, 9, 10, 11],
+      [...unlockedLevels, 6, 7, 8, 9, 10, 11, 12],
       [1, 6]
     );
 
     localStorage.setItem("selectedStage", "2");
-    localStorage.setItem("selectedLevel", "11");
-    localStorage.setItem("selectedStage2Level", "6");
+    localStorage.setItem("selectedLevel", "12");
+    localStorage.setItem("selectedStage2Level", "7");
     localStorage.setItem(
       "completedLevels",
       JSON.stringify(updatedCompletedLevels)
@@ -179,7 +179,7 @@ export default function SimulationStage2Level6() {
   };
 
   const handleFinish = () => {
-    navigate("/map");
+    navigate("/simulation/12");
   };
 
   const isIntro = phase === PHASE.INTRO;
@@ -413,7 +413,7 @@ export default function SimulationStage2Level6() {
 
               <div className="s2l6-result-bubble s2l6-result-bubble--good">
                 <img
-                  src={bubbleGoodLeft}
+                  src={bubbleGoodRight}
                   alt=""
                   className="s2l6-result-bubble-img"
                   draggable="false"
@@ -443,7 +443,7 @@ export default function SimulationStage2Level6() {
                   className="s2l6-secondary-button"
                   onClick={handleFinish}
                 >
-                  Lanjut Pilih Level
+                  Lanjut Level 7
                 </button>
               </div>
             </>
