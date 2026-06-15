@@ -72,9 +72,7 @@
 
 /* =========================
    BACKGROUND CAMERA
-   CATATAN PENTING:
-   - Makin MINUS = kamera lihat bagian bawah gambar.
-   - Makin mendekati 0 = kamera naik ke bagian atas gambar.
+   Kamera dibuat sama cepat dengan rider masuk.
 ========================= */
 .sim-bg-world {
   position: absolute;
@@ -84,7 +82,7 @@
   width: 100vw;
   height: 220vh;
   transform: translate3d(0, -120vh, 0);
-  transition: transform 6.4s cubic-bezier(0.32, 0.04, 0.15, 1);
+  transition: transform 1.45s linear;
   will-change: transform;
   backface-visibility: hidden;
 }
@@ -93,16 +91,11 @@
   transform: translate3d(0, -42vh, 0);
 }
 
-/* FIX:
-   Pas pilih Tetap Ngebut, kamera NAIK ke area atas.
-   Jangan pakai -68vh karena itu malah turun ke bawah gambar.
-*/
 .sim-bg-world--wrong-move {
   transform: translate3d(0, -18vh, 0);
-  transition: transform 1.45s ease-in;
+  transition: transform 1.45s linear;
 }
 
-/* Hasil crash tetap di posisi kamera yang sudah naik */
 .sim-bg-world--crash-view {
   transform: translate3d(0, -18vh, 0);
   transition: none;
@@ -202,7 +195,6 @@
   display: block;
   margin-top: 3px;
   font-size: 15px;
-  font-weight: 1000;
 }
 
 /* =========================
@@ -218,81 +210,68 @@
   transform-origin: center center;
 }
 
+/* FIX:
+   rider masuk dari bawah ke tengah kecepatannya dibuat sama
+   seperti pas user jawab salah, yaitu 1.45s.
+   Posisi awal dan posisi berhenti tetap sama.
+*/
 .sim-rider-boy-back--enter {
-  animation: simRiderBoyEnter 6.4s cubic-bezier(0.32, 0.04, 0.15, 1) forwards;
+  animation: simRiderBoyEnter 1.45s linear forwards;
 }
 
 .sim-rider-boy-back--stop {
-  transform: translate3d(44vw, 62vh, 0) scale(0.78);
+  transform: translate3d(44vw, 56vh, 0) scale(0.8);
 }
 
 .sim-rider-boy-back--wrong-fast {
-  animation: simRiderBoyWrongFast 1.45s ease-in forwards;
+  animation: simRiderBoyWrongFast 1.45s linear forwards;
 }
 
 .sim-rider-boy-back--correct-slow {
-  animation: simRiderBoyCorrectSlow 1.7s ease-in-out forwards;
+  animation: simRiderBoyCorrectSlow 1.25s linear forwards;
 }
 
+/* Gerak awal: posisi tetap sama, cuma durasinya lebih cepat */
 @keyframes simRiderBoyEnter {
   0% {
     transform: translate3d(44vw, 96vh, 0) scale(0.72);
   }
 
-  25% {
-    transform: translate3d(44vw, 86vh, 0) scale(0.74);
-  }
-
-  50% {
-    transform: translate3d(44vw, 76vh, 0) scale(0.76);
-  }
-
-  75% {
-    transform: translate3d(44vw, 68vh, 0) scale(0.77);
-  }
-
   100% {
-    transform: translate3d(44vw, 62vh, 0) scale(0.78);
+    transform: translate3d(44vw, 56vh, 0) scale(0.8);
   }
 }
 
-/* Tetap Ngebut:
-   motor tetap lurus ke atas */
+/* Tetap Ngebut: motor tetap lurus ke atas */
 @keyframes simRiderBoyWrongFast {
   0% {
-    transform: translate3d(44vw, 62vh, 0) scale(0.78);
-  }
-
-  45% {
-    transform: translate3d(44vw, 50vh, 0) scale(0.78);
+    transform: translate3d(44vw, 56vh, 0) scale(0.8);
   }
 
   100% {
-    transform: translate3d(44vw, 34vh, 0) scale(0.78);
+    transform: translate3d(44vw, 16vh, 0) scale(0.78);
   }
 }
 
+/* Jawaban benar: rider maju lurus ke atas, tidak geser kanan */
 @keyframes simRiderBoyCorrectSlow {
   0% {
-    transform: translate3d(44vw, 62vh, 0) scale(0.78);
-  }
-
-  55% {
-    transform: translate3d(50vw, 55vh, 0) scale(0.76);
+    transform: translate3d(44vw, 56vh, 0) scale(0.8);
   }
 
   100% {
-    transform: translate3d(63vw, 48vh, 0) scale(0.72);
+    transform: translate3d(44vw, 39vh, 0) scale(0.78);
   }
 }
 
+/* Posisi akhir aman sesuai gerakan benar */
 .sim-rider-boy-safe-final {
   z-index: 45;
   width: 12vw;
   left: 0;
   top: 0;
   opacity: 1;
-  transform: translate3d(63vw, 48vh, 0) scale(0.72);
+  transform: translate3d(44vw, 39vh, 0) scale(0.78);
   transform-origin: center center;
 }
 
@@ -301,9 +280,9 @@
 ========================= */
 .sim-rider-boy-crash {
   z-index: 72;
-  width: 20vw;
-  left: 0;
-  top: 0;
+  width: 12vw;
+  left: 4vw;
+  top: -16vh;
   opacity: 1;
   transform: translate3d(40vw, 27vh, 0) scale(0.82);
   animation: simRiderBoyCrashPop 0.18s ease-out forwards;
@@ -327,9 +306,9 @@
 .sim-question-bubble {
   position: absolute;
   z-index: 75;
-  left: 5%;
-  top: 8%;
-  width: 32vw;
+  left: 50%;
+  top: 12%;
+  width: 25vw;
   animation: simBubblePop 0.28s ease-out forwards;
 }
 
@@ -345,7 +324,7 @@
 .sim-question-bubble p {
   position: absolute;
   left: 16%;
-  top: 35%;
+  top: 40%;
   width: 64%;
   margin: 0;
   color: #111;
@@ -477,15 +456,15 @@
 }
 
 .sim-result-bubble--warning {
-  left: 5%;
-  top: 5%;
-  width: 39vw;
+  left: 50%;
+  top: 20%;
+  width: 35vw;
 }
 
 .sim-result-bubble--good {
-  left: 7%;
-  top: 16%;
-  width: 37vw;
+  right: 15%;
+  top: 30%;
+  width: 32vw;
 }
 
 .sim-result-text {
@@ -509,15 +488,16 @@
 }
 
 .sim-result-text--warning {
-  left: 16%;
+  left: 18%;
   top: 33%;
   width: 68%;
 }
 
+/* teks bubble good kanan */
 .sim-result-text--good {
-  left: 18%;
-  top: 32%;
-  width: 66%;
+  left: 22%;
+  top: 30%;
+  width: 60%;
 }
 
 /* =========================
@@ -576,7 +556,6 @@
     transform: translate3d(0, -48vh, 0);
   }
 
-  /* versi mobile juga: kamera naik = minusnya lebih kecil */
   .sim-bg-world--wrong-move,
   .sim-bg-world--crash-view {
     transform: translate3d(0, -24vh, 0);
@@ -620,17 +599,19 @@
 
   .sim-result-bubble--warning,
   .sim-result-bubble--good {
-    width: 58vw;
-    left: 4%;
-    top: 8%;
+    left: 50%;
+    right: auto;
+    top: 13%;
+    width: 82vw;
+    transform: translateX(-50%);
   }
 
   .sim-result-text h2 {
-    font-size: 3vw;
+    font-size: 24px;
   }
 
   .sim-result-text p {
-    font-size: 1.8vw;
+    font-size: 14px;
   }
 
   .sim-police--stop,

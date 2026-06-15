@@ -12,7 +12,7 @@ import policeGood from "../assets/simulation/stage1/level1/police-good.png";
 import policeStop from "../assets/simulation/stage1/level1/police-stop.png";
 
 import bubbleQuestionLeft from "../assets/simulation/stage1/level1/bubble-question-left.png";
-import bubbleGoodLeft from "../assets/simulation/stage1/level1/bubble-good-left.png";
+import bubbleGoodRight from "../assets/simulation/stage1/level1/bubble-good-right.png";
 import bubbleWarningRight from "../assets/simulation/stage1/level1/bubble-warning-right.png";
 
 const STAGE1_PROGRESS_KEY = "stage1-progress";
@@ -91,7 +91,7 @@ export default function SimulationPage() {
     timersRef.current.push(
       setTimeout(() => {
         setPhase(PHASE.QUESTION);
-      }, 6400)
+      }, 1600)
     );
   };
 
@@ -126,7 +126,7 @@ export default function SimulationPage() {
     timersRef.current.push(
       setTimeout(() => {
         setPhase(PHASE.CORRECT_RESULT);
-      }, 1700)
+      }, 1300)
     );
   };
 
@@ -312,7 +312,7 @@ export default function SimulationPage() {
 
               <div className="sim-result-bubble sim-result-bubble--good">
                 <img
-                  src={bubbleGoodLeft}
+                  src={bubbleGoodRight}
                   alt=""
                   className="sim-result-bubble-img"
                   draggable="false"

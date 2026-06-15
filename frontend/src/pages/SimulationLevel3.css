@@ -19,6 +19,56 @@
   overflow: hidden;
 }
 
+.level3-viewport--crash-shake {
+  animation: level3CrashShake 0.48s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+@keyframes level3CrashShake {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+
+  8% {
+    transform: translate3d(-8px, 5px, 0) rotate(-0.35deg);
+  }
+
+  16% {
+    transform: translate3d(9px, -6px, 0) rotate(0.35deg);
+  }
+
+  24% {
+    transform: translate3d(-10px, 4px, 0) rotate(-0.3deg);
+  }
+
+  32% {
+    transform: translate3d(8px, 7px, 0) rotate(0.28deg);
+  }
+
+  40% {
+    transform: translate3d(-7px, -5px, 0) rotate(-0.24deg);
+  }
+
+  52% {
+    transform: translate3d(6px, 4px, 0) rotate(0.2deg);
+  }
+
+  64% {
+    transform: translate3d(-5px, 3px, 0) rotate(-0.16deg);
+  }
+
+  76% {
+    transform: translate3d(4px, -2px, 0) rotate(0.12deg);
+  }
+
+  88% {
+    transform: translate3d(-2px, 1px, 0) rotate(-0.06deg);
+  }
+
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+}
+
 /* =========================
    BACKGROUND LEVEL 3
    SHOOT DARI KANAN KE KIRI
@@ -190,7 +240,7 @@
 
   to {
     opacity: 1;
-    transform: translate3d(20vw, 52vh, 0) scale(1);
+    transform: translate3d(20vw, 60vh, 0) scale(1);
   }
 }
 
