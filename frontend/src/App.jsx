@@ -14,6 +14,7 @@ import SimulationStage2Level2 from "./pages/SimulationStage2Level2";
 import SimulationStage2Level3 from "./pages/SimulationStage2Level3";
 import SimulationStage2Level4 from "./pages/SimulationStage2Level4";
 import SimulationStage2Level5 from "./pages/SimulationStage2Level5";
+import SimulationStage2Level6 from "./pages/SimulationStage2Level6";
 import ChallengePage from "./pages/ChallengePage";
 
 function App() {
@@ -50,7 +51,10 @@ function App() {
         {/* STAGE 2 LEVEL 5 */}
         <Route path="/simulation/10" element={<SimulationStage2Level5 />} />
 
-        {/* LEVEL LAIN YANG MASIH PAKE FILE LAMA */}
+        {/* STAGE 2 LEVEL 6 */}
+        <Route path="/simulation/11" element={<SimulationStage2Level6 />} />
+
+        {/* LEVEL STAGE 1 YANG PAKE SIMULATIONPAGE */}
         <Route path="/simulation/:levelNumber" element={<SimulationPage />} />
 
         <Route path="/challenge" element={<ChallengePage />} />

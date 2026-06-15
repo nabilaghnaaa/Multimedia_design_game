@@ -17,33 +17,107 @@
   width: 100vw;
   height: 100vh;
   overflow: hidden;
+  background: #10202a;
+}
+
+.sim-viewport--crash-shake {
+  animation: simCrashShake 0.48s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+@keyframes simCrashShake {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+
+  8% {
+    transform: translate3d(-8px, 5px, 0) rotate(-0.35deg);
+  }
+
+  16% {
+    transform: translate3d(9px, -6px, 0) rotate(0.35deg);
+  }
+
+  24% {
+    transform: translate3d(-10px, 4px, 0) rotate(-0.3deg);
+  }
+
+  32% {
+    transform: translate3d(8px, 7px, 0) rotate(0.28deg);
+  }
+
+  40% {
+    transform: translate3d(-7px, -5px, 0) rotate(-0.24deg);
+  }
+
+  52% {
+    transform: translate3d(6px, 4px, 0) rotate(0.2deg);
+  }
+
+  64% {
+    transform: translate3d(-5px, 3px, 0) rotate(-0.16deg);
+  }
+
+  76% {
+    transform: translate3d(4px, -2px, 0) rotate(0.12deg);
+  }
+
+  88% {
+    transform: translate3d(-2px, 1px, 0) rotate(-0.06deg);
+  }
+
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
 }
 
 /* =========================
    BACKGROUND CAMERA
+   CATATAN PENTING:
+   - Makin MINUS = kamera lihat bagian bawah gambar.
+   - Makin mendekati 0 = kamera naik ke bagian atas gambar.
 ========================= */
 .sim-bg-world {
   position: absolute;
   left: 0;
   top: 0;
-  width: 100vw;
-  height: 150vw;
-  min-height: 165vh;
   z-index: 1;
-  transform: translateY(calc(100vh - 100%));
-  transition: transform 3.65s ease-in-out;
+  width: 100vw;
+  height: 220vh;
+  transform: translate3d(0, -120vh, 0);
+  transition: transform 6.4s cubic-bezier(0.32, 0.04, 0.15, 1);
+  will-change: transform;
+  backface-visibility: hidden;
 }
 
 .sim-bg-world--top {
-  transform: translateY(-32vh);
+  transform: translate3d(0, -42vh, 0);
+}
+
+/* FIX:
+   Pas pilih Tetap Ngebut, kamera NAIK ke area atas.
+   Jangan pakai -68vh karena itu malah turun ke bawah gambar.
+*/
+.sim-bg-world--wrong-move {
+  transform: translate3d(0, -18vh, 0);
+  transition: transform 1.45s ease-in;
+}
+
+/* Hasil crash tetap di posisi kamera yang sudah naik */
+.sim-bg-world--crash-view {
+  transform: translate3d(0, -18vh, 0);
+  transition: none;
+}
+
+.sim-bg-world--correct-view {
+  transform: translate3d(0, -42vh, 0);
 }
 
 .sim-bg {
-  position: absolute;
-  inset: 0;
+  display: block;
   width: 100%;
   height: 100%;
   object-fit: fill;
+  object-position: center top;
   user-select: none;
   pointer-events: none;
 }
@@ -57,7 +131,22 @@
   z-index: 5;
   width: 100vw;
   height: 100vh;
+  overflow: hidden;
   pointer-events: none;
+}
+
+/* =========================
+   AKTOR UMUM
+========================= */
+.sim-actor {
+  position: absolute;
+  z-index: 10;
+  height: auto;
+  user-select: none;
+  pointer-events: none;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  filter: drop-shadow(0 10px 10px rgba(0, 0, 0, 0.25));
 }
 
 /* =========================
@@ -65,7 +154,7 @@
 ========================= */
 .sim-back-button {
   position: absolute;
-  z-index: 100;
+  z-index: 150;
   top: 18px;
   left: 18px;
   border: none;
@@ -90,10 +179,10 @@
 ========================= */
 .sim-level-badge {
   position: absolute;
-  z-index: 100;
+  z-index: 150;
   top: 18px;
   right: 18px;
-  min-width: 205px;
+  min-width: 310px;
   padding: 10px 16px;
   border-radius: 18px;
   background: rgba(71, 39, 10, 0.86);
@@ -112,272 +201,170 @@
 .sim-level-badge strong {
   display: block;
   margin-top: 3px;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 1000;
 }
 
 /* =========================
-   AKTOR UMUM
+   RIDER BOY BACK
 ========================= */
-.sim-actor {
-  position: absolute;
-  z-index: 10;
-  user-select: none;
-  pointer-events: none;
-  height: auto;
-  filter: drop-shadow(0 10px 10px rgba(0, 0, 0, 0.25));
-}
-
-/* =========================
-   CEWEK PINK
-========================= */
-.sim-girl-back {
-  width: 11.5vw;
-  left: 50%;
-  top: 108%;
-  transform: translateX(-50%) scale(1);
-}
-
-.sim-girl-back--walk {
-  animation: girlMoveWithCamera 3.65s ease-in-out forwards;
-}
-
-.sim-girl-back--stop {
-  left: 50%;
-  top: 74% !important;
-  transform: translateX(-50%) scale(1.14) !important;
-}
-
-@keyframes girlMoveWithCamera {
-  0% {
-    left: 50%;
-    top: 108%;
-    transform: translateX(-50%) scale(1.2);
-  }
-
-  35% {
-    left: 50%;
-    top: 94%;
-    transform: translateX(-50%) scale(1.18);
-  }
-
-  70% {
-    left: 50%;
-    top: 84%;
-    transform: translateX(-50%) scale(1.16);
-  }
-
-  100% {
-    left: 50%;
-    top: 74%;
-    transform: translateX(-50%) scale(1.14);
-  }
-}
-
-/* =========================
-   MOBIL HITAM
-========================= */
-.sim-car {
-  width: 15vw;
-  left: 112%;
-  top: 47%;
-}
-
-.sim-car--enter {
-  animation: carEnterFromRight 1.15s ease-out forwards;
-}
-
-.sim-car--stop {
-  left: 55%;
-  top: 47%;
-}
-
-.sim-car--correct-drive {
-  left: 55%;
-  top: 47%;
-  animation: carCorrectDriveStraight 1.1s ease-in-out forwards;
-}
-
-/* Pas salah, mobil maju dikit aja */
-.sim-car--wrong-drive {
-  left: 55%;
-  top: 47%;
-  animation: carWrongDriveForward 0.9s ease-in-out forwards;
-}
-
-@keyframes carEnterFromRight {
-  0% {
-    left: 112%;
-    top: 47%;
-  }
-
-  100% {
-    left: 55%;
-    top: 47%;
-  }
-}
-
-@keyframes carCorrectDriveStraight {
-  0% {
-    left: 55%;
-    top: 47%;
-  }
-
-  100% {
-    left: 45%;
-    top: 47%;
-  }
-}
-
-/* Pas salah, mobil cuma maju sedikit */
-@keyframes carWrongDriveForward {
-  0% {
-    left: 55%;
-    top: 47%;
-  }
-
-  100% {
-    left: 50%;
-    top: 47%;
-  }
-}
-/* =========================
-   COWOK BIRU
-========================= */
-.sim-boy {
+.sim-rider-boy-back {
+  z-index: 35;
   width: 12vw;
-  left: 112%;
-  top: 60%;
-  transform: none !important;
-  transform-origin: center;
+  left: 0;
+  top: 0;
+  opacity: 1;
+  transform: translate3d(44vw, 96vh, 0) scale(0.72);
+  transform-origin: center center;
 }
 
-.sim-boy--enter {
-  animation: boyEnterFromRight 1.15s ease-out forwards;
+.sim-rider-boy-back--enter {
+  animation: simRiderBoyEnter 6.4s cubic-bezier(0.32, 0.04, 0.15, 1) forwards;
 }
 
-.sim-boy--stop {
-  left: 76%;
-  top: 60%;
-  transform: none !important;
+.sim-rider-boy-back--stop {
+  transform: translate3d(44vw, 62vh, 0) scale(0.78);
 }
 
-.sim-boy--wrong-move {
-  left: 76%;
-  top: 60%;
-  transform: none !important;
-  animation: boyWrongMoveForward 0.9s ease-in-out forwards;
+.sim-rider-boy-back--wrong-fast {
+  animation: simRiderBoyWrongFast 1.45s ease-in forwards;
 }
 
-.sim-boy--correct-drive {
-  left: 76%;
-  top: 60%;
-  transform: none !important;
-  animation: boyCorrectDriveStraight 1.1s ease-in-out forwards;
+.sim-rider-boy-back--correct-slow {
+  animation: simRiderBoyCorrectSlow 1.7s ease-in-out forwards;
 }
 
-@keyframes boyEnterFromRight {
+@keyframes simRiderBoyEnter {
   0% {
-    left: 112%;
-    top: 60%;
-    transform: none;
+    transform: translate3d(44vw, 96vh, 0) scale(0.72);
+  }
+
+  25% {
+    transform: translate3d(44vw, 86vh, 0) scale(0.74);
+  }
+
+  50% {
+    transform: translate3d(44vw, 76vh, 0) scale(0.76);
+  }
+
+  75% {
+    transform: translate3d(44vw, 68vh, 0) scale(0.77);
   }
 
   100% {
-    left: 76%;
-    top: 60%;
-    transform: none;
+    transform: translate3d(44vw, 62vh, 0) scale(0.78);
   }
 }
 
-@keyframes boyWrongMoveForward {
+/* Tetap Ngebut:
+   motor tetap lurus ke atas */
+@keyframes simRiderBoyWrongFast {
   0% {
-    left: 76%;
-    top: 60%;
-    transform: none;
+    transform: translate3d(44vw, 62vh, 0) scale(0.78);
+  }
+
+  45% {
+    transform: translate3d(44vw, 50vh, 0) scale(0.78);
   }
 
   100% {
-    left: 68%;
-    top: 60%;
-    transform: none;
+    transform: translate3d(44vw, 34vh, 0) scale(0.78);
   }
 }
 
-@keyframes boyCorrectDriveStraight {
+@keyframes simRiderBoyCorrectSlow {
   0% {
-    left: 76%;
-    top: 60%;
-    transform: none;
+    transform: translate3d(44vw, 62vh, 0) scale(0.78);
+  }
+
+  55% {
+    transform: translate3d(50vw, 55vh, 0) scale(0.76);
   }
 
   100% {
-    left: 52%;
-    top: 60%;
-    transform: none;
+    transform: translate3d(63vw, 48vh, 0) scale(0.72);
+  }
+}
+
+.sim-rider-boy-safe-final {
+  z-index: 45;
+  width: 12vw;
+  left: 0;
+  top: 0;
+  opacity: 1;
+  transform: translate3d(63vw, 48vh, 0) scale(0.72);
+  transform-origin: center center;
+}
+
+/* =========================
+   RIDER CRASH
+========================= */
+.sim-rider-boy-crash {
+  z-index: 72;
+  width: 20vw;
+  left: 0;
+  top: 0;
+  opacity: 1;
+  transform: translate3d(40vw, 27vh, 0) scale(0.82);
+  animation: simRiderBoyCrashPop 0.18s ease-out forwards;
+}
+
+@keyframes simRiderBoyCrashPop {
+  from {
+    opacity: 0;
+    transform: translate3d(40vw, 27vh, 0) scale(0.74);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(40vw, 27vh, 0) scale(0.82);
   }
 }
 
 /* =========================
    BUBBLE QUESTION
-   FIX YANG DI SCREENSHOT
 ========================= */
-.simulation-page .sim-question-bubble {
-  position: absolute !important;
-  z-index: 50 !important;
-
-  /* bubble diposisikan di kanan rambu, tidak terlalu bawah */
-  left: 5% !important;
-  top: 10% !important;
-
-  /* ini yang bikin bubble tidak kegedean */
-  width: 27.5vw !important;
-  min-height: 0 !important;
-
-  transform: none !important;
-  animation: bubblePop 0.28s ease-out forwards !important;
+.sim-question-bubble {
+  position: absolute;
+  z-index: 75;
+  left: 5%;
+  top: 8%;
+  width: 32vw;
+  animation: simBubblePop 0.28s ease-out forwards;
 }
 
-.simulation-page .sim-question-bubble .sim-bubble-img {
-  display: block !important;
-  width: 100% !important;
-  height: auto !important;
+.sim-bubble-img {
+  display: block;
+  width: 100%;
+  height: auto;
   user-select: none;
   pointer-events: none;
   filter: drop-shadow(0 10px 0 rgba(0, 0, 0, 0.18));
 }
 
-/* teks dibuat benar-benar masuk ke area putih bubble */
-.simulation-page .sim-question-bubble p {
-  position: absolute !important;
-
-  /* jangan terlalu ke atas biar tidak nabrak icon tanda tanya */
-  right: 16% !important;
-  top: 37% !important;
-
-  width: 62% !important;
-  margin: 0 !important;
-  padding: 0 !important;
-
-  color: #111 !important;
-  font-size: 1.15vw !important;
-  font-weight: 1000 !important;
-  line-height: 1.18 !important;
-  text-align: center !important;
-
-  z-index: 5 !important;
-  white-space: normal !important;
+.sim-question-bubble p {
+  position: absolute;
+  left: 16%;
+  top: 35%;
+  width: 64%;
+  margin: 0;
+  color: #111;
+  font-size: 1.08vw;
+  font-weight: 1000;
+  line-height: 1.2;
+  text-align: center;
+  z-index: 5;
 }
 
-@keyframes bubblePop {
+@keyframes simBubblePop {
   from {
     opacity: 0;
-    transform: translateY(18px) scale(0.92);
+    transform: translate3d(0, 16px, 0) scale(0.94);
   }
 
   to {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: translate3d(0, 0, 0) scale(1);
   }
 }
 
@@ -386,30 +373,33 @@
 ========================= */
 .sim-answer-wrapper {
   position: fixed;
-  z-index: 70;
+  z-index: 95;
   left: 50%;
   bottom: 5.5%;
   transform: translateX(-50%);
   display: flex;
-  gap: 52px;
+  gap: 26px;
   align-items: center;
   justify-content: center;
   pointer-events: auto;
 }
 
 .sim-answer-button {
-  min-width: 255px;
+  min-width: 300px;
   min-height: 62px;
   border: 4px solid rgba(255, 255, 255, 0.95);
   border-radius: 22px;
   outline: none;
   background: rgba(255, 255, 255, 0.94);
   color: #111;
-  font-size: 23px;
+  font-size: 18px;
   font-weight: 1000;
   cursor: pointer;
   box-shadow: 0 8px 0 rgba(0, 0, 0, 0.18);
-  transition: 0.15s ease;
+  transition:
+    transform 0.15s ease,
+    background 0.15s ease,
+    box-shadow 0.15s ease;
 }
 
 .sim-answer-button:hover {
@@ -422,61 +412,8 @@
   box-shadow: 0 3px 0 rgba(0, 0, 0, 0.18);
 }
 
-/* =========================
-   GERAKAN SALAH
-========================= */
-.sim-girl-wrong {
-  width: 11.5vw;
-  left: 50%;
-  top: 74%;
-  transform: translateX(-50%) scaleX(-1) scale(1.14);
-  animation: girlWrongToCrash 0.9s ease-in-out forwards;
-}
-
-@keyframes girlWrongToCrash {
-  0% {
-    left: 50%;
-    top: 74%;
-    transform: translateX(-50%) scaleX(-1) scale(1.14);
-  }
-
-  100% {
-    left: 68%;
-    top: 60%;
-    transform: translateX(-50%) scaleX(-1) scale(0.98);
-  }
-}
-
-/* =========================
-   GERAKAN BENAR
-========================= */
-.sim-girl-correct {
-  width: 11.5vw;
-  left: 50%;
-  top: 74%;
-  transform: translateX(-50%) scale(1.14);
-  animation: girlCorrectLeft 1.1s ease-in-out forwards;
-}
-
-@keyframes girlCorrectLeft {
-  0% {
-    left: 50%;
-    top: 74%;
-    transform: translateX(-50%) scale(1.14);
-  }
-
-  100% {
-    left: 22%;
-    top: 49%;
-    transform: translateX(-50%) scale(0.98);
-  }
-}
-
-.sim-girl-safe-final {
-  width: 11.5vw;
-  left: 22%;
-  top: 49%;
-  transform: translateX(-50%) scale(0.98);
+.sim-answer-button--danger {
+  background: #fff2f2;
 }
 
 /* =========================
@@ -485,16 +422,16 @@
 .sim-result-dim {
   position: fixed;
   inset: 0;
-  z-index: 40;
+  z-index: 55;
   pointer-events: none;
 }
 
 .sim-result-dim--wrong {
-  background: rgba(104, 28, 18, 0.34);
+  background: rgba(104, 28, 18, 0.3);
 }
 
 .sim-result-dim--correct {
-  background: rgba(27, 93, 49, 0.22);
+  background: rgba(27, 93, 49, 0.18);
 }
 
 /* =========================
@@ -502,52 +439,23 @@
 ========================= */
 .sim-police {
   position: fixed;
-  z-index: 55;
-  width: 80vw;
-  max-width: 500px;
+  z-index: 65;
   height: auto;
+  user-select: none;
+  pointer-events: none;
+  filter: drop-shadow(0 12px 12px rgba(0, 0, 0, 0.28));
 }
 
-/* Polisi saat jawaban salah / stop: agak kiri */
 .sim-police--stop {
-  left: 37%;
-  top: 500px;
-  bottom: auto;
-  width: 40vw;
-  max-width: 600px;
+  right: -13%;
+  bottom: -22%;
+  width: 50vw;
 }
 
-/* Polisi saat jawaban benar / good: agak kanan */
 .sim-police--good {
-  left: 37%;
-  top: 500px;
-  bottom: auto;
-  width: 40vw;
-  max-width: 600px;
-}
-
-/* =========================
-   CRASH
-========================= */
-.sim-crash {
-  z-index: 56;
-  left: 70%;
-  top: 70%;
-  width: 20vw;
-  transform: translate(-50%, -50%);
-  animation: crashPop 0.10s ease-out forwards;
-}
-
-@keyframes crashPop {
-  from {
-    opacity: 0;
-    transform: translate(-50%, -50%) scale(0.75);
-  }
-
-  to {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
-  }
+  right: -13%;
+  bottom: -22%;
+  width: 50vw;
 }
 
 /* =========================
@@ -555,24 +463,8 @@
 ========================= */
 .sim-result-bubble {
   position: fixed;
-  z-index: 58;
-  left: 43%;
-  top: 12%;
-  width: 44vw;
-  min-height: 18vw;
-  animation: bubblePop 0.28s ease-out forwards;
-}
-
-/* Bubble untuk jawaban benar / good */
-.sim-result-bubble--good {
-  left: 52%;
-  top: 1%;
-}
-
-/* Bubble untuk jawaban salah / warning */
-.sim-result-bubble--warning {
-  left: 5%;
-  top: 0%;
+  z-index: 90;
+  animation: simBubblePop 0.28s ease-out forwards;
 }
 
 .sim-result-bubble-img {
@@ -584,35 +476,48 @@
   filter: drop-shadow(0 10px 0 rgba(0, 0, 0, 0.18));
 }
 
+.sim-result-bubble--warning {
+  left: 5%;
+  top: 5%;
+  width: 39vw;
+}
+
+.sim-result-bubble--good {
+  left: 7%;
+  top: 16%;
+  width: 37vw;
+}
+
 .sim-result-text {
   position: absolute;
   z-index: 3;
-  left: 14%;
-  top: 35%;
-  width: 70%;
   color: #111;
   text-align: center;
-}
-
-.sim-result-bubble--warning .sim-result-text--warning {
-  left: 16%;
-  top: 35%;
-  width: 68%;
 }
 
 .sim-result-text h2 {
   margin: 0 0 10px;
   font-size: 2vw;
   font-weight: 1000;
-  text-align: center;
 }
 
 .sim-result-text p {
   margin: 0;
-  font-size: 1.25vw;
+  font-size: 1.05vw;
   font-weight: 900;
   line-height: 1.3;
-  text-align: center;
+}
+
+.sim-result-text--warning {
+  left: 16%;
+  top: 33%;
+  width: 68%;
+}
+
+.sim-result-text--good {
+  left: 18%;
+  top: 32%;
+  width: 66%;
 }
 
 /* =========================
@@ -620,7 +525,7 @@
 ========================= */
 .sim-result-buttons {
   position: fixed;
-  z-index: 75;
+  z-index: 100;
   left: 50%;
   bottom: 5%;
   transform: translateX(-50%);
@@ -661,149 +566,76 @@
 /* =========================
    RESPONSIVE
 ========================= */
-@media (max-width: 1200px) {
-  .sim-bg-world--top {
-    transform: translateY(-28vh);
-  }
-
-  .simulation-page .sim-question-bubble {
-    left: 10% !important;
-    top: 10% !important;
-    width: 34vw !important;
-  }
-
-  .simulation-page .sim-question-bubble p {
-    left: 20% !important;
-    top: 36% !important;
-    width: 62% !important;
-    font-size: 1.45vw !important;
-    line-height: 1.17 !important;
-  }
-
-  .sim-answer-wrapper {
-    gap: 35px;
-  }
-
-  .sim-answer-button {
-    min-width: 220px;
-  }
-
-  .sim-result-bubble {
-    width: 50vw;
-  }
-
-  .sim-result-text h2 {
-    font-size: 2.4vw;
-  }
-
-  .sim-result-text p {
-    font-size: 1.45vw;
-  }
-}
-
-@media (max-width: 760px) {
+@media (max-width: 900px) {
   .sim-bg-world {
-    height: 150vw;
-    min-height: 190vh;
+    height: 230vh;
+    transform: translate3d(0, -130vh, 0);
   }
 
   .sim-bg-world--top {
-    transform: translateY(-22vh);
+    transform: translate3d(0, -48vh, 0);
   }
 
-  .sim-back-button {
-    padding: 9px 14px;
-    font-size: 12px;
+  /* versi mobile juga: kamera naik = minusnya lebih kecil */
+  .sim-bg-world--wrong-move,
+  .sim-bg-world--crash-view {
+    transform: translate3d(0, -24vh, 0);
   }
 
-  .sim-level-badge {
-    min-width: 155px;
-    padding: 8px 11px;
+  .sim-bg-world--correct-view {
+    transform: translate3d(0, -48vh, 0);
   }
 
-  .sim-level-badge span {
-    font-size: 11px;
+  .sim-rider-boy-back {
+    width: 26vw;
   }
 
-  .sim-level-badge strong {
-    font-size: 12px;
+  .sim-rider-boy-safe-final {
+    width: 26vw;
   }
 
-  .sim-girl-back,
-  .sim-girl-wrong,
-  .sim-girl-correct,
-  .sim-girl-safe-final {
-    width: 18vw;
+  .sim-rider-boy-crash {
+    width: 44vw;
   }
 
-  .sim-car {
-    width: 22vw;
+  .sim-question-bubble {
+    left: 4%;
+    top: 8%;
+    width: 56vw;
   }
 
-  .sim-boy {
-    width: 18vw;
-  }
-
-  .simulation-page .sim-question-bubble {
-    left: 50% !important;
-    top: 20% !important;
-    width: 82vw !important;
-    transform: translateX(-50%) !important;
-  }
-
-  .simulation-page .sim-question-bubble p {
-    left: 18% !important;
-    top: 22% !important;
-    width: 62% !important;
-    font-size: 17px !important;
-    line-height: 1.18 !important;
+  .sim-question-bubble p {
+    font-size: 1.85vw;
   }
 
   .sim-answer-wrapper {
-    width: 90vw;
     flex-direction: column;
-    gap: 14px;
-    bottom: 5%;
+    gap: 16px;
   }
 
   .sim-answer-button {
-    width: 100%;
-    min-width: unset;
-    min-height: 58px;
-    font-size: 17px;
+    min-width: 78vw;
+    font-size: 15px;
   }
 
-  .sim-result-bubble {
-    left: 50%;
-    top: 13%;
-    width: 82vw;
-    transform: translateX(-50%);
+  .sim-result-bubble--warning,
+  .sim-result-bubble--good {
+    width: 58vw;
+    left: 4%;
+    top: 8%;
   }
 
   .sim-result-text h2 {
-    font-size: 24px;
+    font-size: 3vw;
   }
 
   .sim-result-text p {
-    font-size: 14px;
+    font-size: 1.8vw;
   }
 
-  .sim-police {
-    left: 2%;
-    bottom: 9%;
-    width: 38vw;
-  }
-
-  .sim-result-buttons {
-    width: 90vw;
-    gap: 12px;
-    bottom: 4%;
-  }
-
-  .sim-main-button,
-  .sim-secondary-button {
-    flex: 1;
-    padding: 12px 14px;
-    font-size: 14px;
+  .sim-police--stop,
+  .sim-police--good {
+    width: 48vw;
+    right: -7%;
   }
 }
