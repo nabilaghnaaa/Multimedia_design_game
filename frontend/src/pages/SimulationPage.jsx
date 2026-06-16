@@ -15,6 +15,11 @@ import bubbleQuestionLeft from "../assets/simulation/stage1/level1/bubble-questi
 import bubbleGoodRight from "../assets/simulation/stage1/level1/bubble-good-right.png";
 import bubbleWarningRight from "../assets/simulation/stage1/level1/bubble-warning-right.png";
 
+import buttonClickSound from "../assets/sounds/button-click.mp3";
+import correctCringSound from "../assets/sounds/correct-cring.mp3";
+import crashSound from "../assets/sounds/crash.mp3";
+import hornSound from "../assets/sounds/horn.mp3";
+
 const STAGE1_PROGRESS_KEY = "stage1-progress";
 
 const PHASE = {
@@ -33,6 +38,11 @@ export default function SimulationPage() {
   const currentLevel = Number(levelNumber || 1);
   const timersRef = useRef([]);
 
+  const buttonClickAudioRef = useRef(null);
+  const correctCringAudioRef = useRef(null);
+  const crashAudioRef = useRef(null);
+  const hornAudioRef = useRef(null);
+
   const [phase, setPhase] = useState(PHASE.INTRO);
   const [startCamera, setStartCamera] = useState(false);
   const [showRider, setShowRider] = useState(false);
@@ -42,6 +52,17 @@ export default function SimulationPage() {
   const clearTimers = () => {
     timersRef.current.forEach((timer) => clearTimeout(timer));
     timersRef.current = [];
+  };
+
+  const playSound = (audioRef) => {
+    if (!audioRef.current) return;
+
+    audioRef.current.pause();
+    audioRef.current.currentTime = 0;
+
+    audioRef.current.play().catch((error) => {
+      console.warn("Sound gagal diputar:", error);
+    });
   };
 
   const saveLevel1Progress = () => {
@@ -106,11 +127,15 @@ export default function SimulationPage() {
   const handleWrongAnswer = () => {
     if (answerLocked) return;
 
+    playSound(buttonClickAudioRef);
+    playSound(hornAudioRef);
+
     setAnswerLocked(true);
     setPhase(PHASE.WRONG_MOVE);
 
     timersRef.current.push(
       setTimeout(() => {
+        playSound(crashAudioRef);
         setPhase(PHASE.WRONG_RESULT);
       }, 1450)
     );
@@ -119,26 +144,32 @@ export default function SimulationPage() {
   const handleCorrectAnswer = () => {
     if (answerLocked) return;
 
+    playSound(buttonClickAudioRef);
+
     setAnswerLocked(true);
     saveLevel1Progress();
     setPhase(PHASE.CORRECT_MOVE);
 
     timersRef.current.push(
       setTimeout(() => {
+        playSound(correctCringAudioRef);
         setPhase(PHASE.CORRECT_RESULT);
       }, 1300)
     );
   };
 
   const handleRetry = () => {
+    playSound(buttonClickAudioRef);
     startLevel();
   };
 
   const handleBack = () => {
+    playSound(buttonClickAudioRef);
     navigate("/stage1-select");
   };
 
   const handleNext = () => {
+    playSound(buttonClickAudioRef);
     navigate("/simulation/2");
   };
 
@@ -153,6 +184,11 @@ export default function SimulationPage() {
 
   return (
     <main className="simulation-page">
+      <audio ref={buttonClickAudioRef} src={buttonClickSound} preload="auto" />
+      <audio ref={correctCringAudioRef} src={correctCringSound} preload="auto" />
+      <audio ref={crashAudioRef} src={crashSound} preload="auto" />
+      <audio ref={hornAudioRef} src={hornSound} preload="auto" />
+
       <button type="button" className="sim-back-button" onClick={handleBack}>
         ← Pilih Level
       </button>
