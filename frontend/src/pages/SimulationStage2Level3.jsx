@@ -18,6 +18,11 @@ import bubbleQuestionRight from "../assets/simulation/stage1/level1/bubble-quest
 import bubbleGoodLeft from "../assets/simulation/stage1/level1/bubble-good-left.png";
 import bubbleWarningLeft from "../assets/simulation/stage1/level1/bubble-warning-left.png";
 
+import buttonClickSound from "../assets/sounds/button-click.mp3";
+import correctCringSound from "../assets/sounds/correct-cring.mp3";
+import crashSound from "../assets/sounds/crash.mp3";
+import hormSound from "../assets/sounds/horm.mp3";
+
 const PHASE = {
   INTRO: "intro",
   GIRL_STOP: "girl-stop",
@@ -57,7 +62,11 @@ const safeParseArray = (key, fallback) => {
 export default function SimulationStage2Level3() {
   const navigate = useNavigate();
   const timersRef = useRef([]);
-  const audioContextRef = useRef(null);
+
+  const buttonClickAudioRef = useRef(null);
+  const correctCringAudioRef = useRef(null);
+  const crashAudioRef = useRef(null);
+  const hormAudioRef = useRef(null);
 
   const [phase, setPhase] = useState(PHASE.INTRO);
   const [startCamera, setStartCamera] = useState(false);
@@ -71,82 +80,15 @@ export default function SimulationStage2Level3() {
     timersRef.current = [];
   };
 
-  const getAudioContext = () => {
-    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+  const playSound = (audioRef) => {
+    if (!audioRef.current) return;
 
-    if (!AudioContextClass) return null;
+    audioRef.current.pause();
+    audioRef.current.currentTime = 0;
 
-    if (!audioContextRef.current) {
-      audioContextRef.current = new AudioContextClass();
-    }
-
-    if (audioContextRef.current.state === "suspended") {
-      audioContextRef.current.resume();
-    }
-
-    return audioContextRef.current;
-  };
-
-  const playCrashSound = () => {
-    const audioContext = getAudioContext();
-    if (!audioContext) return;
-
-    const now = audioContext.currentTime;
-
-    const masterGain = audioContext.createGain();
-    masterGain.gain.setValueAtTime(0.0001, now);
-    masterGain.gain.exponentialRampToValueAtTime(0.7, now + 0.02);
-    masterGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.5);
-    masterGain.connect(audioContext.destination);
-
-    const boom = audioContext.createOscillator();
-    boom.type = "sawtooth";
-    boom.frequency.setValueAtTime(130, now);
-    boom.frequency.exponentialRampToValueAtTime(35, now + 0.42);
-
-    const boomGain = audioContext.createGain();
-    boomGain.gain.setValueAtTime(0.0001, now);
-    boomGain.gain.exponentialRampToValueAtTime(0.85, now + 0.015);
-    boomGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.42);
-
-    boom.connect(boomGain);
-    boomGain.connect(masterGain);
-
-    const bufferSize = audioContext.sampleRate * 0.36;
-    const noiseBuffer = audioContext.createBuffer(
-      1,
-      bufferSize,
-      audioContext.sampleRate
-    );
-
-    const output = noiseBuffer.getChannelData(0);
-
-    for (let i = 0; i < bufferSize; i += 1) {
-      output[i] = (Math.random() * 2 - 1) * (1 - i / bufferSize);
-    }
-
-    const noise = audioContext.createBufferSource();
-    noise.buffer = noiseBuffer;
-
-    const noiseFilter = audioContext.createBiquadFilter();
-    noiseFilter.type = "lowpass";
-    noiseFilter.frequency.setValueAtTime(1800, now);
-    noiseFilter.frequency.exponentialRampToValueAtTime(250, now + 0.34);
-
-    const noiseGain = audioContext.createGain();
-    noiseGain.gain.setValueAtTime(0.0001, now);
-    noiseGain.gain.exponentialRampToValueAtTime(0.9, now + 0.01);
-    noiseGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.34);
-
-    noise.connect(noiseFilter);
-    noiseFilter.connect(noiseGain);
-    noiseGain.connect(masterGain);
-
-    boom.start(now);
-    boom.stop(now + 0.45);
-
-    noise.start(now);
-    noise.stop(now + 0.36);
+    audioRef.current.play().catch((error) => {
+      console.warn("Sound gagal diputar:", error);
+    });
   };
 
   const saveStage2Level3Progress = () => {
@@ -224,13 +166,15 @@ export default function SimulationStage2Level3() {
   const handleWrongAnswer = () => {
     if (answerLocked) return;
 
-    getAudioContext();
+    playSound(buttonClickAudioRef);
+    playSound(hormAudioRef);
+
     setAnswerLocked(true);
     setPhase(PHASE.WRONG_MOVE);
 
     timersRef.current.push(
       setTimeout(() => {
-        playCrashSound();
+        playSound(crashAudioRef);
         setPhase(PHASE.WRONG_RESULT);
       }, 900)
     );
@@ -239,26 +183,32 @@ export default function SimulationStage2Level3() {
   const handleCorrectAnswer = () => {
     if (answerLocked) return;
 
+    playSound(buttonClickAudioRef);
+
     setAnswerLocked(true);
     saveStage2Level3Progress();
     setPhase(PHASE.CORRECT_MOVE);
 
     timersRef.current.push(
       setTimeout(() => {
+        playSound(correctCringAudioRef);
         setPhase(PHASE.CORRECT_RESULT);
       }, 1100)
     );
   };
 
   const handleRetry = () => {
+    playSound(buttonClickAudioRef);
     startLevel();
   };
 
   const handleBack = () => {
+    playSound(buttonClickAudioRef);
     navigate("/map");
   };
 
   const handleFinish = () => {
+    playSound(buttonClickAudioRef);
     navigate("/simulation/9");
   };
 
@@ -282,6 +232,11 @@ export default function SimulationStage2Level3() {
 
   return (
     <main className="simulation-s2l3-page">
+      <audio ref={buttonClickAudioRef} src={buttonClickSound} preload="auto" />
+      <audio ref={correctCringAudioRef} src={correctCringSound} preload="auto" />
+      <audio ref={crashAudioRef} src={crashSound} preload="auto" />
+      <audio ref={hormAudioRef} src={hormSound} preload="auto" />
+
       <button type="button" className="s2l3-back-button" onClick={handleBack}>
         ← Pilih Level
       </button>

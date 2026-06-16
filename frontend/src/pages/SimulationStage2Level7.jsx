@@ -17,6 +17,11 @@ import bubbleQuestionLeft from "../assets/simulation/stage1/level1/bubble-questi
 import bubbleGoodLeft from "../assets/simulation/stage1/level1/bubble-good-left.png";
 import bubbleWarningRight from "../assets/simulation/stage1/level1/bubble-warning-right.png";
 
+import buttonClickSound from "../assets/sounds/button-click.mp3";
+import correctCringSound from "../assets/sounds/correct-cring.mp3";
+import crashSound from "../assets/sounds/crash.mp3";
+import hormSound from "../assets/sounds/horm.mp3";
+
 const PHASE = {
   INTRO: "intro",
   QUESTION: "question",
@@ -56,6 +61,11 @@ export default function SimulationStage2Level7() {
   const navigate = useNavigate();
   const timersRef = useRef([]);
 
+  const buttonClickAudioRef = useRef(null);
+  const correctCringAudioRef = useRef(null);
+  const crashAudioRef = useRef(null);
+  const hormAudioRef = useRef(null);
+
   const [phase, setPhase] = useState(PHASE.INTRO);
   const [startScene, setStartScene] = useState(false);
   const [showRider, setShowRider] = useState(false);
@@ -67,6 +77,17 @@ export default function SimulationStage2Level7() {
   const clearTimers = () => {
     timersRef.current.forEach((timer) => clearTimeout(timer));
     timersRef.current = [];
+  };
+
+  const playSound = (audioRef) => {
+    if (!audioRef.current) return;
+
+    audioRef.current.pause();
+    audioRef.current.currentTime = 0;
+
+    audioRef.current.play().catch((error) => {
+      console.warn("Sound gagal diputar:", error);
+    });
   };
 
   const saveStage2Level7Progress = () => {
@@ -138,6 +159,9 @@ export default function SimulationStage2Level7() {
   const handleWrongAnswer = () => {
     if (answerLocked) return;
 
+    playSound(buttonClickAudioRef);
+    playSound(hormAudioRef);
+
     setAnswerLocked(true);
     setPhase(PHASE.WRONG_START_TURN);
 
@@ -149,6 +173,7 @@ export default function SimulationStage2Level7() {
 
     timersRef.current.push(
       setTimeout(() => {
+        playSound(crashAudioRef);
         setPhase(PHASE.WRONG_RESULT);
       }, 1700)
     );
@@ -157,34 +182,42 @@ export default function SimulationStage2Level7() {
   const handleCorrectAnswer = () => {
     if (answerLocked) return;
 
+    playSound(buttonClickAudioRef);
+
     setAnswerLocked(true);
     saveStage2Level7Progress();
     setPhase(PHASE.CORRECT_GO);
 
     timersRef.current.push(
       setTimeout(() => {
+        playSound(correctCringAudioRef);
         setPhase(PHASE.CORRECT_RESULT);
       }, 1900)
     );
   };
 
   const handleRetry = () => {
+    playSound(buttonClickAudioRef);
     startLevel();
   };
 
   const handleBack = () => {
+    playSound(buttonClickAudioRef);
     navigate("/map");
   };
 
   const handleFinish = () => {
+    playSound(buttonClickAudioRef);
     setShowStageComplete(true);
   };
 
   const handleBackToStageSelect = () => {
+    playSound(buttonClickAudioRef);
     navigate("/stage-select");
   };
 
   const handleCloseStageComplete = () => {
+    playSound(buttonClickAudioRef);
     setShowStageComplete(false);
   };
 
@@ -206,6 +239,11 @@ export default function SimulationStage2Level7() {
 
   return (
     <main className="simulation-s2l7-page">
+      <audio ref={buttonClickAudioRef} src={buttonClickSound} preload="auto" />
+      <audio ref={correctCringAudioRef} src={correctCringSound} preload="auto" />
+      <audio ref={crashAudioRef} src={crashSound} preload="auto" />
+      <audio ref={hormAudioRef} src={hormSound} preload="auto" />
+
       <button type="button" className="s2l7-back-button" onClick={handleBack}>
         ← Pilih Level
       </button>

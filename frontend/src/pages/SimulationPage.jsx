@@ -18,7 +18,7 @@ import bubbleWarningRight from "../assets/simulation/stage1/level1/bubble-warnin
 import buttonClickSound from "../assets/sounds/button-click.mp3";
 import correctCringSound from "../assets/sounds/correct-cring.mp3";
 import crashSound from "../assets/sounds/crash.mp3";
-import hornSound from "../assets/sounds/horn.mp3";
+import hornSound from "../assets/sounds/horm.mp3";
 
 const STAGE1_PROGRESS_KEY = "stage1-progress";
 
@@ -179,8 +179,7 @@ export default function SimulationPage() {
   const isCorrectMove = phase === PHASE.CORRECT_MOVE;
   const isCorrectResult = phase === PHASE.CORRECT_RESULT;
 
-  const showNormalRider =
-    showRider && !isWrongResult && !isCorrectResult;
+  const showNormalRider = showRider && !isWrongResult && !isCorrectResult;
 
   return (
     <main className="simulation-page">
