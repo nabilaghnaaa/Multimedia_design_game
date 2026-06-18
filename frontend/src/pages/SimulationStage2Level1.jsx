@@ -15,6 +15,7 @@ import bubbleQuestionRight from "../assets/simulation/stage1/level1/bubble-quest
 import bubbleWarningLeft from "../assets/simulation/stage1/level1/bubble-warning-left.png";
 import bubbleGoodLeft from "../assets/simulation/stage1/level1/bubble-good-left.png";
 
+import backsoundMusic from "../assets/sounds/backsound.mp3";
 import buttonClickSound from "../assets/sounds/button-click.mp3";
 import correctCringSound from "../assets/sounds/correct-cring.mp3";
 import crashSound from "../assets/sounds/crash.mp3";
@@ -30,6 +31,8 @@ const PHASE = {
 };
 
 const WRONG_MOVE_DURATION = 3200;
+const BACKSOUND_NORMAL_VOLUME = 0.18;
+const BACKSOUND_DUCK_VOLUME = 0.06;
 
 const normalizeNumberArray = (data, fallback = []) => {
   if (!Array.isArray(data)) return fallback;
@@ -59,7 +62,9 @@ const safeParseArray = (key, fallback) => {
 export default function SimulationStage2Level1() {
   const navigate = useNavigate();
   const timersRef = useRef([]);
+  const restoreBacksoundTimerRef = useRef(null);
 
+  const backsoundAudioRef = useRef(null);
   const buttonClickAudioRef = useRef(null);
   const correctCringAudioRef = useRef(null);
   const crashAudioRef = useRef(null);
@@ -76,11 +81,43 @@ export default function SimulationStage2Level1() {
     timersRef.current = [];
   };
 
-  const playSound = (audioRef) => {
+  const startBacksound = () => {
+    if (!backsoundAudioRef.current) return;
+
+    backsoundAudioRef.current.volume = BACKSOUND_NORMAL_VOLUME;
+    backsoundAudioRef.current.loop = true;
+    backsoundAudioRef.current.muted = false;
+
+    backsoundAudioRef.current.play().catch((error) => {
+      console.warn("Backsound belum bisa autoplay sebelum user klik:", error);
+    });
+  };
+
+  const duckBacksound = (duration = 900) => {
+    if (!backsoundAudioRef.current) return;
+
+    if (restoreBacksoundTimerRef.current) {
+      clearTimeout(restoreBacksoundTimerRef.current);
+      restoreBacksoundTimerRef.current = null;
+    }
+
+    backsoundAudioRef.current.volume = BACKSOUND_DUCK_VOLUME;
+
+    restoreBacksoundTimerRef.current = setTimeout(() => {
+      if (backsoundAudioRef.current) {
+        backsoundAudioRef.current.volume = BACKSOUND_NORMAL_VOLUME;
+      }
+    }, duration);
+  };
+
+  const playSound = (audioRef, volume = 1, duckDuration = 900) => {
     if (!audioRef.current) return;
+
+    duckBacksound(duckDuration);
 
     audioRef.current.pause();
     audioRef.current.currentTime = 0;
+    audioRef.current.volume = volume;
 
     audioRef.current.play().catch((error) => {
       console.warn("Sound gagal diputar:", error);
@@ -116,6 +153,7 @@ export default function SimulationStage2Level1() {
 
   const startLevel = () => {
     clearTimers();
+    startBacksound();
 
     setRestartKey((prev) => prev + 1);
     setPhase(PHASE.INTRO);
@@ -145,23 +183,44 @@ export default function SimulationStage2Level1() {
   useEffect(() => {
     startLevel();
 
+    const unlockAudio = () => {
+      startBacksound();
+    };
+
+    window.addEventListener("click", unlockAudio);
+    window.addEventListener("touchstart", unlockAudio);
+    window.addEventListener("keydown", unlockAudio);
+
     return () => {
       clearTimers();
+
+      window.removeEventListener("click", unlockAudio);
+      window.removeEventListener("touchstart", unlockAudio);
+      window.removeEventListener("keydown", unlockAudio);
+
+      if (restoreBacksoundTimerRef.current) {
+        clearTimeout(restoreBacksoundTimerRef.current);
+      }
+
+      if (backsoundAudioRef.current) {
+        backsoundAudioRef.current.pause();
+        backsoundAudioRef.current.currentTime = 0;
+      }
     };
   }, []);
 
   const handleSpeedUp = () => {
     if (answerLocked) return;
 
-    playSound(buttonClickAudioRef);
-    playSound(hormAudioRef);
+    playSound(buttonClickAudioRef, 1, 450);
+    playSound(hormAudioRef, 1, 1000);
 
     setAnswerLocked(true);
     setPhase(PHASE.SPEED_MOVE);
 
     timersRef.current.push(
       setTimeout(() => {
-        playSound(crashAudioRef);
+        playSound(crashAudioRef, 1, 1600);
         setPhase(PHASE.CRASH_RESULT);
       }, WRONG_MOVE_DURATION)
     );
@@ -170,7 +229,7 @@ export default function SimulationStage2Level1() {
   const handleSlowDown = () => {
     if (answerLocked) return;
 
-    playSound(buttonClickAudioRef);
+    playSound(buttonClickAudioRef, 1, 450);
 
     setAnswerLocked(true);
     saveStage2Level1Progress();
@@ -178,25 +237,31 @@ export default function SimulationStage2Level1() {
 
     timersRef.current.push(
       setTimeout(() => {
-        playSound(correctCringAudioRef);
+        playSound(correctCringAudioRef, 1, 1300);
         setPhase(PHASE.GOOD_RESULT);
       }, 1700)
     );
   };
 
   const handleRetry = () => {
-    playSound(buttonClickAudioRef);
+    playSound(buttonClickAudioRef, 1, 450);
     startLevel();
   };
 
   const handleBack = () => {
-    playSound(buttonClickAudioRef);
-    navigate("/map");
+    playSound(buttonClickAudioRef, 1, 450);
+
+    setTimeout(() => {
+      navigate("/map");
+    }, 160);
   };
 
   const handleFinish = () => {
-    playSound(buttonClickAudioRef);
-    navigate("/map");
+    playSound(buttonClickAudioRef, 1, 450);
+
+    setTimeout(() => {
+      navigate("/simulation/7");
+    }, 160);
   };
 
   const isQuestion = phase === PHASE.QUESTION;
@@ -267,9 +332,21 @@ export default function SimulationStage2Level1() {
 
   return (
     <>
-      <main className="simulation-s2l1-page">
+      <main className="simulation-s2l1-page" onClick={startBacksound}>
+        <audio
+          ref={backsoundAudioRef}
+          src={backsoundMusic}
+          preload="auto"
+          loop
+          autoPlay
+        />
+
         <audio ref={buttonClickAudioRef} src={buttonClickSound} preload="auto" />
-        <audio ref={correctCringAudioRef} src={correctCringSound} preload="auto" />
+        <audio
+          ref={correctCringAudioRef}
+          src={correctCringSound}
+          preload="auto"
+        />
         <audio ref={crashAudioRef} src={crashSound} preload="auto" />
         <audio ref={hormAudioRef} src={hormSound} preload="auto" />
 
@@ -397,7 +474,7 @@ export default function SimulationStage2Level1() {
                     className="s2l1-secondary-button"
                     onClick={handleFinish}
                   >
-                    Lanjut level 3
+                    Lanjut Level 2
                   </button>
                 </div>
               </>

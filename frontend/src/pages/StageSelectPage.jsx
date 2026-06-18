@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import "./StageSelectPage.css";
@@ -9,12 +9,41 @@ import stage2LockedBoard from "../assets/stage-select/stage-2-locked.png";
 import stage2UnlockedBoard from "../assets/stage-select/stage-2-unlocked.png";
 import stageLockedPopup from "../assets/stage-select/stage-locked-popup.png";
 
+import backsoundMusic from "../assets/sounds/backsound.mp3";
+import buttonClickSound from "../assets/sounds/button-click.mp3";
+
 const StageSelectPage = () => {
   const navigate = useNavigate();
+
+  const backsoundAudioRef = useRef(null);
+  const buttonClickAudioRef = useRef(null);
 
   const [isStage2Unlocked, setIsStage2Unlocked] = useState(false);
   const [showPage, setShowPage] = useState(false);
   const [showLockedPopup, setShowLockedPopup] = useState(false);
+
+  const playButtonClick = () => {
+    if (!buttonClickAudioRef.current) return;
+
+    buttonClickAudioRef.current.pause();
+    buttonClickAudioRef.current.currentTime = 0;
+
+    buttonClickAudioRef.current.play().catch((error) => {
+      console.warn("Sound button gagal diputar:", error);
+    });
+  };
+
+  const startBacksound = () => {
+    if (!backsoundAudioRef.current) return;
+
+    backsoundAudioRef.current.volume = 0.35;
+    backsoundAudioRef.current.loop = true;
+    backsoundAudioRef.current.muted = false;
+
+    backsoundAudioRef.current.play().catch((error) => {
+      console.warn("Backsound belum bisa autoplay sebelum user klik:", error);
+    });
+  };
 
   useEffect(() => {
     document.body.classList.add("stage-select-no-scroll");
@@ -33,13 +62,48 @@ const StageSelectPage = () => {
       setShowPage(true);
     }, 0);
 
+    const audio = backsoundAudioRef.current;
+
+    if (audio) {
+      audio.volume = 0.35;
+      audio.loop = true;
+      audio.muted = false;
+
+      audio.play().catch((error) => {
+        console.warn(
+          "Browser memblokir autoplay backsound. Musik akan aktif setelah user klik halaman:",
+          error
+        );
+      });
+    }
+
+    const unlockAudio = () => {
+      startBacksound();
+    };
+
+    window.addEventListener("click", unlockAudio);
+    window.addEventListener("touchstart", unlockAudio);
+    window.addEventListener("keydown", unlockAudio);
+
     return () => {
       clearTimeout(timer);
       document.body.classList.remove("stage-select-no-scroll");
+
+      window.removeEventListener("click", unlockAudio);
+      window.removeEventListener("touchstart", unlockAudio);
+      window.removeEventListener("keydown", unlockAudio);
+
+      if (backsoundAudioRef.current) {
+        backsoundAudioRef.current.pause();
+        backsoundAudioRef.current.currentTime = 0;
+      }
     };
   }, []);
 
   const handleStage1Click = () => {
+    playButtonClick();
+    startBacksound();
+
     localStorage.setItem("selectedStage", "1");
 
     if (!localStorage.getItem("completedLevels")) {
@@ -50,10 +114,15 @@ const StageSelectPage = () => {
       localStorage.setItem("unlockedLevels", JSON.stringify([1]));
     }
 
-    navigate("/stage1-select");
+    setTimeout(() => {
+      navigate("/stage1-select");
+    }, 160);
   };
 
   const handleStage2Click = () => {
+    playButtonClick();
+    startBacksound();
+
     if (!isStage2Unlocked) {
       setShowLockedPopup(true);
 
@@ -77,11 +146,42 @@ const StageSelectPage = () => {
       );
     }
 
-    navigate("/map");
+    setTimeout(() => {
+      navigate("/map");
+    }, 160);
+  };
+
+  const handleBackToHome = () => {
+    playButtonClick();
+    startBacksound();
+
+    setTimeout(() => {
+      navigate("/");
+    }, 160);
+  };
+
+  const handleCloseLockedPopup = () => {
+    playButtonClick();
+    startBacksound();
+    setShowLockedPopup(false);
   };
 
   return (
     <main className={`stage-select-page ${showPage ? "show" : ""}`}>
+      <audio
+        ref={backsoundAudioRef}
+        src={backsoundMusic}
+        preload="auto"
+        loop
+        autoPlay
+      />
+
+      <audio
+        ref={buttonClickAudioRef}
+        src={buttonClickSound}
+        preload="auto"
+      />
+
       <img
         src={stageBg}
         alt="Background Pilih Stage"
@@ -124,16 +224,13 @@ const StageSelectPage = () => {
       <button
         type="button"
         className="stage-back-button"
-        onClick={() => navigate("/")}
+        onClick={handleBackToHome}
       >
         ← Beranda
       </button>
 
       {showLockedPopup && (
-        <div
-          className="stage-popup-overlay"
-          onClick={() => setShowLockedPopup(false)}
-        >
+        <div className="stage-popup-overlay" onClick={handleCloseLockedPopup}>
           <img
             src={stageLockedPopup}
             alt="Stage 2 masih terkunci"

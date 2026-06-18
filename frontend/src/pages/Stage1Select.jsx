@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Stage1Select.css";
 
@@ -13,6 +13,9 @@ import level4Locked from "../assets/stage-levels/stage1/level-4-locked.png";
 import level4Unlocked from "../assets/stage-levels/stage1/level-4-unlocked.png";
 import level5Locked from "../assets/stage-levels/stage1/level-5-locked.png";
 import level5Unlocked from "../assets/stage-levels/stage1/level-5-unlocked.png";
+
+import backsoundMusic from "../assets/sounds/backsound.mp3";
+import buttonClickSound from "../assets/sounds/button-click.mp3";
 
 const STAGE1_PROGRESS_KEY = "stage1-progress";
 
@@ -106,10 +109,36 @@ const safeParseStage1Progress = () => {
 export default function Stage1Select() {
   const navigate = useNavigate();
 
+  const backsoundAudioRef = useRef(null);
+  const buttonClickAudioRef = useRef(null);
+
   const [completedLevels, setCompletedLevels] = useState([]);
   const [unlockedLevels, setUnlockedLevels] = useState([1]);
   const [showPage, setShowPage] = useState(false);
   const [popupMessage, setPopupMessage] = useState("");
+
+  const playButtonClick = () => {
+    if (!buttonClickAudioRef.current) return;
+
+    buttonClickAudioRef.current.pause();
+    buttonClickAudioRef.current.currentTime = 0;
+
+    buttonClickAudioRef.current.play().catch((error) => {
+      console.warn("Sound button gagal diputar:", error);
+    });
+  };
+
+  const startBacksound = () => {
+    if (!backsoundAudioRef.current) return;
+
+    backsoundAudioRef.current.volume = 0.35;
+    backsoundAudioRef.current.loop = true;
+    backsoundAudioRef.current.muted = false;
+
+    backsoundAudioRef.current.play().catch((error) => {
+      console.warn("Backsound belum bisa autoplay sebelum user klik:", error);
+    });
+  };
 
   useEffect(() => {
     document.body.classList.add("stage1-no-scroll");
@@ -156,9 +185,41 @@ export default function Stage1Select() {
       setShowPage(true);
     }, 120);
 
+    const audio = backsoundAudioRef.current;
+
+    if (audio) {
+      audio.volume = 0.35;
+      audio.loop = true;
+      audio.muted = false;
+
+      audio.play().catch((error) => {
+        console.warn(
+          "Browser memblokir autoplay backsound. Musik akan aktif setelah user klik halaman:",
+          error
+        );
+      });
+    }
+
+    const unlockAudio = () => {
+      startBacksound();
+    };
+
+    window.addEventListener("click", unlockAudio);
+    window.addEventListener("touchstart", unlockAudio);
+    window.addEventListener("keydown", unlockAudio);
+
     return () => {
       clearTimeout(timer);
       document.body.classList.remove("stage1-no-scroll");
+
+      window.removeEventListener("click", unlockAudio);
+      window.removeEventListener("touchstart", unlockAudio);
+      window.removeEventListener("keydown", unlockAudio);
+
+      if (backsoundAudioRef.current) {
+        backsoundAudioRef.current.pause();
+        backsoundAudioRef.current.currentTime = 0;
+      }
     };
   }, []);
 
@@ -179,6 +240,9 @@ export default function Stage1Select() {
   };
 
   const handleLevelClick = (levelNumber) => {
+    playButtonClick();
+    startBacksound();
+
     const numberLevel = Number(levelNumber);
 
     if (!Number.isFinite(numberLevel)) {
@@ -205,11 +269,36 @@ export default function Stage1Select() {
     localStorage.setItem("selectedStage", "1");
     localStorage.setItem("selectedLevel", String(numberLevel));
 
-    navigate(`/simulation/${numberLevel}`);
+    setTimeout(() => {
+      navigate(`/simulation/${numberLevel}`);
+    }, 160);
+  };
+
+  const handleBackToStageSelect = () => {
+    playButtonClick();
+    startBacksound();
+
+    setTimeout(() => {
+      navigate("/stage-select");
+    }, 160);
   };
 
   return (
     <main className={`stage1-page ${showPage ? "show" : ""}`}>
+      <audio
+        ref={backsoundAudioRef}
+        src={backsoundMusic}
+        preload="auto"
+        loop
+        autoPlay
+      />
+
+      <audio
+        ref={buttonClickAudioRef}
+        src={buttonClickSound}
+        preload="auto"
+      />
+
       <img
         src={stage1Bg}
         alt="Stage 1 Rambu Peringatan"
@@ -220,7 +309,7 @@ export default function Stage1Select() {
       <button
         type="button"
         className="stage1-back-button"
-        onClick={() => navigate("/stage-select")}
+        onClick={handleBackToStageSelect}
       >
         ← Pilih Stage
       </button>
